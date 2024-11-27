@@ -1,16 +1,52 @@
 import localFont from "next/font/local";
 import "./globals.css";
+import 'leaflet/dist/leaflet.css'; // Leaflet styles
+import 'slick-carousel/slick/slick.css'; // Slick carousel styles
+import 'slick-carousel/slick/slick-theme.css'; // Slick carousel theme
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import { config } from "@fortawesome/fontawesome-svg-core";
+config.autoAddCss = false;
+import Header from "@/components/Header/page";
+import Footer from "@/components/Footer/page";
+import {Noto_Sans,Nunito_Sans,Archivo} from "next/font/google"
+
+
+const NotoSans = Noto_Sans({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--Noto-Sans',
+
+})
+
+const Archivoo = Archivo({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-Archivo',
+
+})
+
+
+const nunitosans  = Nunito_Sans({ 
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-nunitosans',
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+
+// const geistSans = localFont({
+//   src: "./fonts/GeistVF.woff",
+//   variable: "--font-geist-sans",
+//   weight: "100 900",
+// });
+// const geistMono = localFont({
+//   src: "./fonts/GeistMonoVF.woff",
+//   variable: "--font-geist-mono",
+//   weight: "100 900",
+// });
 
 export const metadata = {
   title: "Urban AdCheck",
@@ -19,11 +55,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning={true}>
+    <html lang="en"  className={`${NotoSans.variable} ${nunitosans.variable} ${Archivoo.variable}`} suppressHydrationWarning={true}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Header/>
         {children}
+        <Footer/>
       </body>
     </html>
   );
