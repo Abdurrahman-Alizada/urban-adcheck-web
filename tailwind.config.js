@@ -8,7 +8,8 @@ module.exports = {
   theme: {
     extend: {
       boxShadow: {
-        'custom-card': '0 4px 4px 0 rgba(0, 0, 0, 0.25)', // x:0, y:4, blur:4, spread:0, color: black, opacity: 25%
+        'custom-card': '0 4px 4px 0 rgba(0, 0, 0, 0.111)', // x:0, y:4, blur:4, spread:0, color: black, opacity: 25%
+        'custom-shadow': '0 11.27px 45.09px 0 rgba(0, 34, 51, 0.06)',
       }
       ,
       colors: {
@@ -16,6 +17,7 @@ module.exports = {
         foreground: "var(--foreground)",
         primary: "#068179", 
         secondary: "#F27125", 
+        grayColor: "#767E94",
       },
       fontFamily: {
         NotoSans: ['var(--Noto-Sans)'],

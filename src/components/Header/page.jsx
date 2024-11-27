@@ -27,7 +27,7 @@ function Header() {
 }
 
   return (
-    <header className="w-full h-[80px] relative lg:h-[140px] px-4 lg:px-16 shadow-sm flex justify-between items-center bg-white">
+    <header className="w-full h-[80px] relative lg:h-[140px] px-4 lg:px-16 shadow-custom-shadow flex justify-between items-center bg-white">
       {/* Logo Section */}
       <div className="">
         <Image 
