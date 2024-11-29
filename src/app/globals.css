@@ -24,3 +24,19 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.placeholder-white-space::placeholder{
+  white-space: pre-wrap;
+}
+
+/* dahboard post ads 3rd tab code */
+.custom-phone-input input {
+ 
+  outline: none;
+}
+
+.custom-phone-input input:focus {
+  
+  border-color: #068179; /* Primary color on focus */
+  box-shadow: 0 0 0 0px #068179; /* Primary outline */
+}
