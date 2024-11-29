@@ -1,210 +1,204 @@
-import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import React, { useState, useEffect } from "react";
+import { Formik, Form } from "formik";
+import * as Yup from "yup"; // For schema validation
+import ProgressBar from "./ProgressBar/page"; // Assuming ProgressBar is another component
+import AdsInfoSection from "./AdsInfoSection/page"; // Assuming AdsInfoSection is a separate component
+import AdvanceInfoSection from "./AdvanceInfoSection/page"; // Assuming AdvanceInfoSection is a separate component
+import ContactSection from "./ContactSection/page"; // Assuming ContactSection is a separate component
 
-function Postads() {
+const AdsPost = () => {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [modelOptions, setModelOptions] = useState([]); // State to hold models based on selected brand
+
+  // Example brand to model mapping (replace with your actual data)
+  const brandModelMapping = {
+    "Apple": ["iPhone 14", "iPhone 13", "MacBook Pro"],
+    "Samsung": ["Galaxy S21", "Galaxy Note 20", "Galaxy Tab"],
+    "Dell": ["XPS 13", "Inspiron 15", "Alienware"],
+  };
+
+  const authenticityOptions = ["Original", "Refurbished", "Used"];
+
+  // Step 1 Schema
+  const step1Schema = Yup.object().shape({
+    adName: Yup.string().required("Ad name is required."),
+    category: Yup.string().required("Category is required."),
+    subCategory: Yup.string().required("Sub-category is required."),
+    brand: Yup.string().required("Brand is required."),
+    model: Yup.string().required("Model is required."),
+    conditions: Yup.string().required("Conditions are required."),
+    authenticity: Yup.string().required("Authenticity is required."),
+    tags: Yup.string().required("Tags are required."),
+    adsPrices: Yup.number()
+      .typeError("Price must be a number.")
+      .required("Ads price is required."),
+    negotiables: Yup.string().required("Please select if negotiable."),
+  });
+
+  // Step 2 Schema
+  const step2Schema = Yup.object().shape({
+    description: Yup.string().required("Description is required."),
+    features: Yup.array()
+      .of(Yup.string().required("Feature is required."))
+      .required("At least one feature is required."),
+    images: Yup.array()
+      .of(
+        Yup.mixed()
+          .nullable()
+          .test("fileType", "Only images are allowed.", (value) =>
+            value ? ["image/jpeg", "image/png", "image/gif"].includes(value.type) : true
+          )
+          .test("fileSize", "File size too large.", (value) =>
+            value ? value.size <= 5000000 : true
+          )
+      )
+      .min(1, "At least one image is required."),
+  });
+
+  // Step 3 Schema
+  const step3Schema = Yup.object().shape({
+    contactName: Yup.string().required("Contact name is required."),
+    email: Yup.string()
+      .email("Invalid email address.")
+      .required("Email is required."),
+    phoneNumber: Yup.string()
+      .matches(/^[0-9]{10}$/, "Phone number must be 10 digits.")
+      .required("Phone number is required."),
+    address: Yup.string().required("Address is required."),
+  });
+
+  // Combined Validation Schemas
+  const validationSchemas = [step1Schema, step2Schema, step3Schema];
+
+  // Initial Values
+  const initialValues = {
+    adName: "",
+    category: "",
+    subCategory: "",
+    brand: "",
+    model: "",
+    conditions: "",
+    authenticity: "",
+    tags: "",
+    adsPrices: "",
+    negotiables: "",
+    description: "",
+    features: [],
+    images: [],
+    contactName: "",
+    email: "",
+    phoneNumber: "",
+    address: "",
+  };
+
+  // Handle "Next" Button Click
+  const handleNext = async (validateForm, setFieldTouched) => {
+    const schemaFieldKeys = [
+      ["adName", "category", "subCategory", "brand", "model", "conditions", "authenticity", "tags", "adsPrices", "negotiables"],
+      ["description", "features", "images"],
+      ["contactName", "email", "phoneNumber", "address"],
+    ];
+
+    const currentFields = schemaFieldKeys[currentStep - 1]; // Get fields for current step
+
+    // Mark all fields in current step as touched for validation
+    currentFields.forEach((field) => setFieldTouched(field, true));
+
+    // Validate the form
+    const validationErrors = await validateForm();
+
+    if (Object.keys(validationErrors).length === 0) {
+      // If no validation errors, proceed to the next step
+      setCurrentStep((prevStep) => prevStep + 1);
+    } else {
+      console.log("Validation errors:", validationErrors); // Debugging validation errors
+    }
+  };
+
+  // Update model options based on selected brand
+  const handleBrandChange = (brand) => {
+    setModelOptions(brandModelMapping[brand] || []);
+  };
+
   return (
-    <div className='shadow-custom-shadow px-3 py-4 rounded-sm mt-5'>
-                          {/* multi-step form */}
-        {/* Step-01 - ads information*/}
-        <form action="">
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchemas[currentStep - 1]} // Apply validation for current step only
+      validateOnChange={false}
+      validateOnBlur={false}
+      onSubmit={(values) => {
+        console.log("Form submitted:", values);
+      }}
+    >
+      {({ values, errors, touched, validateForm, setFieldTouched, handleChange, handleBlur }) => (
+        <Form className="w-full">
+          {/* Progress Bar */}
+          <ProgressBar currentStep={currentStep} />
 
-           <section className='flex flex-col gap-4'> 
+          {/* Step Content */}
+          {currentStep === 1 && (
+            <AdsInfoSection
+              values={values}
+              errors={errors}
+              touched={touched}
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              handleBrandChange={handleBrandChange} // Pass brand change handler
+            />
+          )}
 
-                  {/* ad Name */}
-              <div className='flex flex-col gap-2'>
-                <label htmlFor="ad-name" className='text-[16px]'>Ad Name</label>
-                <input type="text" placeholder='Ad name' className='text-[15.04px] border-gray-300 outline-primary border-[1px] px-3 py-2 rounded-[5px]' id='ad-name'/>
-              </div>
+          {currentStep === 2 && (
+            <AdvanceInfoSection
+              values={values}
+              errors={errors}
+              touched={touched}
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+            />
+          )}
 
-                  {/* category & sub-category */}
-              <div className='flex gap-3'>
+          {currentStep === 3 && (
+            <ContactSection
+              values={values}
+              errors={errors}
+              touched={touched}
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+            />
+          )}
 
-                  {/* Catogery */}
-                  <div className="w-[50%] flex flex-col gap-2">
-                    <label htmlFor="category" className="text-[16px]">Category</label>
-                    <div className="relative">
-                        <select
-                        name="Category"
-                        id="category"
-                        className="border-gray-300 text-[15.04px] border-[1px] outline-primary px-3 py-2 text-grayColor rounded-[5px] w-full appearance-none focus:ring-2 focus:ring-primary"
-                        >
-                        <option value="">Select ...</option>
-                        <option value="">Homes</option>
-                        <option value="">Automotive</option>
-                        <option value="">Garage</option>
-                        </select>
-                        {/* Chevron Icon */}
-                        <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                        <FontAwesomeIcon icon={faChevronDown} className="text-gray-400 w-8 h-8" />
-                        </span>
-                    </div>
-                  </div>
+          {/* Navigation Buttons */}
+          <div className="flex justify-between mt-4">
+            {currentStep > 1 && (
+              <button
+                type="button"
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded"
+                onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
+              >
+                Back
+              </button>
+            )}
+            {currentStep < validationSchemas.length ? (
+              <button
+                type="button"
+                className="px-4 py-2 bg-primary text-white rounded"
+                onClick={() => handleNext(validateForm, setFieldTouched)}
+              >
+                Next
+              </button>
+            ) : (
+              <button
+                type="submit"
+                className="px-4 py-2 bg-green-500 text-white rounded"
+              >
+                Submit
+              </button>
+            )}
+          </div>
+        </Form>
+      )}
+    </Formik>
+  );
+};
 
-                  {/* Sub-Category */}
-                  <div className="w-[50%] flex flex-col gap-2">
-                    <label htmlFor="Sub-Category" className="text-[16px]">Sub-Category</label>
-                    <div className="relative">
-                        <select
-                        name="Sub-Category"
-                        id="Sub-Category"
-                        className="border-gray-300  text-[15.04px] outline-primary border-[1px] px-3 py-2 text-grayColor rounded-[5px] w-full appearance-none focus:ring-2 focus:ring-primary"
-                        >
-                        <option value="">Select ...</option>
-                        <option value="">Homes</option>
-                        <option value="">Automotive</option>
-                        <option value="">Garage</option>
-                        </select>
-                        {/* Chevron Icon */}
-                        <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                        <FontAwesomeIcon icon={faChevronDown} className="text-gray-400 w-8 h-8" />
-                        </span>
-                    </div>
-                  </div>
- 
-                   
-              </div>
-
-               {/* Brand & Model */}
-               <div className='flex gap-3'>
-
-                {/* Brand */}
-                <div className="w-[50%] flex flex-col gap-2">
-                    <label htmlFor="Brand" className="text-[16px]">Brand</label>
-                    <div className="relative">
-                        <select
-                        name="Brand"
-                        id="Brand"
-                        className="border-gray-300 text-[15.04px] border-[1px] outline-primary px-3 py-2 text-grayColor rounded-[5px] w-full appearance-none focus:ring-2 focus:ring-primary"
-                        >
-                        <option value="">Select ...</option>
-                        <option value="">Brand 1</option>
-                        <option value="">Brand 2</option>
-                        <option value="">Brand 3</option>
-                        </select>
-                        {/* Chevron Icon */}
-                        <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                        <FontAwesomeIcon icon={faChevronDown} className="text-gray-400 w-8 h-8" />
-                        </span>
-                    </div>
-                </div>
-
-                {/* Model */}
-                <div className="w-[50%] flex flex-col gap-2">
-                <label htmlFor="Model" className="text-[16px]">Model</label>
-                <div className="relative">
-                    <select
-                    name="Model"
-                    id="Model"
-                    className="border-gray-300 text-[15.04px] outline-primary border-[1px] px-3 py-2 text-grayColor rounded-[5px] w-full appearance-none focus:ring-2 focus:ring-primary"
-                    >
-                    <option value="">Select ...</option>
-                    <option value="">Homes</option>
-                    <option value="">Automotive</option>
-                    <option value="">Garage</option>
-                    </select>
-                    {/* Chevron Icon */}
-                    <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                    <FontAwesomeIcon icon={faChevronDown} className="text-gray-400 w-8 h-8" />
-                    </span>
-                </div>
-                </div>
-
- 
-               </div>
-  
-               {/* Conditions & Authenticity */}
-               <div className='flex gap-3'>
-
-                {/* Conditions */}
-                <div className="w-[50%] flex flex-col gap-2">
-                    <label htmlFor="Conditions" className="text-[16px]">Conditions</label>
-                    <div className="relative">
-                        <select
-                        name="Conditions"
-                        id="Conditions"
-                        className="border-gray-300 text-[15.04px] border-[1px] outline-primary px-3 py-2 text-grayColor rounded-[5px] w-full appearance-none focus:ring-2 focus:ring-primary"
-                        >
-                        <option value="">Select ...</option>
-                        <option value="">Brand 1</option>
-                        <option value="">Brand 2</option>
-                        <option value="">Brand 3</option>
-                        </select>
-                        {/* Chevron Icon */}
-                        <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                        <FontAwesomeIcon icon={faChevronDown} className="text-gray-400 w-8 h-8" />
-                        </span>
-                    </div>
-                </div>
-
-                {/* Authenticity */}
-                <div className="w-[50%] flex flex-col gap-2">
-                <label htmlFor="Authenticity" className="text-[16px]">Authenticity</label>
-                <div className="relative">
-                    <select
-                    name="Authenticity"
-                    id="Authenticity"
-                    className="border-gray-300 text-[15.04px] outline-primary border-[1px] px-3 py-2 text-grayColor rounded-[5px] w-full appearance-none focus:ring-2 focus:ring-primary"
-                    >
-                    <option value="">Select ...</option>
-                    <option value="">Homes</option>
-                    <option value="">Automotive</option>
-                    <option value="">Garage</option>
-                    </select>
-                    {/* Chevron Icon */}
-                    <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                    <FontAwesomeIcon icon={faChevronDown} className="text-gray-400 w-8 h-8" />
-                    </span>
-                </div>
-                </div>
-
- 
-               </div>  
-
-                   {/* Tag Name */}
-              <div className='flex flex-col gap-2'>
-                <label htmlFor="Tag" className='text-[16px]'>Tags</label>
-                <input type="text" placeholder='ads Tag...' className='text-[15.04px] border-gray-300 outline-primary border-[1px] px-3 py-2 rounded-[5px]' id='ad-name'/>
-              </div>  
-
-
-              {/* Ads Prices & Negotiables */}
-              <div className='flex gap-3'>
-
-            {/* Ads Prices */}
-              <div className='w-[50%] flex flex-col gap-2'>
-                <label htmlFor="Ads Prices" className='text-[16px]'>Ads Prices (USD)</label>
-                <input type="text" placeholder='ads Tag...' className='text-[15.04px] border-gray-300 outline-primary border-[1px] px-3 py-2 rounded-[5px]' id='ad-name'/>
-              </div>  
-
-            {/* Negotiables */}
-            <div className="w-[50%] flex flex-col gap-2">
-            <label htmlFor="Negotiables" className="text-[16px]">Negotiables</label>
-            <div className="relative">
-                <select
-                name="Negotiables"
-                id="Negotiables"
-                className="border-gray-300 text-[15.04px] outline-primary border-[1px] px-3 py-2 text-grayColor rounded-[5px] w-full appearance-none focus:ring-2 focus:ring-primary"
-                >
-                <option value="">Select ...</option>
-                <option value="">Negotiables 1</option>
-                <option value="">Negotiables 2</option>
-                <option value="">Negotiables 3</option>
-                </select>
-                {/* Chevron Icon */}
-                <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                <FontAwesomeIcon icon={faChevronDown} className="text-gray-400 w-8 h-8" />
-                </span>
-            </div>
-            </div>
-
-
-            </div> 
-
-           </section>
-        </form>
-    </div>
-  )
-}
-
-export default Postads
+export default AdsPost;

@@ -27,7 +27,7 @@ function Header() {
 }
 
   return (
-    <header className="w-full h-[80px] relative lg:h-[140px] px-4 lg:px-16 shadow-custom-shadow flex justify-between items-center bg-white">
+    <header className="w-full h-[60px] relative lg:h-[100px] px-4 lg:px-16 shadow-custom-shadow flex justify-between items-center bg-white">
       {/* Logo Section */}
       <div className="">
         <Image 
@@ -35,7 +35,7 @@ function Header() {
           width={285} 
           height={80} 
           alt="Company Logo"
-          className="object-contain w-[140px] h-[80px] lg:w-[285px] lg:h-[80]" 
+          className="object-contain w-[140px] h-[80px] lg:w-[205px] lg:h-[80]" 
         />
       </div>
 

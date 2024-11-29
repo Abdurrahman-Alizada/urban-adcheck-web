@@ -3,12 +3,13 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Overview from '../../overview/page';
 import Postads from '../../postAds/page';
+import Myads from '../../myAds/page';
 
 // Example components for each tab
 const overview = () => <div><Overview/></div>;
 const ViewProfile = () => <div>View Profile Content</div>;
 const RequestForJobs = () => <div><Postads/></div>;
-const MyAds = () => <div>My Ads Content</div>;
+const MyAds = () => <div><Myads/></div>;
 const AccountSettings = () => <div>Account Settings Content</div>;
 const SignOut = () => <div>Sign Out Content</div>;
 
