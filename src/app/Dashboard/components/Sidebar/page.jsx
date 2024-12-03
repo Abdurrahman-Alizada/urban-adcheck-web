@@ -1,15 +1,14 @@
 'use client'
 import React, { useState } from 'react';
 import Image from 'next/image';
-import Overview from '../../overview/page';
-import Postads from '../../postAds/page';
-import Myads from '../../myAds/page';
+// import Overview from '../../overview/page';
+// import Postads from '../../postAds/page';
+// import Myads from '../../myAds/page';
 
-// Example components for each tab
-const overview = () => <div><Overview/></div>;
+const overview = () => <div></div>;
 const ViewProfile = () => <div>View Profile Content</div>;
-const RequestForJobs = () => <div><Postads/></div>;
-const MyAds = () => <div><Myads/></div>;
+const RequestForJobs = () => <div></div>;
+const MyAds = () => <div></div>;
 const AccountSettings = () => <div>Account Settings Content</div>;
 const SignOut = () => <div>Sign Out Content</div>;
 
@@ -22,7 +21,7 @@ function Sidebar() {
     { name: 'Overview', icon: '/Grid.png', component: <Overview /> },
     { name: 'View Profile', icon: '/UserCircle.png', component: <ViewProfile /> },
     { name: 'Request For Jobs', icon: '/PlusCircle.png', component: <RequestForJobs /> },
-    { name: 'My ads', icon: '/ClipboardText.png', component: <MyAds /> },
+    { name: 'My ads', icon: '/Clipboa                                                                                                                                                                                                                                                                         rdText.png', component: <MyAds /> },
     { name: 'Account Settings', icon: '/Gear.png', component: <AccountSettings /> },
     { name: 'Sign Out', icon: '/SignOut.png', component: <SignOut /> },
   ];

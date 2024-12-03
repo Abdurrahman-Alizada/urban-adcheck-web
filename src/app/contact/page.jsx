@@ -24,7 +24,7 @@ function Contact() {
       {/* Left Side */}
       <div className="w-full md:w-1/2">
         <div className="mb-5 md:mb-8">
-          <h2 className="text-[48px] font-extrabold font-Archivoo">Get In Touch!</h2>
+          <h2 className="text-[24px] md:text-[34px] lg:text-[48px] font-extrabold font-Archivoo">Get In Touch!</h2>
           <p className="text-black max-w-[400px] font-nunitosans font-normal text-[17px]">
             Fill up the form and our Team will get back to you within 24 hours.
           </p>

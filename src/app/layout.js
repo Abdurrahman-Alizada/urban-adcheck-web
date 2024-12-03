@@ -8,7 +8,6 @@ import Header from "@/components/Header/page";
 import Footer from "@/components/Footer/page";
 import {Noto_Sans,Nunito_Sans,Archivo} from "next/font/google"
 
-
 const NotoSans = Noto_Sans({
   weight: '400',
   subsets: ['latin'],

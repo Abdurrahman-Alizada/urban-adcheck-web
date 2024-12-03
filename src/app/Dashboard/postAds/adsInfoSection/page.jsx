@@ -1,23 +1,51 @@
-import React, { useEffect } from 'react';
+'use client'
+
+import React, { useState, useEffect } from 'react';
 import { Field, ErrorMessage } from 'formik';
 
-const AdsInfoSection = ({ values, handleChange, handleBlur, errors, touched, modelOptions = [], authenticityOptions = [] }) => {
-  // Debug logging (for development purposes)
-  useEffect(() => {
-    console.log('AdsInfoSection Values:', values);
-    console.log('AdsInfoSection Errors:', errors);
-    console.log('AdsInfoSection Touched:', touched);
-  }, [values, errors, touched]);
+const AdsInfoSection = ({
+  values,
+  handleChange,
+  handleBlur,
+  errors,
+  touched,
+  modelOptions = [],
+  authenticityOptions = [],
+  onNext,
+}) => {
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+
+  // Trigger validation on all fields when "Next" is clicked
+  const handleNextClick = () => {
+    console.log("click")
+    setHasSubmitted(true);
+    if (onNext) {
+      onNext();
+    }
+  };
 
   // Helper function to determine the border class based on error state
   const getBorderClass = (fieldName) => {
-    return errors[fieldName] && touched[fieldName] ? 'border-red-500' : 'border-gray-300';
+    const isFieldInvalid =
+      (hasSubmitted || touched[fieldName]) && errors[fieldName];
+    return isFieldInvalid ? 'border-red-500' : 'border-gray-300';
   };
 
   return (
     <section className="flex flex-col gap-4">
       {/* Ad Name */}
       <div className="flex flex-col gap-2">
+              <label htmlFor="adName" className="text-[16px]">Ad Name</label>
+              <Field
+                type="text"
+                id="adName"
+                name="adName"
+                className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${getBorderClass(errors, touched, 'adName')}`}
+              />
+              <ErrorMessage name="adName" component="div" className="text-red-500 text-sm" />
+            </div>
+
+      {/* <div className="flex flex-col gap-2">
         <label htmlFor="adName" className="text-[16px]">Ad Name</label>
         <Field
           type="text"
@@ -29,8 +57,10 @@ const AdsInfoSection = ({ values, handleChange, handleBlur, errors, touched, mod
           placeholder="Ad name"
           className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${getBorderClass('adName')}`}
         />
-        <ErrorMessage name="adName" component="div" className="text-red-500 text-sm" />
-      </div>
+        {(hasSubmitted || touched.adName) && (
+          <ErrorMessage name="adName" component="div" className="text-red-500 text-sm" />
+        )}
+      </div> */}
 
       {/* Category & Sub-category */}
       <div className="flex gap-3">
@@ -50,7 +80,9 @@ const AdsInfoSection = ({ values, handleChange, handleBlur, errors, touched, mod
             <option value="automotive">Automotive</option>
             <option value="garage">Garage</option>
           </Field>
-          <ErrorMessage name="category" component="div" className="text-red-500 text-sm" />
+          {(hasSubmitted || touched.category) && (
+            <ErrorMessage name="category" component="div" className="text-red-500 text-sm" />
+          )}
         </div>
 
         <div className="w-[50%] flex flex-col gap-2">
@@ -69,113 +101,104 @@ const AdsInfoSection = ({ values, handleChange, handleBlur, errors, touched, mod
             <option value="automotive">Automotive</option>
             <option value="garage">Garage</option>
           </Field>
-          <ErrorMessage name="subCategory" component="div" className="text-red-500 text-sm" />
+          {(hasSubmitted || touched.subCategory) && (
+            <ErrorMessage name="subCategory" component="div" className="text-red-500 text-sm" />
+          )}
         </div>
       </div>
 
-        { /* Brand and model Field */}
-      <div className='flex gap-3'>
-
-          {/* Brand Field */}
-      <div className="w-[50%] flex flex-col gap-2">
-        <label htmlFor="brand" className="text-[16px]">Brand</label>
-        <Field
-          as="select"
-          id="brand"
-          name="brand"
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={values.brand}
-          className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${getBorderClass('brand')}`}
-        >
-          <option value="">Select ...</option>
-          <option value="brand1">Brand 1</option>
-          <option value="brand2">Brand 2</option>
-          <option value="brand3">Brand 3</option>
-        </Field>
-        <ErrorMessage name="brand" component="div" className="text-red-500 text-sm" />
-      </div>
-
-      {/* Model Field */}
-      <div className="w-[50%] flex flex-col gap-2">
-        <label htmlFor="model" className="text-[16px]">Model</label>
-        <Field
-          as="select"
-          id="model"
-          name="model"
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={values.model}
-          className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${getBorderClass('model')}`}
-        >
-          <option value="">Select Model</option>
-          {modelOptions.length > 0 ? (
-            modelOptions.map((model) => (
-              <option key={model} value={model}>{model}</option>
-            ))
-          ) : (
-            <option value="">No models available</option>
+      {/*Brand & Negotiables Dropdown */}
+      <div className="flex gap-3">
+        <div className="w-[50%] flex flex-col gap-2">
+          <label htmlFor="negotiables" className="text-[16px]">Negotiable</label>
+          <Field
+            as="select"
+            id="negotiables"
+            name="negotiables"
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={values.negotiables}
+            className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.negotiables && touched.negotiables ? 'border-red-500' : ''}`}
+          >
+            <option value="">Select</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </Field>
+          {(hasSubmitted || touched.negotiables) && (
+            <ErrorMessage name="negotiables" component="div" className="text-red-500 text-sm" />
           )}
-        </Field>
-        <ErrorMessage name="model" component="div" className="text-red-500 text-sm" />
-      </div>
-
-      </div>
-   
-   
-              {/* Negotiables & Authenticity Field */}
-        <div className='flex gap-3'>
-
-            {/* Negotiables Field */}
-      <div className="w-[50%] flex flex-col gap-2">
-        <label htmlFor="negotiables" className="text-[16px]">Negotiables</label>
-        <Field
-          as="select"
-          id="negotiables"
-          name="negotiables"
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={values.negotiables}
-          className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${getBorderClass('negotiables')}`}
-        >
-          <option value="">Select ...</option>
-          <option value="negotiable">Negotiable</option>
-          <option value="non-negotiable">Non-Negotiable</option>
-        </Field>
-        <ErrorMessage name="negotiables" component="div" className="text-red-500 text-sm" />
-      </div>
-
-      {/* Authenticity Field */}
-      <div className="w-[50%] flex flex-col gap-2">
-        <label htmlFor="authenticity" className="text-[16px]">Authenticity</label>
-        <Field
-          as="select"
-          id="authenticity"
-          name="authenticity"
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={values.authenticity}
-          className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${getBorderClass('authenticity')}`}
-        >
-          <option value="">Select</option>
-          {authenticityOptions.length > 0 ? (
-            authenticityOptions.map((option) => (
-              <option key={option} value={option}>{option}</option>
-            ))
-          ) : (
-            <option value="">No authenticity options available</option>
+        </div>
+        <div className="w-[50%] flex flex-col gap-2">
+          <label htmlFor="brand" className="text-[16px]">Brand</label>
+          <Field
+            as="select"
+            id="brand"
+            name="brand"
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={values.brand}
+            className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${getBorderClass('brand')}`}
+          >
+            <option value="">Select ...</option>
+            <option value="brand1">Brand 1</option>
+            <option value="brand2">Brand 2</option>
+            <option value="brand3">Brand 3</option>
+          </Field>
+          {(hasSubmitted || touched.brand) && (
+            <ErrorMessage name="brand" component="div" className="text-red-500 text-sm" />
           )}
-        </Field>
-        <ErrorMessage name="authenticity" component="div" className="text-red-500 text-sm" />
-      </div>
+        </div>
+      </div> 
 
+        {/* Conditions & models Dropdown */}
+       
+      <div className="flex gap-3">
+        <div className="w-[50%] flex flex-col gap-2">
+          <label htmlFor="model" className="text-[16px]">Model</label>
+          <Field
+            as="select"
+            id="model"
+            name="model"
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={values.model}
+            className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.model && touched.model ? 'border-red-500' : ''}`}
+          >
+            <option value="">Select Model</option>
+            {modelOptions?.map((model, index) => (
+              <option key={index} value={model}>{model}</option>
+            ))}
+          </Field>
+          {(hasSubmitted || touched.model) && (
+            <ErrorMessage name="model" component="div" className="text-red-500 text-sm" />
+          )}
         </div>
 
+        {/* Conditions Dropdown */}
+        <div className="w-[50%] flex flex-col gap-2">
+          <label htmlFor="conditions" className="text-[16px]">Conditions</label>
+          <Field
+            as="select"
+            id="conditions"
+            name="conditions"
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={values.conditions}
+            className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.conditions && touched.conditions ? 'border-red-500' : ''}`}
+          >
+            <option value="">Select Condition</option>
+            <option value="New">New</option>
+            <option value="Used">Used</option>
+            <option value="Refurbished">Refurbished</option>
+          </Field>
+          {(hasSubmitted || touched.conditions) && (
+            <ErrorMessage name="conditions" component="div" className="text-red-500 text-sm" />
+          )}
+        </div>
+      </div>
 
-        
-
-      {/* Tags Field */}
-      <div className=" flex flex-col gap-2">
+      {/* Example: Tags Field */}
+      <div className="flex flex-col gap-2">
         <label htmlFor="tags" className="text-[16px]">Tags</label>
         <Field
           type="text"
@@ -187,48 +210,45 @@ const AdsInfoSection = ({ values, handleChange, handleBlur, errors, touched, mod
           placeholder="Add tags (comma separated)"
           className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${getBorderClass('tags')}`}
         />
-        <ErrorMessage name="tags" component="div" className="text-red-500 text-sm" />
+        {(hasSubmitted || touched.tags) && (
+          <ErrorMessage name="tags" component="div" className="text-red-500 text-sm" />
+        )}
       </div>
-
-        <div className='flex gap-3'>
-
-          {/* Price Field */}
-        <div className="w-[50%] flex flex-col gap-2">
-        <label htmlFor="adsPrices" className="text-[16px]">Ads Prices (USD)</label>
-        <Field
-          type="text"
-          id="adsPrices"
-          name="adsPrices"
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={values.adsPrices}
-          placeholder="Ads Price"
-          className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${getBorderClass('adsPrices')}`}
-        />
-        <ErrorMessage name="adsPrices" component="div" className="text-red-500 text-sm" />
-         </div>
-
-          {/* Negotiables Field */}
-          <div className="w-[50%] flex flex-col gap-2">
-            <label htmlFor="negotiables" className="text-[16px]">Negotiables</label>
-            <Field
-              as="select"
-              id="negotiables"
-              name="negotiables"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.negotiables}
-              className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${getBorderClass('negotiables')}`}
-            >
-              <option value="">Select ...</option>
-              <option value="negotiable">Negotiable</option>
-              <option value="non-negotiable">Non-Negotiable</option>
-            </Field>
-            <ErrorMessage name="negotiables" component="div" className="text-red-500 text-sm" />
-          </div>
-
+      {/* Ads Price */}
+      <div className="w-[50%] flex flex-col gap-2">
+          <label htmlFor="adsPrices" className="text-[16px]">Ads Price</label>
+          <Field
+            as="input"
+            type="number"
+            id="adsPrices"
+            name="adsPrices"
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={values.adsPrices}
+            className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.adsPrices && touched.adsPrices ? 'border-red-500' : ''}`}
+          />
+          {(hasSubmitted || touched.adsPrices) && (
+            <ErrorMessage name="adsPrices" component="div" className="text-red-500 text-sm" />
+          )}
         </div>
-        
+
+      {/* Next Button */}
+      <div className='flex justify-end items-center gap-6'>
+        <button
+          type="button"
+          className="w-[280px] bg-transparent border-grayColor border-[1px] text-black px-8 py-2 rounded-md mt-4"
+
+        >
+          View Posting Rules
+        </button>
+        <button
+          type="button"
+          className="w-[200px] bg-primary text-white px-8 py-2 rounded-md mt-4"
+          onClick={handleNextClick}
+        >
+          Next
+        </button>
+      </div>
     </section>
   );
 };
