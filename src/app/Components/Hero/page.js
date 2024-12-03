@@ -4,7 +4,7 @@ import Image from 'next/image';
 function Hero() {
   return (
     <section
-    className="w-full max-w-[1440px] lg:min-h-screen relative flex flex-col md:flex-row justify-between px-3 md:px-5 lg:px-[80px] py-4 md:py-6 lg:pt-[150px] lg:pb-0"
+    className="w-full lg:min-h-screen relative flex flex-col md:flex-row justify-between px-3 md:px-5 lg:px-[80px] py-4 md:py-6 lg:pt-[150px] lg:pb-0"
     style={{
       backgroundImage: "url('/hero-overlay.png')",
       backgroundSize: 'cover',
@@ -27,7 +27,7 @@ function Hero() {
     <div className="relative w-full md:w-1/2 z-10 md:mb-10 lg:mb-16">
       {/* Welcome Banner */}
       <div className="bg-white inline-block px-4 md:px-2 lg:px-4 py-2 md:py-1 lg:py-0 rounded-[10px] mb-2 md:mb-6">
-        <span className="font-nunitosans text-[15px] font-light">👋 Welcome to UBC</span>
+        <span className="font-nunitosans text-[15px] font-light">👋 Welcome to URBAN-AdCHECK </span>
       </div>
   
       {/* Heading and Floating Image */}
