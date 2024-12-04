@@ -32,7 +32,7 @@ function ForgotPassword() {
         <div className="mt-8">
           <h2 className="font-nunitosans">Forgot Password? 🔒</h2>
           <span className="font-nunitosans text-[14px] text-grayColor">
-            Enter your email, and we'll send you instructions to reset your password          </span>
+            Enter your email, and we&aposll send you instructions to reset your password          </span>
         </div>
         <div className="mt-6">
           <form className="flex flex-col gap-3">

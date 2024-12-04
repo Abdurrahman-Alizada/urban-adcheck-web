@@ -24,7 +24,7 @@ function Hero() {
     </div>
   
     {/* Left Section */}
-    <div className="relative w-full md:w-1/2 z-10 md:mb-10 lg:mb-16">
+    <div className="relative w-full md:w-1/2  md:mb-10 lg:mb-16">
       {/* Welcome Banner */}
       <div className="bg-white inline-block px-4 md:px-2 lg:px-4 py-2 md:py-1 lg:py-0 rounded-[10px] mb-2 md:mb-6">
         <span className="font-nunitosans text-[15px] font-light">👋 Welcome to URBAN-AdCHECK </span>

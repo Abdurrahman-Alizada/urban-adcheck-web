@@ -81,13 +81,13 @@ function Header() {
       </div>
 
       {/* sidebar Menu for mobile and tablet */}
-      { MenuOpen && <div className='w-3/5 max-h-svh lg:hidden fixed inset-0 bg-opacity-80 bg-black '>
+      { MenuOpen && <div className='w-3/5 z-10 md:w-2/5 max-h-svh lg:hidden fixed inset-0 bg-opacity-80 bg-black '>
          {/* Navigation Menu */}
          <div className='relative'>
          <FontAwesomeIcon icon={faCircleXmark} size={'xl'} color='white' className=' cursor-pointer absolute right-2 top-2' onClick={closeSidebarMenu} />
          </div>
-         <nav className=''>
-          <ul className="flex flex-col gap-3 p-6 text-white font-medium">
+         <nav className='z-10'>
+          <ul className="flex z-10 flex-col gap-3 p-6 text-white font-medium">
             {navItems.map((item) => (
               <li key={item.href}>
                 <Link href={item.href} legacyBehavior>
@@ -97,7 +97,7 @@ function Header() {
                 </Link>
               </li>
             ))}
-            <button className=" text-[18px] px-4 py-2 rounded-[10px] bg-secondary text-white  hover:bg-blue-600">
+            <button className="md:hidden text-[18px] px-4 py-2 rounded-[10px] bg-secondary text-white  hover:bg-blue-600">
               Dashbaord
             </button>
           </ul>

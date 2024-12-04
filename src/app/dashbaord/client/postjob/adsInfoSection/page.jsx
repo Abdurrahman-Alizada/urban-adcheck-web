@@ -232,7 +232,7 @@ const AdsInfoSection = ({
           )}
         </div>
 
-      {/* Next Button */}
+      {/* Next Button
       <div className='flex justify-end items-center gap-6'>
         <button
           type="button"
@@ -248,7 +248,7 @@ const AdsInfoSection = ({
         >
           Next
         </button>
-      </div>
+      </div> */}
     </section>
   );
 };

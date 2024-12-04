@@ -51,7 +51,7 @@ function ResetPassword() {
             </div>
            <div className='flex justify-center'>
            <span className="font-nunitosans font-[14px]">
-             Didn't get the code?  
+             Didn&apost get the code?  
             <a href="#" className="text-primary underline font-semibold">
              Resend
             </a>

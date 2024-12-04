@@ -39,7 +39,7 @@ export default function WhatYouCanDo() {
          {
                 WhatYouCanDoData.map((todo,index)=>(
                       <div key={index} className='flex flex-col gap-3 items-center justify-center'>
-                          <Image src={todo.image} width={100} height={100} className='object-contain'/>
+                          <Image src={todo.image} width={100} height={100} className='object-contain' alt='todo-image'/>
                           <h3 className='text-[#2B3377] font-bold'>{todo.title}</h3>
                           <p className='text-[#585858] px-3 text-center font-nunitosans font-normal text-[16px]'>{todo.content}</p>
                       </div>

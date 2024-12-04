@@ -5,7 +5,6 @@ import WhatYouCanDo from "./Components/whatYouCanDo/page";
 import ContactHome from "./Components/Contact/page";
 import Testimonials from "@/components/testimonials/page";
 import FAQ from "@/components/Faq/page";
-import Footer from "@/components/Footer/page";
 import CTA from "@/components/CTA/page";
 
 export default function Home() {
