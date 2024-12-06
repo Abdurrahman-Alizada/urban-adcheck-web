@@ -1,11 +1,10 @@
-import Hero from "./Components/Hero/page";
-import Clients from "./Components/clients/page";
+import Hero from "../components/landingPage/Hero/page";
+import Clients from "../components/landingPage/clients/page";
 import ProductPricing from "@/components/productPricing/page";
-import WhatYouCanDo from "./Components/whatYouCanDo/page";
-import ContactHome from "./Components/Contact/page";
+import WhatYouCanDo from "../components/landingPage/whatYouCanDo/page";
+import ContactHome from "../components/landingPage/Contact/page";
 import Testimonials from "@/components/testimonials/page";
 import FAQ from "@/components/Faq/page";
-import Footer from "@/components/Footer/page";
 import CTA from "@/components/CTA/page";
 
 export default function Home() {
@@ -20,7 +19,6 @@ export default function Home() {
            <Testimonials/>
            <FAQ/>
            <CTA/>
-           <Footer/>
            
        </main>
     </div>

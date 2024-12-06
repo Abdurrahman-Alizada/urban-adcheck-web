@@ -1,8 +1,5 @@
 import localFont from "next/font/local";
 import "./globals.css";
-import 'leaflet/dist/leaflet.css'; // Leaflet styles
-import 'slick-carousel/slick/slick.css'; // Slick carousel styles
-import 'slick-carousel/slick/slick-theme.css'; // Slick carousel theme
 
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
@@ -10,6 +7,7 @@ config.autoAddCss = false;
 import Header from "@/components/Header/page";
 import Footer from "@/components/Footer/page";
 import {Noto_Sans,Nunito_Sans,Archivo} from "next/font/google"
+import { ReduxProvider } from "@/redux/provider/reduxProvider";
 
 
 const NotoSans = Noto_Sans({
@@ -56,6 +54,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en"  className={`${NotoSans.variable} ${nunitosans.variable} ${Archivoo.variable}`} suppressHydrationWarning={true}>
+      <ReduxProvider>
       <body
         // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -63,6 +62,7 @@ export default function RootLayout({ children }) {
         {children}
         <Footer/>
       </body>
+      </ReduxProvider>
     </html>
   );
 }
