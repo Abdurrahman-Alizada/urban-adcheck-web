@@ -1,5 +1,4 @@
 "use client"
-import ForgotPassword from "@/app/auth/forgotpassword/page";
 import { baseURL } from "@/redux/baseUrl";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
