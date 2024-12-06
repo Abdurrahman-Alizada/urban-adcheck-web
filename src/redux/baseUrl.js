@@ -1,1 +1,1 @@
-export const baseURL = 'http://localhost:7000'
+export const baseURL = 'https://urban-adcheck-backend.onrender.com/api/v1'

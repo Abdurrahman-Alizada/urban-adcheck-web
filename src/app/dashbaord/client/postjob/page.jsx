@@ -2,10 +2,13 @@
 import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import ProgressBar from "./ProgressBar/page";
-import AdsInfoSection from "./AdsInfoSection/page";
-import AdvanceInfoSection from "./AdvanceInfoSection/page";
-import ContactSection from "./ContactSection/page";
+import ProgressBar from "../../../../components/progressBar/page";
+import AdsInfoSection from "@/components/ads-info/page";
+import AdvanceInfoSection from "../../../../components/advanceInfoSection/page";
+import ContactSection from "../../../../components/contactSection/page";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
 
 const AdsPost = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -16,9 +19,9 @@ const AdsPost = () => {
     category: Yup.string().required("Category is required."),
     subCategory: Yup.string().required("Sub-category is required."),
     brand: Yup.string().required("Brand is required."),
-    model: Yup.string().required("Model is required."),
+    // model: Yup.string().required("Model is required."),
     conditions: Yup.string().required("Conditions are required."),
-    authenticity: Yup.string().required("Authenticity is required."),
+    // authenticity: Yup.string().required("Authenticity is required."),
     tags: Yup.string().required("Tags are required."),
     adsPrices: Yup.number()
       .typeError("Price must be a number.")
@@ -32,18 +35,18 @@ const AdsPost = () => {
     features: Yup.array()
       .of(Yup.string().required("Feature is required."))
       .required("At least one feature is required."),
-    images: Yup.array()
-      .of(
-        Yup.mixed()
-          .nullable()
-          .test("fileType", "Only images are allowed.", (value) =>
-            value ? ["image/jpeg", "image/png", "image/gif"].includes(value.type) : true
-          )
-          .test("fileSize", "File size too large.", (value) =>
-            value ? value.size <= 5000000 : true
-          )
-      )
-      .min(1, "At least one image is required."),
+    // images: Yup.array()
+    //   .of(
+    //     Yup.mixed()
+    //       .nullable()
+    //       .test("fileType", "Only images are allowed.", (value) =>
+    //         value ? ["image/jpeg", "image/png", "image/gif"].includes(value.type) : true
+    //       )
+    //       .test("fileSize", "File size too large.", (value) =>
+    //         value ? value.size <= 5000000 : true
+    //       )
+    //   )
+    //   .min(1, "At least one image is required."),
   });
 
   // Step 3 Schema
@@ -143,10 +146,11 @@ const AdsPost = () => {
           {currentStep === 1 && (
             <AdsInfoSection
               values={values}
-              errors={errors}
-              touched={touched}
               handleChange={handleChange}
               handleBlur={handleBlur}
+              errors={errors}
+              touched={touched}
+              onNext={()=>console.log("onNext")}
             />
           )}
 
@@ -157,6 +161,7 @@ const AdsPost = () => {
               touched={touched}
               handleChange={handleChange}
               handleBlur={handleBlur}
+              onNext={()=>console.log("onNext")}
             />
           )}
 
@@ -167,6 +172,7 @@ const AdsPost = () => {
               touched={touched}
               handleChange={handleChange}
               handleBlur={handleBlur}
+              onNext={()=>console.log("onNext")}
             />
           )}
 
@@ -193,38 +199,54 @@ const AdsPost = () => {
 
   {currentStep === 2 && (
     <>
-      <button
-        type="button"
-        className="px-4 py-2 bg-gray-300 text-gray-800 rounded"
-        onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
-      >
-        Previous
-      </button>
-      <button
-        type="button"
-        className="px-4 py-2 bg-primary text-white rounded"
-        onClick={() => handleNext(validateForm, setFieldTouched)}
-      >
-        Next
-      </button>
+    <div className="flex justify-end gap-3 mt-3">
+        <button
+          type="button"
+          className="flex items-center text-[18px] px-6 py-2 border-[1px] border-grayColor rounded-[5px] bg-transparent text-Black"
+          onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
+        >
+          Previous
+        </button>
+        <button
+          type="submit"
+          className="flex items-center gap-4 text-[18px] px-8 py-2 rounded-[5px] bg-primary text-white"
+          onClick={() => handleNext(validateForm, setFieldTouched)}
+        >
+          Next Steps
+          <FontAwesomeIcon icon={faArrowRight} size="15" />
+        </button>
+      </div>
+
+      
     </>
   )}
 
   {currentStep === 3 && (
     <>
-      <button
-        type="button"
-        className="px-4 py-2 bg-gray-300 text-gray-800 rounded"
-        onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
-      >
-        Previous
-      </button>
-      <button
-        type="submit"
-        className="px-4 py-2 bg-green-500 text-white rounded"
-      >
-        Post Job
-      </button>
+      <div className="w-full flex justify-between items-center mt-6">
+         <label className=" text-grayColor text-[15.03px] ">
+          <input type="checkbox" className="mr-2" />
+             Save my contact information for faster posting
+         </label>
+
+         <div className=" flex justify-end gap-3">
+          <button 
+          type="button"
+          className="text-[18px] px-6 py-2 border-grayColor border-[1px] rounded-[5px] bg-transparent"
+          onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
+          >
+            Previous
+          </button>
+          <button
+            type="submit"
+            className="text-[18px] px-8 py-2 bg-primary text-white rounded-[5px]"
+          
+          >
+            Post Ads
+            <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
+          </button>
+         </div>
+      </div>
     </>
   )}
 </div>

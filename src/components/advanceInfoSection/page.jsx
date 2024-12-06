@@ -76,7 +76,7 @@ function AdvanceInfoSection({ handleFileUpload, values, errors, touched,   onNex
       </div>
 
       {/* Buttons */}
-      <div className="flex justify-end gap-3 mt-3">
+      {/* <div className="flex justify-end gap-3 mt-3">
         <button
           type="button"
           className="flex items-center text-[18px] px-6 py-2 border-[1px] border-grayColor rounded-[5px] bg-transparent text-Black"
@@ -90,7 +90,7 @@ function AdvanceInfoSection({ handleFileUpload, values, errors, touched,   onNex
           Next Steps
           <FontAwesomeIcon icon={faArrowRight} size="15" />
         </button>
-      </div>
+      </div> */}
     </section>
   );
 }

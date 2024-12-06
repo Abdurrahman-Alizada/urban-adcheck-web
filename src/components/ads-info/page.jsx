@@ -11,18 +11,18 @@ const AdsInfoSection = ({
   touched,
   modelOptions = [],
   authenticityOptions = [],
-  onNext,
+  // onNext,
 }) => {
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
   // Trigger validation on all fields when "Next" is clicked
-  const handleNextClick = () => {
-    console.log("click")
-    setHasSubmitted(true);
-    if (onNext) {
-      onNext();
-    }
-  };
+  // const handleNextClick = () => {
+  //   console.log("click")
+  //   setHasSubmitted(true);
+  //   if (onNext) {
+  //     onNext();
+  //   }
+  // };
 
   // Helper function to determine the border class based on error state
   const getBorderClass = (fieldName) => {

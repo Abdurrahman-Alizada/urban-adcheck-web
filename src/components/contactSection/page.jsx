@@ -102,7 +102,7 @@ function ContactSection() {
           <label htmlFor="phone" className="text-[16px]">Primary Phone</label>
           <PhoneInput
             placeholder="Phone"
-            className="custom-phone-input text-[15.04px] border-gray-300 outline-primary border-[1px] px-3 py-3 rounded-[5px]"
+            className="custom-phone-input text-[15.04px] bg-transparent border-gray-300 outline-primary border-[1px] px-3 py-3 rounded-[5px]"
             defaultCountry="US"
             value={phone}
             onChange={setPhone}
@@ -114,7 +114,7 @@ function ContactSection() {
           <label htmlFor="backupPhone" className="text-[16px]">Backup Phone</label>
           <PhoneInput
             placeholder="Backup Phone"
-            className="custom-phone-input text-[15.04px] border-gray-300 outline-primary border-[1px] px-3 py-3 rounded-[5px]"
+            className="custom-phone-input text-[15.04px] bg-transparent border-gray-300 outline-primary border-[1px] px-3 py-3 rounded-[5px]"
             defaultCountry="US"
             value={backupPhone}
             onChange={setBackupPhone}
@@ -201,7 +201,7 @@ function ContactSection() {
       </div>
 
       {/* Buttons */}
-      <div className="flex justify-between items-center mt-3">
+      {/* <div className="flex justify-between items-center mt-3">
         <label className="text-grayColor text-[15.03px] mt-4">
           <input type="checkbox" className="mr-2" />
           Save my contact information for faster posting
@@ -220,7 +220,7 @@ function ContactSection() {
             <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
           </button>
         </div>
-      </div>
+      </div> */}
     </section>
   );
 }

@@ -7,6 +7,8 @@ config.autoAddCss = false;
 import Header from "@/components/Header/page";
 import Footer from "@/components/Footer/page";
 import {Noto_Sans,Nunito_Sans,Archivo} from "next/font/google"
+import { ReduxProvider } from "@/redux/provider/reduxProvider";
+
 
 const NotoSans = Noto_Sans({
   weight: '400',
@@ -52,6 +54,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en"  className={`${NotoSans.variable} ${nunitosans.variable} ${Archivoo.variable}`} suppressHydrationWarning={true}>
+      <ReduxProvider>
       <body
         // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -59,6 +62,7 @@ export default function RootLayout({ children }) {
         {children}
         <Footer/>
       </body>
+      </ReduxProvider>
     </html>
   );
 }

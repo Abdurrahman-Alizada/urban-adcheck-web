@@ -1,49 +1,57 @@
 "use client"
+import ForgotPassword from "@/app/auth/forgotpassword/page";
+import { baseURL } from "@/redux/baseUrl";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { baseURL } from "../../axios";
+
 
 
 export const userApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: baseURL,
-    prepareHeaders: async (headers, { getState }) => {
-      let token = ""
-      if (typeof window !== "undefined") {
-        const user = JSON.parse(localStorage.getItem('userInfo'));
-        token = user?.token
-      }
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-      // hello
-      return headers;
+    prepareHeaders: (headers, { getState }) => {
+        const token = getState().user.token; // Access the token from Redux store
+        if (token) {
+            headers.set('Authorization', `Bearer ${token}`); // Add token to headers
+        }
+        return headers;
     },
-  }),
-  tagTypes: ["User", "CurrentLoginUser"],
+    }),
+
+  tagTypes: ["User", "CurrentLoginUser","loginUser","signupUser"],
   reducerPath: "userApi",
   endpoints: (build) => ({
     loginUser: build.mutation({
       query: user => ({
-        url: `/user/login`,
+        url: `/user/session`,
         method: 'POST',
-        body: {
-          email: user.email,
-          password: user.password,
-        },
+        body: user,
       }),
-      invalidatesTags: ['User'],
+      invalidatesTags: ['loginUser'],
     }),
     signupUser: build.mutation({
         query: user => ({
-          url: `/user/login`,
+          url: `/user/signup`,
           method: 'POST',
-          body: {
-            email: user.email,
-            password: user.password,
-          },
+          body: user,
         }),
-        invalidatesTags: ['User'],
+        invalidatesTags: ['signupUser'],
       }),
+    forgotPassword:build.mutation({
+        query: email=> ({
+          url: `/user/account/forget-password`,
+          method:'PUT',
+          body: email
+        })
+      }),
+    resetPassword:build.mutation({
+        query: user=>({
+        url:`/user/account/reset-password`,
+        method:'GET',
+        body: user,
+
+        })
+    }),
+
     getCurrentLoginUser: build.query({
       query: () => `/user/currentLoginUser`,
       providesTags: ["User","CurrentLoginUser"],
@@ -54,6 +62,7 @@ export const userApi = createApi({
 export const {
   useLoginUserMutation,
   useSignupUserMutation,
-
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
   useGetCurrentLoginUserQuery,
 } = userApi;

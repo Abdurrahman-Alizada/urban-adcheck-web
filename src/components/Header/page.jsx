@@ -32,7 +32,7 @@ function Header() {
       <div className="">
         <Image 
           src="/logo.png" 
-          width={285} 
+          width={205} 
           height={80} 
           alt="Company Logo"
           className="object-contain w-[140px] h-[80px] lg:w-[205px] lg:h-[80]" 

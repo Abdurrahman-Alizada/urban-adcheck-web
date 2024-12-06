@@ -27,7 +27,7 @@ function ResetPassword() {
             alt="Favicon"
             className="object-contain"
           />
-          <h2 className="text-grayColor font-bold">Urban Adchecker</h2>
+          <h2 className="text-grayColor font-bold">Urban Adcheck</h2>
         </div>
         <div className="mt-8 flex flex-col">
           <h2 className="font-nunitosans">Two-Step Verification 💬</h2>

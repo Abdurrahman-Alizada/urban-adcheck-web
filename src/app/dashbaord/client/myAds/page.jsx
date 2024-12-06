@@ -4,8 +4,31 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BsThreeDots } from "react-icons/bs";
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { MdDone } from "react-icons/md";
+import { CiEdit } from "react-icons/ci";
+import { IoEyeOutline } from "react-icons/io5";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { TiDeleteOutline } from "react-icons/ti";
 
 function Myads() {
+
+
+      // action items 3 dots
+  const actionItems = [
+    {
+      icon: <IoEyeOutline size={16} color="#767E94" className="cursor-pointer" />,
+      text: 'View job details',
+    },
+    {
+      icon: <TiDeleteOutline size={16} color="#767E94" className="cursor-pointer" />,
+      text: 'Mark it expire',
+    },
+    {
+      icon: <RiDeleteBin6Line size={16} color="#767E94" className="cursor-pointer" />,
+      text: 'Delete job',
+    },
+  ];
+
+
   return (
     <div className="w-full  bg-gray-50">
       {/* Search and Filters Section */}
@@ -59,21 +82,23 @@ function Myads() {
       </section>
 
       {/* My Ads Table */}
-<div className="overflow-x-auto w-full">
+ <div className="overflow-x-auto w-full">
   <table className="w-full border table-fixed border-gray-300 bg-white rounded-md shadow-sm">
+    {/* table head */}
     <thead className="bg-gray-100 text-gray-600 text-left">
       <tr>
-        <th className="px-4 py-2">Ads</th>
-        <th className="px-4 py-2">Title</th>
-        <th className="px-4 py-2">Date</th>
-        <th className="px-4 py-2">Price</th>
-        <th className="px-4 py-2">Status</th>
-        <th className="px-4 py-2">Actions</th>
+        <th className="text-[18px] font-nunitosans px-4 py-2">Ads</th>
+        <th className="text-[18px] font-nunitosans py-2">Title</th>
+        <th className="text-[18px] font-nunitosanspy-2">Date</th>
+        <th className="text-[18px] font-nunitosans py-2">Price</th>
+        <th className="text-[18px] font-nunitosans py-2">Status</th>
+        <th className="text-[18px] font-nunitosanspy-2">Actions</th>
       </tr>
     </thead>
+    {/* table body */}
     <tbody className='w-full'>
       {/* Ad Item */}
-      <tr className="border-t border-gray-200 hover:bg-gray-50">
+      <tr className="w-full border-t border-gray-200 hover:bg-gray-50">
         <td className="px-2 py-3">
           <Image
             src="/img-jobs.png"
@@ -88,17 +113,29 @@ function Myads() {
         <td className="px-2 py-3 text-gray-500 text-[14.5px]">$250.00</td>
         <td className="px-2 py-3 text-[14.5px] text-green-500 flex items-center gap-2">
           <MdDone size={16} />
-          Completed
+            Completed
         </td>
-        <td className="px-2 py-3 flex items-center gap-1">
-          <button className="text-primary hover:underline text-[14.5px]">Edit</button>
-          <BsThreeDots size={20} className="cursor-pointer text-gray-600" />
+        <td className="px-2 py-3 flex items-center gap-1 ">
+          <div className='bg-[#F5F7FA] hover:text-white hover:bg-[#00AAFF] px-2 py-2 flex gap-1'>
+          <CiEdit size={20} className="cursor-pointer" />
+          <button className="text-primary hover:text-white  text-[14.5px]">Edit</button>
+          </div>
+          <BsThreeDots size={40}  className="cursor-pointer text-gray-600 bg-[#F5F7FA] hover:text-white hover:bg-[#00AAFF] px-1 py-2" />
         </td>
+        
       </tr>
     </tbody>
   </table>
-</div>
-
+</div> 
+       {/* three dots popup */}
+         <div className="w-[20%] p-2 rounded-[10px] shadow-custom-shadow">
+             {actionItems.map((item, index) => (
+              <div key={index} className="flex items-center gap-2 hover:bg-[#E8F7FF] p-1">
+              {item.icon}
+              <span className="text-[14px] text-grayColor">{item.text}</span>
+             </div>
+           ))}
+         </div>
     </div>
   );
 }
