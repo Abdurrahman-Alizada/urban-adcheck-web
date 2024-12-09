@@ -5,7 +5,7 @@ import 'react-phone-number-input/style.css';
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
 import { RiDeleteBin6Line } from "react-icons/ri";
 
-function accountSettings() {
+function AccountSettings() {
 
   const [phone, setPhone] = useState("");
 
@@ -223,4 +223,4 @@ function accountSettings() {
   )
 }
 
-export default accountSettings
+export default AccountSettings
