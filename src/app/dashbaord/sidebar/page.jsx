@@ -14,7 +14,7 @@ function Sidebar() {
     { name: 'View Profile', icon: <HiOutlineUserCircle size={21} />, url: '/dashbaord/client/overview' },
     { name: 'Request For Jobs', icon: <GoPlusCircle size={21} />, url: '/dashbaord/client/postjob' },
     { name: 'My Ads', icon: <PiClipboardTextLight size={21} />, url: '/dashbaord/client/myAds' },
-    { name: 'Account Settings', icon: <GoGear size={21} />, url: '/settings' },
+    { name: 'Account Settings', icon: <GoGear size={21} />, url: '/dashbaord/client/account-setting' },
     { name: 'Sign Out', icon: <PiSignOut size={21} />, url: '/sign-out' },
   ];
 
