@@ -7,7 +7,6 @@ import { IoGridOutline } from "react-icons/io5";
 import { HiOutlineCurrencyDollar } from "react-icons/hi";
 import { GoPlusCircle, GoGear } from "react-icons/go";
 import { PiClipboardTextLight, PiSignOut } from "react-icons/pi";
-import { HiOutlineUserCircle } from 'react-icons/hi';
 
 function WatchDogSidebar() {
   const Client = [
@@ -19,10 +18,10 @@ function WatchDogSidebar() {
   ];
 
   const watchDog = [
-    { name: 'Overview', icon: <IoGridOutline size={21} />, url: 'dashbaord/watchdog/overview' },
-    { name: 'Financial overview', icon: <HiOutlineCurrencyDollar size={21} />, url: '/dashbaord/watchdog/financial-overview' },
-    { name: 'My Jobs', icon: <PiClipboardTextLight size={21} />, url: '/dashbaord/watchdog/myAds' },
-    { name: 'Account Settings', icon: <GoGear size={21} />, url: '/dashbaord/watchdog/account-setting' },
+    { name: 'Financial Overview', icon: <IoGridOutline size={21} />, url: '/dashbaord/client/overview' },
+    { name: 'Financial overview', icon: <HiOutlineCurrencyDollar size={21} />, url: '/dashbaord/client/overview' },
+    { name: 'My Jobs', icon: <PiClipboardTextLight size={21} />, url: '/dashbaord/client/myAds' },
+    { name: 'Account Settings', icon: <GoGear size={21} />, url: '/dashbaord/client/account-setting' },
     { name: 'Sign Out', icon: <PiSignOut size={21} />, url: '/sign-out' },
   ];
 
