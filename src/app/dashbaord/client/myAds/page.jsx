@@ -120,7 +120,7 @@ function Myads() {
                       alt='job-image' 
                       className='object-contain rounded-[7px]'
                   />
-                  Apple MacBook Pro 17"
+                  Apple MacBook Pro 17
               </th>
               <td className="px-4 py-4 font-nunitosans font-normal text-[13px]">
                   Jul 13, 2021
