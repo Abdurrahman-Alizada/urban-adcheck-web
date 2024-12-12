@@ -4,17 +4,25 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { IoGridOutline } from "react-icons/io5";
-import { HiOutlineUserCircle } from "react-icons/hi";
+import { HiOutlineCurrencyDollar } from "react-icons/hi";
 import { GoPlusCircle, GoGear } from "react-icons/go";
 import { PiClipboardTextLight, PiSignOut } from "react-icons/pi";
+import { HiOutlineUserCircle } from 'react-icons/hi';
 
 function Sidebar() {
-  const tabs = [
+  const Client = [
     { name: 'Overview', icon: <IoGridOutline size={21} />, url: '/dashbaord/client/overview' },
     { name: 'View Profile', icon: <HiOutlineUserCircle size={21} />, url: '/dashbaord/client/overview' },
-    { name: 'Request For Jobs', icon: <GoPlusCircle size={21} />, url: '/dashbaord/client/postjob' },
-    { name: 'My Ads', icon: <PiClipboardTextLight size={21} />, url: '/dashbaord/client/myAds' },
-    { name: 'Account Settings', icon: <GoGear size={21} />, url: '/settings' },
+    { name: 'My Jobs', icon: <PiClipboardTextLight size={21} />, url: '/dashbaord/client/my-jobs' },
+    { name: 'Account Settings', icon: <GoGear size={21} />, url: '/dashbaord/client/account-setting' },
+    { name: 'Sign Out', icon: <PiSignOut size={21} />, url: '/sign-out' },
+  ];
+
+  const watchDog = [
+    { name: 'Overview', icon: <IoGridOutline size={21} />, url: 'dashbaord/watchdog/overview' },
+    { name: 'Financial overview', icon: <HiOutlineCurrencyDollar size={21} />, url: '/dashbaord/watchdog/financial-overview' },
+    { name: 'My Jobs', icon: <PiClipboardTextLight size={21} />, url: '/dashbaord/watchdog/my-jobs' },
+    { name: 'Account Settings', icon: <GoGear size={21} />, url: '/dashbaord/watchdog/account-setting' },
     { name: 'Sign Out', icon: <PiSignOut size={21} />, url: '/sign-out' },
   ];
 
@@ -39,7 +47,7 @@ function Sidebar() {
 
         {/* List of Items */}
         <ul className="flex flex-col gap-4 px-6 mt-4">
-          {tabs.map((tab) => (
+          {watchDog.map((tab) => (
             <li key={tab.name} className="flex items-center gap-2 text-gray-400">
               <Link href={tab.url} className="flex items-center gap-2 hover:text-primary">
                 {tab.icon}
@@ -54,3 +62,4 @@ function Sidebar() {
 }
 
 export default Sidebar;
+                                                
