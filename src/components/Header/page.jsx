@@ -10,9 +10,9 @@ function Header() {
   const [MenuOpen, setMenuOpen] = useState(false);
 
   const navItems = [
-    { href: '/', label: 'About us' },
-    { href: '/about', label: 'Services' },
-    { href: '/services', label: 'F&Q' },
+    { href: '/about', label: 'About us' },
+    { href: '/Pricing', label: 'Services' },
+    { href: '/faq', label: 'F&Q' },
     { href: '/contact', label: 'Contact' },
   ];
 

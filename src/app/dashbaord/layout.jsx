@@ -2,7 +2,7 @@ import React, { Children } from 'react'
 import Sidebar from './sidebar/page'
 function layout({ children }) {
   return (
-    <div className='w-full flex lg:gap-4 justify-between'>
+    <div className='w-full flex lg:gap-4 justify-between  mb-[240px]'>
         <div className='lg:w-[25%] xl:w-[20%]'>
            <Sidebar/>
         </div>
