@@ -3,6 +3,7 @@ import React from 'react'
 import { BsArrowLeft } from "react-icons/bs";
 import Image from 'next/image';
 import UserLocationIframe from '@/components/LocationMap/UserLocationIframe';
+import Link from 'next/link';
 
 function ViewDetails() {
   return (
@@ -10,7 +11,7 @@ function ViewDetails() {
        
           {/* navigation */}
         <div className='flex items-center gap-3'>
-            <BsArrowLeft size={22}/>
+              <BsArrowLeft size={22}/>  
             <h2 className="text-gray-700 text-[20px] lg:text-[24px] font-extrabold font-Archivoo">
                 <span>1:</span> Oliviya Rhye
             </h2>
@@ -23,7 +24,7 @@ function ViewDetails() {
             src={'/billboard-horizontal.png'}
             height={404}
             width={337}
-            className="object-contain w-full"
+            className="object-contain "
             alt="Horizontal Billboard"
           />
         </div>
@@ -34,14 +35,14 @@ function ViewDetails() {
             src={'/billboard-rectangle.png'}
             height={197}
             width={337}
-            className="object-contain w-full"
+            className="object-contain "
             alt="Rectangle Billboard 1"
           />
           <Image
             src={'/billboard-rectangle.png'}
             height={197}
             width={337}
-            className="object-contain w-full"
+            className="object-contain "
             alt="Rectangle Billboard 2"
           />
         </div>
@@ -52,14 +53,14 @@ function ViewDetails() {
             src={'/billboard-square.png'}
             height={197}
             width={300}
-            className="object-contain w-full"
+            className="object-contain "
             alt="Square Billboard 1"
           />
           <Image
             src={'/billboard-square.png'}
             height={197}
             width={300}
-            className="object-contain w-full"
+            className="object-contain "
             alt="Square Billboard 2"
           />
         </div>
@@ -82,6 +83,7 @@ function ViewDetails() {
                     ut sagittis augue imperdiet quis. Vestibulum bibendum ultricies ipsum.
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed accumsan felis nunc, 
                     ut sagittis augue imperdiet quis. Vestibulum bibendum ultricies ipsum.
+                   
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed accumsan felis nunc, 
                     ut sagittis augue imperdiet quis. Vestibulum bibendum ultricies ipsum.
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed accumsan felis nunc, 
@@ -95,7 +97,7 @@ function ViewDetails() {
 
             <div className='mt-4'>
                 <span className="mt-2 font-nunitosans text-[#123633] font-bold text-[18.03px]">Location</span>
-                <UserLocationIframe />
+                <Image src={'/map-1.png'} width={944} height={311} alt='Map' className='object-contain'/>
 
             </div>
          </div>
