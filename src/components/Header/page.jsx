@@ -62,7 +62,7 @@ function Header() {
           className="object-contain hidden xl:inline-block"
         />
 
-        <Link href="/dashbaord/client/overview">
+        <Link href="/dashbaord/watchdog/overview">
           <button className="hidden xl:inline-block px-4 py-2 rounded-[10px] bg-secondary text-white hover:bg-primary">
             Dashboard
           </button>
@@ -104,7 +104,7 @@ function Header() {
                   </Link>
                 </li>
               ))}
-              <Link href="/dashbaord/client/overview">
+              <Link href="/dashbaord/watchdog/overview">
                 <button className="md:hidden text-[18px] px-4 py-2 rounded-[10px] bg-secondary text-white hover:bg-blue-600">
                   Dashboard
                 </button>
