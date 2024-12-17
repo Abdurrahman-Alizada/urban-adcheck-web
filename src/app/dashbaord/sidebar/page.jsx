@@ -8,7 +8,7 @@ import { HiOutlineCurrencyDollar } from "react-icons/hi";
 import { GoPlusCircle, GoGear } from "react-icons/go";
 import { PiClipboardTextLight, PiSignOut } from "react-icons/pi";
 import { HiOutlineUserCircle } from 'react-icons/hi';
-
+import { FaRegUserCircle } from "react-icons/fa";
 function Sidebar() {
   const Client = [
     { name: 'Overview', icon: <IoGridOutline size={21} />, url: '/dashbaord/client/overview' },
@@ -22,6 +22,13 @@ function Sidebar() {
     { name: 'Overview', icon: <IoGridOutline size={21} />, url: '/dashbaord/watchdog/overview' },
     { name: 'Financial overview', icon: <HiOutlineCurrencyDollar size={21} />, url: '/dashbaord/watchdog/financial-overview' },
     { name: 'My Jobs', icon: <PiClipboardTextLight size={21} />, url: '/dashbaord/watchdog/my-jobs' },
+    { name: 'Account Settings', icon: <GoGear size={21} />, url: '/dashbaord/watchdog/account-setting' },
+    { name: 'Sign Out', icon: <PiSignOut size={21} />, url: '/sign-out' },
+  ];
+  const admin = [
+    { name: 'Dashboard', icon: <IoGridOutline size={21} />, url: '/dashbaord/admin/dashboard' },
+    { name: 'Clients', icon: <FaRegUserCircle size={21} />, url: '/dashbaord/admin/clients' },
+    { name: 'WatchDogs', icon: <PiClipboardTextLight size={21} />, url: '/dashbaord/admin/watchdog' },
     { name: 'Account Settings', icon: <GoGear size={21} />, url: '/dashbaord/watchdog/account-setting' },
     { name: 'Sign Out', icon: <PiSignOut size={21} />, url: '/sign-out' },
   ];
@@ -47,7 +54,7 @@ function Sidebar() {
 
         {/* List of Items */}
         <ul className="flex flex-col gap-4 px-6 mt-4">
-          {watchDog.map((tab) => (
+          {admin.map((tab) => (
             <li key={tab.name} className="flex items-center gap-2 text-gray-400">
               <Link href={tab.url} className="flex items-center gap-2 hover:text-primary">
                 {tab.icon}

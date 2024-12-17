@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
-import { IoIosSquareOutline } from "react-icons/io";
+import { BiSquareRounded } from "react-icons/bi";
 import Image from 'next/image';
 import { IoMdCheckboxOutline } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -335,7 +335,7 @@ function MyJob() {
     <thead className="text-xs text-grayColor font-normal capitalize bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
       <tr>
         <th scope="col" className="px-6 py-3 font-normal flex items-center gap-1">
-          <IoIosSquareOutline size={20} />
+          <BiSquareRounded size={20} className='bg-white'/>
           Name
         </th>
         <th scope="col" className="font-normal px-6 py-3">Location</th>
