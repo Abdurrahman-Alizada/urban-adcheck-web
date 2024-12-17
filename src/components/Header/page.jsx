@@ -97,10 +97,10 @@ function Header() {
             <ul className="flex z-10 flex-col gap-3 p-6 text-white font-medium">
               {navItems.map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href}>
-                    <a className="hover:text-secondary font-NotoSans text-[18px] leading-6">
+                  <Link href={item.href} className="hover:text-secondary font-NotoSans text-[18px] leading-6">
+       
                       {item.label}
-                    </a>
+                
                   </Link>
                 </li>
               ))}

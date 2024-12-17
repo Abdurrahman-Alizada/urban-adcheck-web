@@ -43,7 +43,7 @@ function MyJob() {
         },
         {
             filter: 'posted',
-            title: 'Posted Jobs',
+            title: 'posted Jobs',
             jobs: '43',
             image: '/posted-job-1.png',
             alt: 'posted-jobs',
@@ -63,6 +63,13 @@ function MyJob() {
             alt: 'pending-jobs',
         },
         {
+            filter: 'Assigned',
+            title: 'Assigned Jobs',
+            jobs: '443',
+            image: '/pending-job-1.png',
+            alt: 'Assigned-jobs',
+        },
+        {
             filter: 'completed',
             title: 'Completed Jobs',
             jobs: '23',
@@ -70,16 +77,16 @@ function MyJob() {
             alt: 'completed-jobs',
         },
     ];
-
+    
     useEffect(() => {
         const fetchJobs = async () => {
             const jobData = [
-                { id: 1, name: 'Building Horse', location: 'A Block st41, H20', charge: 100, status: 'posted', image: '/img-jobs.png',alt:"job image 1" },
+                { id: 1, name: 'Building Horse', location: 'A Block st41, H20', charge: 100, status: 'Requested', image: '/img-jobs.png',alt:"job image 1" },
                 { id: 2, name: 'Painting Wall', location: 'C Block st23, H10', charge: 200, status: 'in-progress', image: '/img-jobs.png',alt:"job image 2" },
                 { id: 3, name: 'Fixing Roof', location: 'D Block st9, H5', charge: 150, status: 'pending', image: '/img-jobs.png' , alt:"job image 3" },
                 { id: 4, name: 'Plumbing Work', location: 'E Block st12, H15', charge: 180, status: 'completed', image: '/img-jobs.png',alt:"job image 4" },
-                { id: 5, name: 'Plumbing Work', location: 'E Block st12, H15', charge: 180, status: 'completed', image: '/img-jobs.png',alt:"job image 5" },
-                { id: 6, name: 'Plumbing Work', location: 'E Block st12, H15', charge: 180, status: 'completed', image: '/img-jobs.png',alt:"job image 7" },
+                { id: 5, name: 'Plumbing Work', location: 'E Block st12, H15', charge: 180, status: 'Assigned', image: '/img-jobs.png',alt:"job image 5" },
+                { id: 6, name: 'Plumbing Work', location: 'E Block st12, H15', charge: 180, status: 'Assigned', image: '/img-jobs.png',alt:"job image 7" },
                 { id: 7, name: 'Plumbing Work', location: 'E Block st12, H15', charge: 180, status: 'completed', image: '/img-jobs.png',alt:"job image 6" },
                 { id: 8, name: 'Painting Wall', location: 'C Block st23, H10', charge: 200, status: 'in-progress', image: '/img-jobs.png',alt:"job image 8" },
                 { id: 9, name: 'Painting Wall', location: 'C Block st23, H10', charge: 200, status: 'in-progress', image: '/img-jobs.png', alt:"job image 9" },
@@ -170,18 +177,33 @@ function MyJob() {
                         >
                             Done
                         </button>
-                    ) : (
+                    ) 
+                    : job.status === 'Assigned' ? (
                         <>
-                           <div className='flex gap-5'>
-                               <IoMdCheckboxOutline size={20}/>
-                               <RiDeleteBin6Line size={20}/>
-                            </div>
-
+                            <button
+                            className="text-[13px] lg:text-[15px] shadow-md px-1 xl:px-3 py-1 font-medium bg-transparent text-black border-[1px] border-primary rounded-[10px]"
+                            >
+                            View
+                            </button>
                             <button
                             className="text-[13px] lg:text-[15px] shadow-md px-1 xl:px-3 py-1 font-medium bg-primary text-white rounded-[10px]"
                             >
-                            See details
-                        </button>
+                            Assign
+                            </button>
+                        </>
+                    )
+                    : (
+                        <>
+                            <button
+                            className="text-[13px] lg:text-[15px] shadow-md px-1 xl:px-3 py-1 font-medium bg-transparent text-black border-[1px] border-primary rounded-[10px]"
+                            >
+                            View
+                            </button>
+                            <button
+                            className="text-[13px] lg:text-[15px] shadow-md px-1 xl:px-3 py-1 font-medium bg-primary text-white rounded-[10px]"
+                            >
+                            Assign
+                            </button>
                         </>
                        
                     )}
@@ -239,15 +261,13 @@ function MyJob() {
         return pages;
     };
     
-
-
     return (
         <div className="w-full mt-4 mb-10">
             {/* Section Header */}
             <div className="flex gap-4 items-center">
                 <BsArrowLeft size={22} />
                 <h2 className="text-gray-700 text-[20px] lg:text-[24px] font-extrabold font-Archivoo">
-                    My Jobs
+                    All Jobs
                 </h2>
             </div>
             {/* Jobs List */}
@@ -330,67 +350,66 @@ function MyJob() {
                         </div>
                     )}
                     {/* Job List Table */}
-                    <div className="relative overflow-x-auto">
-  <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-    <thead className="text-xs text-grayColor font-normal capitalize bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-      <tr>
-        <th scope="col" className="px-6 py-3 font-normal flex items-center gap-1">
-          <BiSquareRounded size={20} className='bg-white'/>
-          Name
-        </th>
-        <th scope="col" className="font-normal px-6 py-3">Location</th>
-        <th scope="col" className="font-normal px-6 py-3">Charge ($)</th>
-        <th scope="col" className="font-normal px-6 py-3">Action</th>
-      </tr>
-    </thead>
-    <tbody>{renderJobRows(currentJobs)}</tbody>
-  </table>
+                  <div className="relative overflow-x-auto">
+                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                        <thead className="text-xs text-grayColor font-normal capitalize bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" className="px-6 py-3 font-normal flex items-center gap-1">
+                            <BiSquareRounded size={20} className='bg-white'/>
+                            Name
+                            </th>
+                            <th scope="col" className="font-normal px-6 py-3">Location</th>
+                            <th scope="col" className="font-normal px-6 py-3">Charge ($)</th>
+                            <th scope="col" className="font-normal px-6 py-3">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>{renderJobRows(currentJobs)}</tbody>
+                    </table>
 
-  {/* Delete Job Modal */}
-  {showDeleteModal && (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
-      <div className="w-[70%] md:w-[60%] lg:w-[50%] bg-white shadow-custom-shadow p-4 rounded-md">
-        <div className="flex flex-col items-center">
-          <RxCross2
-            color="red"
-            size={25}
-            className="cursor-pointer"
-            onClick={closeDeleteInProgressJobModal}
-          />
-          <span className="font-semibold font-nunitosans text-center">
-            Are you sure you want to cancel a job?
-          </span>
-        </div>
-        <div className="flex flex-col gap-2 p-4">
-          <label
-            htmlFor="jobCancellationReason"
-            className="text-[15px] font-semibold font-nunitosans"
-          >
-            Give Reason
-          </label>
-          <textarea
-            id="jobCancellationReason"
-            placeholder="Type here"
-            className="bg-gray-100 text-[16px] resize-none rounded-md p-2"
-            rows="4"
-          ></textarea>
-        </div>
-        <div className="flex flex-col md:flex-row justify-center gap-2">
-          <button
-            className="bg-transparent border-[1px] border-red-500 text-red-500 px-2 md:px-6 py-1 rounded-md disabled:opacity-50"
-            onClick={closeDeleteInProgressJobModal}
-          >
-            Cancel
-          </button>
-          <button className="bg-green-400 border-[1px] text-white px-2 md:px-6 py-1 rounded-md disabled:opacity-50">
-            Submit
-          </button>
-        </div>
-      </div>
-    </div>
-  )}
-</div>
-
+                    {/* Delete Job Modal */}
+                    {showDeleteModal && (
+                        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
+                        <div className="w-[70%] md:w-[60%] lg:w-[50%] bg-white shadow-custom-shadow p-4 rounded-md">
+                            <div className="flex flex-col items-center">
+                            <RxCross2
+                                color="red"
+                                size={25}
+                                className="cursor-pointer"
+                                onClick={closeDeleteInProgressJobModal}
+                            />
+                            <span className="font-semibold font-nunitosans text-center">
+                                Are you sure you want to cancel a job?
+                            </span>
+                            </div>
+                            <div className="flex flex-col gap-2 p-4">
+                            <label
+                                htmlFor="jobCancellationReason"
+                                className="text-[15px] font-semibold font-nunitosans"
+                            >
+                                Give Reason
+                            </label>
+                            <textarea
+                                id="jobCancellationReason"
+                                placeholder="Type here"
+                                className="bg-gray-100 text-[16px] resize-none rounded-md p-2"
+                                rows="4"
+                            ></textarea>
+                            </div>
+                            <div className="flex flex-col md:flex-row justify-center gap-2">
+                            <button
+                                className="bg-transparent border-[1px] border-red-500 text-red-500 px-2 md:px-6 py-1 rounded-md disabled:opacity-50"
+                                onClick={closeDeleteInProgressJobModal}
+                            >
+                                Cancel
+                            </button>
+                            <button className="bg-green-400 border-[1px] text-white px-2 md:px-6 py-1 rounded-md disabled:opacity-50">
+                                Submit
+                            </button>
+                            </div>
+                        </div>
+                        </div>
+                    )}
+                    </div>
 
                     {/* Pagination Controls */}
                     <div className="flex flex-col md:flex-row justify-between items-center gap-4 p-4">

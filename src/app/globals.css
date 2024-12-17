@@ -40,3 +40,13 @@ body {
   border-color: #068179; /* Primary color on focus */
   box-shadow: 0 0 0 0px #068179; /* Primary outline */
 }
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}

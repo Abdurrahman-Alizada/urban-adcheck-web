@@ -75,7 +75,7 @@ function Overview() {
   ];
 
   return (
-    <div className="space-y-10 mt-5">
+    <div className="space-y-10 mt-5 p-3 lg:p-0">
        {/* Cards Section */}
        <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {cardsData.map((card, index) => (
@@ -99,11 +99,11 @@ function Overview() {
         ))}
       </section>
 
-      {/* Recently Posted Ads Section */}
+      {/* Recently Posted Jobs Section */}
       <section>
         {/* Section Header */}
         <div className="flex justify-between items-center">
-          <h2 className="font-semibold text-lg md:text-xl">Recently Posted Ads</h2>
+          <h2 className="font-semibold text-lg md:text-xl">Recently Posted Jobs</h2>
           <button className="border-b border-transparent hover:border-black transition duration-150 text-base md:text-lg font-medium">
             View All <FontAwesomeIcon icon={faArrowRight} className="text-gray-400" size="xs" />
           </button>

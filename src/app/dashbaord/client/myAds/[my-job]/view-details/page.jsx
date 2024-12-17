@@ -2,7 +2,6 @@
 import React from 'react'
 import { BsArrowLeft } from "react-icons/bs";
 import Image from 'next/image';
-import UserLocationIframe from '@/components/LocationMap/UserLocationIframe';
 import Link from 'next/link';
 
 function ViewDetails() {
