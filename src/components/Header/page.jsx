@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link'
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,6 +8,20 @@ import { faBars, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 
 function Header() {
   const [MenuOpen, setMenuOpen] = useState(false);
+  const [user,setUser]=useState({});
+
+  useEffect(()=>{
+    const userData=JSON.parse(localStorage.getItem('userInfo'));
+   try{
+      if(userData)
+        {
+          setUser(userData);
+        }
+    }
+    catch(error){
+      console.error("Failed to parse user data:",error)
+    }
+  },[])
 
   const navItems = [
     { href: '/about', label: 'About us' },
@@ -52,22 +66,31 @@ function Header() {
         </ul>
       </nav>
 
-      {/* Profile Image & Button */}
-      <div className="flex gap-4">
-        <Image 
-          src="/profile-image.png" 
-          width={40} 
-          height={40} 
-          alt="Profile Image"
-          className="object-contain hidden xl:inline-block"
-        />
+     {/* Profile Image & Button */}
+      {
+        user?.accessToken ? 
+         <div className="flex gap-4">
+          <Image 
+            src="/profile-image.png" 
+            width={40} 
+            height={40} 
+            alt="Profile Image"
+            className="object-contain hidden xl:inline-block"
+          />
 
-        <Link href="/dashbaord/watchdog/overview">
-          <button className="hidden xl:inline-block px-4 py-2 rounded-[10px] bg-secondary text-white hover:bg-primary">
-            Dashboard
-          </button>
-        </Link>
-      </div>
+          <Link href="/dashbaord/watchdog/overview">
+            <button className="hidden xl:inline-block px-4 py-2 rounded-[10px] bg-secondary text-white hover:bg-primary">
+              Dashboard
+            </button>
+          </Link>
+         </div>       
+        :
+        <div>
+           <span>Login</span>
+           <span>singup</span>
+        </div>
+      
+      }
 
       {/* Mobile & Tablet Sidebar Toggle */}
       <div className="xl:hidden flex items-center gap-4">
