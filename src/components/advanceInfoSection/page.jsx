@@ -3,18 +3,81 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { Field, ErrorMessage } from 'formik';
+import { IoIosAddCircleOutline } from "react-icons/io";
+import { RxCross2 } from "react-icons/rx";
 
 function AdvanceInfoSection({ handleFileUpload, values, errors, touched,   onNext,
 }) {
   const [hasSubmitted, setHasSubmitted] = useState(false);
-  
+  const [uploadedFiles, setUploadedFiles] = useState([]); // Array to store uploaded images
+  const [loading, setLoading] = useState(false); // Loading state
+  const [errorMessage, setErrorMessage] = useState(""); // Error message for validation
+
+  const MAX_FILES = 5;
+  const MAX_FILE_SIZE_MB = 5;
+
+
+
   const handleNextClick = () => {
-    console.log("click")
     setHasSubmitted(true);
     if (onNext) {
       onNext();
     }
   };
+
+
+  // Handle file upload and validation
+  const handleUpload = async (event) => {
+    const files = Array.from(event.target.files); // Convert FileList to array
+    let newFiles = [...uploadedFiles]; // Clone current uploaded files
+    let error = ""; // Initialize error message
+
+    for (let file of files) {
+      // Check if total uploaded files exceed the limit
+      if (newFiles.length >= MAX_FILES) {
+        error = "You can only upload up to 5 images.";
+        break;
+      }
+
+      // Check file size limit
+      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        error = `File size should not exceed ${MAX_FILE_SIZE_MB} MB.`;
+        break;
+      }
+
+      // Add file if valid
+      newFiles.push({
+        file,
+        preview: URL.createObjectURL(file), // Generate preview URL
+      });
+    }
+
+    // Set state based on validation
+    if (error) {
+      setErrorMessage(error);
+    } else {
+      setLoading(true);
+      setErrorMessage("");
+      setUploadedFiles(newFiles);
+
+      // Simulate upload delay (replace with actual upload logic)
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      setLoading(false);
+
+      // Call external file handler if provided
+      if (handleFileUpload) {
+        handleFileUpload(newFiles.map((item) => item.file));
+      }
+    }
+  };
+
+  // Remove image functionality
+  const handleRemoveImage = (index) => {
+    const filteredFiles = uploadedFiles.filter((_, i) => i !== index);
+    setUploadedFiles(filteredFiles);
+  };
+
   
   return (
     <section className="flex flex-col gap-4">
@@ -48,31 +111,63 @@ function AdvanceInfoSection({ handleFileUpload, values, errors, touched,   onNex
       </div>
 
       {/* Upload Images */}
-      <div className="flex flex-col gap-2 mt-3">
-        <label htmlFor="upload-images" className="text-[16px]">Upload Images</label>
-        <div className="relative border-gray-300 border-[1px] rounded-[5px] flex items-center justify-center p-4 bg-gray-50">
-          <input
-            type="file"
-            id="upload-images"
-            name="images"
-            accept=".png, .jpg, .jpeg"
-            className="absolute inset-0 opacity-0 cursor-pointer"
-            onChange={handleFileUpload}
-          />
-          <div className="flex flex-col items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+      <div className="w-[100%]">
+        <label htmlFor="upload-images" className="text-[16px] font-semibold">
+          Upload Images (Max 5 images, 5MB each)
+        </label>
+
+        {/* Upload Area */}
+        <div className="flex flex-wrap gap-4 mt-3 p-4 border-gray-300 border-[1px] rounded-md">
+          {/* File Input */}
+          {uploadedFiles.length < MAX_FILES && (
+            <label
+              htmlFor="upload-images"
+              className="w-[100px] h-[100px] bg-[#F5F7FA] rounded-[5px] flex items-center justify-center cursor-pointer relative"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 16v5h5M16 3h5v5M16 16h5v5M3 3h5v5M12 9v3m0 0v3m0-3h3m-3 0H9" />
-            </svg>
-            <p className="text-gray-500 text-sm mt-2">Click to upload PNG, JPG, or JPEG (Max 2MB)</p>
-          </div>
+              <input
+                type="file"
+                id="upload-images"
+                name="images"
+                accept=".png, .jpg, .jpeg"
+                className="hidden"
+                multiple
+                onChange={handleUpload}
+              />
+              {loading ? (
+                <div className="loader border-4 border-primary border-t-transparent rounded-full w-8 h-8 animate-spin"></div>
+              ) : (
+                <IoIosAddCircleOutline size={35} color="#636A80" />
+              )}
+            </label>
+          )}
+
+          {/* Uploaded Image Previews */}
+          {uploadedFiles.map((file, index) => (
+            <div
+              key={index}
+              className="relative w-[100px] h-[100px] flex items-center justify-center"
+            >
+              <img
+                src={file.preview}
+                alt={`Uploaded Preview ${index + 1}`}
+                className="w-full h-full object-contain rounded-md"
+              />
+              {/* Remove Image Button */}
+              <button
+                type="button"
+                onClick={() => handleRemoveImage(index)}
+                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+              >
+                <RxCross2 size={16}/>
+              </button>
+            </div>
+          ))}
         </div>
-        <ErrorMessage name="images" component="div" className="text-red-500 text-sm" />
+
+      {/* Error Message */}
+      {errorMessage && (
+        <div className="text-red-500 text-sm mt-2">{errorMessage}</div>
+      )}
       </div>
 
       {/* Buttons */}

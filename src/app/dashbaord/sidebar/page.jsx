@@ -29,7 +29,7 @@ function Sidebar() {
     { name: 'Dashboard', icon: <IoGridOutline size={21} />, url: '/dashbaord/admin/dashboard' },
     { name: 'Clients', icon: <FaRegUserCircle size={21} />, url: '/dashbaord/admin/clients' },
     { name: 'WatchDogs', icon: <PiClipboardTextLight size={21} />, url: '/dashbaord/admin/watchdog' },
-    { name: 'Account Settings', icon: <GoGear size={21} />, url: '/dashbaord/watchdog/account-setting' },
+    { name: 'Account Settings', icon: <GoGear size={21} />, url: '/dashbaord/admin/account-setting' },
     { name: 'Sign Out', icon: <PiSignOut size={21} />, url: '/sign-out' },
   ];
 
