@@ -5,6 +5,7 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { Field, ErrorMessage } from 'formik';
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
+import Image from 'next/image';
 
 function AdvanceInfoSection({ handleFileUpload, values, errors, touched,   onNext,
 }) {
