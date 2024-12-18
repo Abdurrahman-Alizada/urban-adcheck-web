@@ -38,9 +38,9 @@ function Login() {
         // Save user info and token in Redux store
         dispatch(setUser(response));
         console.log('Login successful:', response);
-
+        localStorage.setItem('userInfo',response);
         // Redirect to dashboard
-        router.push('/dashboard/client/overview');
+        router.push('/dashbaord/client/overview');
       } catch (error) {
         console.error('Login failed:', error);
         alert('Something went wrong');
@@ -133,6 +133,7 @@ function Login() {
                 >
                   {isLoading ? 'Logging in...' : 'Login'}
                 </button>
+                
               </div>
             </form>
           </div>

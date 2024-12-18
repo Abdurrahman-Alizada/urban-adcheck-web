@@ -147,7 +147,7 @@ function AdvanceInfoSection({ handleFileUpload, values, errors, touched,   onNex
               key={index}
               className="relative w-[100px] h-[100px] flex items-center justify-center"
             >
-              <img
+              <Image
                 src={file.preview}
                 alt={`Uploaded Preview ${index + 1}`}
                 className="w-full h-full object-contain rounded-md"

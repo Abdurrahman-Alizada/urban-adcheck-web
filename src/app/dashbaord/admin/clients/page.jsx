@@ -218,8 +218,6 @@ function MyJob() {
                             </div>
                         )}
                     </div>
-
-
                     {/* Pagination Controls */}
                     <div className="flex flex-col md:flex-row justify-between items-center gap-4 p-4">
                        {/* Previous Button */}
@@ -258,7 +256,7 @@ function MyJob() {
                             <FaArrowRightLong size={22}/>
                         </button>
                     </div>
-                    </div>
+            </div>
             </div>
         
     );
