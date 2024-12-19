@@ -259,7 +259,7 @@ function MyJob() {
                             className="flex items-center gap-2 bg-[#bffeb0] text-black px-3 py-1 rounded-full"
                             onClick={() => setOpenFilter(!openFilter)}
                         >
-                            <Image src={'/filter.png'} width={35} height={35} onClick={() => setOpenFilter(!openFilter)} className='cursor-pointer'/>
+                            <Image src={'/filter.png'} alt='filter icon' width={35} height={35} onClick={() => setOpenFilter(!openFilter)} className='cursor-pointer'/>
                             <span>Filter Jobs</span>
                         </button>
 
