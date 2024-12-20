@@ -3,20 +3,23 @@ import { baseURL } from "@/redux/baseUrl";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 
-
 export const userApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: baseURL,
-    prepareHeaders: (headers, { getState }) => {
-        const token = getState().user.token; // Access the token from Redux store
-        if (token) {
-            headers.set('Authorization', `Bearer ${token}`); // Add token to headers
-        }
-        return headers;
+    prepareHeaders: async (headers, { getState }) => {
+      let accessToken = ""
+      if (typeof window !== "undefined") {
+        const user = JSON.parse(localStorage.getItem('userInfo'));
+        accessToken = user?.accessToken
+      }
+      if (accessToken) {
+        headers.set("Authorization", `Bearer ${accessToken}`);
+      }
+      return headers;
     },
-    }),
+  }),
 
-  tagTypes: ["User", "CurrentLoginUser","loginUser","signupUser"],
+  tagTypes: ["User", "CurrentLoginUser","loginUser","signupUser","signOutUser"],
   reducerPath: "userApi",
   endpoints: (build) => ({
     loginUser: build.mutation({
@@ -50,9 +53,14 @@ export const userApi = createApi({
 
         })
     }),
+    
+    signOutUser: build.query({
+      query: () => `/user/session`,
+      providesTags: ["User","signOutUser"],
+    }),
 
     getCurrentLoginUser: build.query({
-      query: () => `/user/currentLoginUser`,
+      query: () => `/user/self`,
       providesTags: ["User","CurrentLoginUser"],
     }),
   }),
