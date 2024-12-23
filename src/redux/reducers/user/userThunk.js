@@ -19,7 +19,7 @@ export const userApi = createApi({
     },
   }),
 
-  tagTypes: ["User", "CurrentLoginUser","loginUser","signupUser","signOutUser"],
+  tagTypes: ["User", "CurrentLoginUser", "loginUser", "signupUser", "signOutUser"],
   reducerPath: "userApi",
   endpoints: (build) => ({
     loginUser: build.mutation({
@@ -31,37 +31,38 @@ export const userApi = createApi({
       invalidatesTags: ['loginUser'],
     }),
     signupUser: build.mutation({
-        query: user => ({
-          url: `/user/signup`,
-          method: 'POST',
-          body: user,
-        }),
-        invalidatesTags: ['signupUser'],
+      query: user => ({
+        url: `/user/signup`,
+        method: 'POST',
+        body: user,
       }),
-    forgotPassword:build.mutation({
-        query: email=> ({
-          url: `/user/account/forget-password`,
-          method:'PUT',
-          body: email
-        })
-      }),
-    resetPassword:build.mutation({
-        query: user=>({
-        url:`/user/account/reset-password`,
-        method:'GET',
+      invalidatesTags: ['signupUser'],
+    }),
+    forgotPassword: build.mutation({
+      query: email => ({
+        url: `/user/account/forget-password`,
+        method: 'PUT',
+        body: email
+      })
+    }),
+    resetPassword: build.mutation({
+      query: user => ({
+        url: `/user/account/reset-password`,
+        method: 'GET',
         body: user,
 
-        })
-    }),
-    
-    signOutUser: build.query({
-      query: () => `/user/session`,
-      providesTags: ["User","signOutUser"],
+      })
     }),
 
+    signOutUser: build.mutation({
+      query: () => ({
+        url: `/user/session`,
+        method: 'DELETE',
+      })
+    }),
     getCurrentLoginUser: build.query({
       query: () => `/user/self`,
-      providesTags: ["User","CurrentLoginUser"],
+      providesTags: ["User", "CurrentLoginUser"],
     }),
   }),
 });
@@ -72,4 +73,5 @@ export const {
   useForgotPasswordMutation,
   useResetPasswordMutation,
   useGetCurrentLoginUserQuery,
+  useSignOutUserMutation
 } = userApi;

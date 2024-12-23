@@ -4,15 +4,22 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link'
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
-import { useGetCurrentLoginUserQuery } from '@/redux/reducers/user/userThunk';
+import { faBars, faCircleXmark, faL } from '@fortawesome/free-solid-svg-icons';
+import { useSignOutUserMutation } from '@/redux/reducers/user/userThunk';
+import { GoPlusCircle, GoGear } from "react-icons/go";
+import {  PiSignOut } from "react-icons/pi";
+import { useRouter } from 'next/navigation';
+
 
 
 function Header() {
   const [MenuOpen, setMenuOpen] = useState(false);
   const [user,setUser]=useState({});
-  const {data:loginUser,isLoading,error,isError}=useGetCurrentLoginUserQuery();
-  
+  const [showDropdown,setShowDropdown]=useState(false);
+ 
+  const [signOutUser, {}]=useSignOutUserMutation();
+  const router=useRouter();
+
   useEffect(()=>{
     const userData=JSON.parse(localStorage.getItem('userInfo'));
    try{
@@ -39,6 +46,20 @@ function Header() {
 
   const closeSidebarMenu = () => {
     setMenuOpen(false);
+  }
+
+  const toggleDropdown=()=>{
+        setShowDropdown((prev)=>!prev)
+  }
+  
+  const SignoutUser=()=>{
+    signOutUser().then((res)=>{
+      console.log("respons us", res)
+      localStorage.removeItem("userInfo")
+      // navigate to login/
+      router.push("/auth/login")
+      
+    })
   }
 
   return (
@@ -74,30 +95,49 @@ function Header() {
               {
                 user?.accessToken ? 
                 <div className="flex gap-4">
-                  <Image 
-                    src="/profile-image.png" 
-                    width={40} 
-                    height={40} 
-                    alt="Profile Image"
-                    className="object-contain hidden xl:inline-block"
-                  />
+                  
+                  <div
+                  className='relative inline-block'
+                  onClick={toggleDropdown}
+                  >
+                        <Image 
+                          src="/profile-image.png" 
+                          width={40} 
+                          height={40} 
+                          alt="Profile Image"
+                          className="cursor-pointer object-contain hidden xl:inline-block"
+                        />
+                        {showDropdown && (
+                          <div className="absolute -right-12 mt-2 w-32 bg-white border rounded shadow-lg">
+                            <ul className='flex flex-col gap-3 px-1 py-2'>
+                                  <li className="flex items-center gap-4 text-gray-400">
+                                      <Link href={"/dashbaord/watchdog/account-settings"}  className="flex items-center gap-2 hover:text-primary">
+                                        <GoGear size={22}/>
+                                        <span className="text-[15.03px]">Account Settings</span>
+                                      </Link> 
+                                  </li>
+                                  <li className="flex items-center gap-4 text-gray-400">
+                                      <div onClick={SignoutUser} className="cursor-pointer flex items-center gap-2 hover:text-primary">
+                                        <PiSignOut size={22}/>
+                                        <span className="text-[15.03px]">Sign Out</span>
+                                      </div>
+                                  </li>                                   
+                            </ul>
+                          </div>
+                        )}
+                  </div>
 
-                  <Link href="/dashbaord/watchdog/overview">
-                    <button className="hidden xl:inline-block px-4 py-2 rounded-[10px] bg-secondary text-white hover:bg-primary">
-                      Dashboard
-                    </button>
-                  </Link>
                 </div>       
                 :
                 // login & sign buttons 
-                <div>
-                  <Link href="/dashbaord/watchdog/overview">
-                    <button className="hidden xl:inline-block px-2 py-2 rounded-[10px] bg-transparent text-white hover:bg-primary">
+                <div className='flex gap-2'>
+                  <Link href="/auth/login">
+                    <button className="hidden xl:inline-block px-6 py-2 rounded-[10px] bg-primary text-white hover:bg-primary">
                       Login
                     </button>
                   </Link>
-                  <Link href="/dashbaord/watchdog/overview">
-                    <button className="hidden xl:inline-block px-2 py-2 rounded-[10px] bg-secondary text-white hover:bg-primary">
+                  <Link href="/auth/signup">
+                    <button className="hidden xl:inline-block px-6 py-2 rounded-[10px] bg-secondary text-white hover:bg-primary">
                       SignUp
                     </button>
                   </Link>
@@ -133,10 +173,8 @@ function Header() {
                     <ul className="flex z-10 flex-col gap-3 p-6 text-white font-medium">
                       {navItems.map((item) => (
                         <li key={item.href}>
-                          <Link href={item.href} className="hover:text-secondary font-NotoSans text-[18px] leading-6">
-              
-                              {item.label}
-                        
+                          <Link href={item.href} className="hover:text-secondary font-NotoSans text-[18px] leading-6">              
+                              {item.label}                        
                           </Link>
                         </li>
                       ))}

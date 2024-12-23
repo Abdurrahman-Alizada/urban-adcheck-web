@@ -32,9 +32,9 @@ const AdsPost = () => {
   // Step 2 Schema
   const step2Schema = Yup.object().shape({
     description: Yup.string().required("Description is required."),
-    features: Yup.array()
-      .of(Yup.string().required("Feature is required."))
-      .required("At least one feature is required."),
+    // features: Yup.array()
+    //   .of(Yup.string().required("Feature is required."))
+    //   .required("At least one feature is required."),
     // images: Yup.array()
     //   .of(
     //     Yup.mixed()
@@ -116,7 +116,7 @@ const AdsPost = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (values, actions) => {
+  const handleSubmitHanlder = (values, actions) => {
     console.log("Form submitted:", values);
     actions.setSubmitting(false);
   };
@@ -127,18 +127,19 @@ const AdsPost = () => {
       validationSchema={validationSchemas[currentStep - 1]} // Apply validation for the current step only
       validateOnChange={false}
       validateOnBlur={false}
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmitHanlder}
     >
-      {({ 
-        values, 
-        errors, 
-        touched, 
-        validateForm, 
-        setFieldTouched, 
-        handleChange, 
-        handleBlur 
+      {({
+        values,
+        errors,
+        touched,
+        validateForm,
+        setFieldTouched,
+        handleChange,
+        handleSubmit,
+        handleBlur
       }) => (
-        <Form className="w-full">
+        <div className="w-full">
           {/* Progress Bar */}
           <ProgressBar currentStep={currentStep} totalSteps={validationSchemas.length} />
 
@@ -150,7 +151,7 @@ const AdsPost = () => {
               handleBlur={handleBlur}
               errors={errors}
               touched={touched}
-              onNext={()=>console.log("onNext")}
+              onNext={() => console.log("onNext")}
             />
           )}
 
@@ -161,7 +162,7 @@ const AdsPost = () => {
               touched={touched}
               handleChange={handleChange}
               handleBlur={handleBlur}
-              onNext={()=>console.log("onNext")}
+              onNext={() => console.log("onNext")}
             />
           )}
 
@@ -172,86 +173,86 @@ const AdsPost = () => {
               touched={touched}
               handleChange={handleChange}
               handleBlur={handleBlur}
-              onNext={()=>console.log("onNext")}
+              onNext={() => console.log("onNext")}
             />
           )}
 
           {/* Navigation Buttons */}
-<div className="flex justify-end items-center gap-6">
-  {currentStep === 1 && (
-    <>
-      <button
-        type="button"
-        className="w-[280px] bg-transparent border-grayColor border-[1px] text-black px-8 py-2 rounded-md "
-        onClick={() => console.log("View Posting Rules clicked")}
-      >
-        View Posting Rules
-      </button>
-      <button
-        type="button"
-        className="px-4 py-2 bg-primary text-white rounded"
-        onClick={() => handleNext(validateForm, setFieldTouched)}
-      >
-        Next Step
-      </button>
-    </>
-  )}
+          <div className="flex justify-end items-center gap-6">
+            {currentStep === 1 && (
+              <>
+                <button
+                  type="button"
+                  className="w-[280px] bg-transparent border-grayColor border-[1px] text-black px-8 py-2 rounded-md "
+                  onClick={() => console.log("View Posting Rules clicked")}
+                >
+                  View Posting Rules
+                </button>
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-primary text-white rounded"
+                  onClick={() => handleNext(validateForm, setFieldTouched)}
+                >
+                  Next Step
+                </button>
+              </>
+            )}
 
-  {currentStep === 2 && (
-    <>
-    <div className="flex justify-end gap-3 mt-3">
-        <button
-          type="button"
-          className="flex items-center text-[18px] px-6 py-2 border-[1px] border-grayColor rounded-[5px] bg-transparent text-Black"
-          onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
-        >
-          Previous
-        </button>
-        <button
-          type="submit"
-          className="flex items-center gap-4 text-[18px] px-8 py-2 rounded-[5px] bg-primary text-white"
-          onClick={() => handleNext(validateForm, setFieldTouched)}
-        >
-          Next Steps
-          <FontAwesomeIcon icon={faArrowRight} size="15" />
-        </button>
-      </div>
+            {currentStep === 2 && (
+              <>
+                <div className="flex justify-end gap-3 mt-3">
+                  <button
+                    type="button"
+                    className="flex items-center text-[18px] px-6 py-2 border-[1px] border-grayColor rounded-[5px] bg-transparent text-Black"
+                    onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex items-center gap-4 text-[18px] px-8 py-2 rounded-[5px] bg-primary text-white"
+                    onClick={() => handleNext(validateForm, setFieldTouched)}
+                  >
+                    Next Steps
+                    <FontAwesomeIcon icon={faArrowRight} size="15" />
+                  </button>
+                </div>
 
-      
-    </>
-  )}
 
-  {currentStep === 3 && (
-    <>
-      <div className="w-full flex justify-between items-center mt-6">
-         <label className=" text-grayColor text-[15.03px] ">
-          <input type="checkbox" className="mr-2" />
-             Save my contact information for faster posting
-         </label>
+              </>
+            )}
 
-         <div className=" flex justify-end gap-3">
-          <button 
-          type="button"
-          className="text-[18px] px-6 py-2 border-grayColor border-[1px] rounded-[5px] bg-transparent"
-          onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
-          >
-            Previous
-          </button>
-          <button
-            type="submit"
-            className="text-[18px] px-8 py-2 bg-primary text-white rounded-[5px]"
-          
-          >
-            Post Ads
-            <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
-          </button>
-         </div>
-      </div>
-    </>
-  )}
-</div>
+            {currentStep === 3 && (
+              <>
+                <div className="w-full flex justify-between items-center mt-6">
+                  <label className=" text-grayColor text-[15.03px] ">
+                    <input type="checkbox" className="mr-2" />
+                    Save my contact information for faster posting
+                  </label>
 
-        </Form>
+                  <div className=" flex justify-end gap-3">
+                    <button
+                      type="button"
+                      className="text-[18px] px-6 py-2 border-grayColor border-[1px] rounded-[5px] bg-transparent"
+                      onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
+                    >
+                      Previous
+                    </button>
+                    <button
+                      type="submit"
+                      className="text-[18px] px-8 py-2 bg-primary text-white rounded-[5px]"
+                      // onClick={handleSubmitHanlder}
+                    >
+                      Post Ads
+                      <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+
+        </div>
       )}
     </Formik>
   );
