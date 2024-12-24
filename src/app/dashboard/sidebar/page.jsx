@@ -16,7 +16,7 @@ function Sidebar() {
   const ClientMenu = [
     { name: 'Overview', icon: <IoGridOutline size={21} />, url: '/dashboard/client/overview' },
     { name: 'View Profile', icon: <HiOutlineUserCircle size={21} />, url: '/dashboard/client/overview' },
-    { name: 'My Jobs', icon: <PiClipboardTextLight size={21} />, url: '/dashboard/client/myJobs' },
+    { name: 'My Jobs', icon: <PiClipboardTextLight size={21} />, url: '/dashboard/client/my-jobs' },
    ];
 
   const watchDogMenu = [
