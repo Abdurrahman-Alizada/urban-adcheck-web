@@ -1,7 +1,5 @@
 "use client"
 import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { Field, ErrorMessage } from 'formik';
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
@@ -151,6 +149,8 @@ function AdvanceInfoSection({ handleFileUpload, values, errors, touched,   onNex
               <Image
                 src={file.preview}
                 alt={`Uploaded Preview ${index + 1}`}
+                width={200}
+                height={200}
                 className="w-full h-full object-contain rounded-md"
               />
               {/* Remove Image Button */}

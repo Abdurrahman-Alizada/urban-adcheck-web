@@ -4,8 +4,6 @@ import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Image from 'next/image';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faTwitter, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { useLoginUserMutation } from '@/redux/reducers/user/userThunk';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/redux/reducers/user/userSlice';
@@ -38,7 +36,7 @@ function Login() {
         // Save user info and token in Redux store
         dispatch(setUser(response));
         console.log('Login successful:', response);
-        localStorage.setItem('userInfo',response);
+        localStorage.setItem('userInfo',JSON.stringify(response));
         // Redirect to dashboard
         router.push('/dashbaord/client/overview');
       } catch (error) {

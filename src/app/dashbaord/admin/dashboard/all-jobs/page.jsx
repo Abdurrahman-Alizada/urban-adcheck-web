@@ -3,8 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { BsArrowLeft } from 'react-icons/bs';
 import { BiSquareRounded } from "react-icons/bi";
 import Image from 'next/image';
-import { IoMdCheckboxOutline } from "react-icons/io";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import { RxCross1 } from "react-icons/rx";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { FaArrowLeftLong } from "react-icons/fa6";
