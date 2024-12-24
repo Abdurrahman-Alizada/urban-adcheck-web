@@ -9,13 +9,13 @@ import { IoEyeOutline } from "react-icons/io5";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TiDeleteOutline } from "react-icons/ti";
 
-function Myads() {
+function MyJobs() {
   const [activeRow, setActiveRow] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
 
-  // Ads data for dynamic rendering
-  const adsData = [
+  // jobs data for dynamic rendering
+  const JobsData = [
     {
       id: 1,
       title: "Apple MacBook Pro 17",
@@ -42,9 +42,9 @@ function Myads() {
     },
   ];
 
-  // Filter ads based on the search query
-  const filteredAds = adsData.filter((ad) =>
-    ad.title.toLowerCase().includes(searchQuery.toLowerCase())
+  // Filter Jobs based on the search query
+  const filteredJobs = JobsData.filter((job) =>
+    job.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Toggle the popup for specific row
@@ -72,7 +72,7 @@ function Myads() {
     <div className="w-full p-2 relative bg-[#FFFFFF] overflow-hidden">
       {/* Search and Filters Section */}
       <section className="w-full flex flex-col lg:flex-row items-center justify-between gap-4 mb-6">
-          {/* search for ads */}
+          {/* search for Jobs */}
         <div className="relative w-full sm:w-[40%]">
           <FontAwesomeIcon
             icon={faSearch}
@@ -81,7 +81,7 @@ function Myads() {
           />
           <input
             type="text"
-            placeholder="Ads title, Keywords..."
+            placeholder="Jobs title, Keywords..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full border border-gray-300 text-[16px] rounded-[5px] pl-10 py-2 focus:outline-primary"
@@ -107,12 +107,12 @@ function Myads() {
         </div>
       </section>
 
-      {/* My Ads Table */}
+      {/* My Jobs Table */}
       <div className="relative overflow-x-auto">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500">
           <thead className="border-b-[1px]">
             <tr>
-              <th className="px-6 py-3 text-[13px] font-normal">Ads</th>
+              <th className="px-6 py-3 text-[13px] font-normal">Jobs</th>
               <th className="px-6 py-3 text-[13px] font-normal">Date</th>
               <th className="px-6 py-3 text-[13px] font-normal">Prices</th>
               <th className="px-6 py-3 text-[13px] font-normal">Status</th>
@@ -120,33 +120,33 @@ function Myads() {
             </tr>
           </thead>
           <tbody>
-            {filteredAds.map((ad) => (
+            {filteredJobs.map((job) => (
               <tr
-                key={ad.id}
+                key={job.id}
                 className="hover:rounded-md hover:shadow-custom-hover"
               >
                 <td className="px-4 py-4 flex items-center gap-2 text-[14.5px] font-semibold text-gray-900">
                   <Image
-                    src={ad.image}
+                    src={job.image}
                     width={74}
                     height={74}
                     alt="job-image"
                     className="object-contain rounded-[7px]"
                   />
-                  {ad.title}
+                  {job.title}
                 </td>
-                <td className="px-4 py-4 text-[13px]">{ad.date}</td>
-                <td className="px-4 py-4 text-[13px]">{ad.price}</td>
+                <td className="px-4 py-4 text-[13px]">{job.date}</td>
+                <td className="px-4 py-4 text-[13px]">{job.price}</td>
                 <td
                   className={`px-4 py-4 text-[13px] ${
-                    ad.status === "Complete"
+                    job.status === "Complete"
                       ? "text- [#27C200]"
-                      : ad.status === "Active"
+                      : job.status === "Active"
                       ? "text-[#007BFF]"
                       : "text-[#FF4F4F]"
                   }`}
                 >
-                  ✓ {ad.status}
+                  ✓ {job.status}
                 </td>
                 <td className="px-1 py-4">
                   <div className="flex items-center gap-1">
@@ -154,14 +154,14 @@ function Myads() {
                       <CiEdit size={20} className="cursor-pointer" />
                       Edit
                     </button>
-                    <button onClick={() => togglePopup(ad.id)} className="relative">
+                    <button onClick={() => togglePopup(job.id)} className="relative">
                       <BsThreeDots
                         size={45}
                         className="cursor-pointer text-gray-600 bg-[#F5F7FA] hover:text-white hover:bg-[#00AAFF] rounded-md px-2 py-2"
                       />
                     </button>
                   </div>
-                  {activeRow === ad.id && (
+                  {activeRow === job.id && (
                     <div className="absolute top-25 right-[10%] z-10 w-[200px] bg-white shadow-lg rounded-md">
                       {actionItems.map((item, index) => (
                         <div
@@ -186,5 +186,5 @@ function Myads() {
   );
 }
 
-export default Myads;
+export default MyJobs;
 

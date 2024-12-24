@@ -53,7 +53,7 @@ function Overview() {
   ];
 
 
-  const adsData = [
+  const jobsData = [
     {
       image: '/ads-img.png',
       category: 'Home & Kitchen',
@@ -109,9 +109,9 @@ function Overview() {
           </button>
         </div>
 
-        {/* Ads Grid */}
+        {/* Jobs Grid */}
         <div className="mt-6 mb-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ">
-          {adsData.map((ad, index) => (
+          {jobsData.map((ad, index) => (
             <div key={index} className="shadow-custom-shadow rounded-lg overflow-hidden relative z-0">
               {/* Ad Image */}
               <Image

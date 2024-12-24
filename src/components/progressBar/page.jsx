@@ -13,7 +13,7 @@ const ProgressBar = ({ currentStep }) => {
     { 
       number: 1, 
       title: 'Step 01', 
-      subtitle: 'Ads Information',
+      subtitle: 'Jobs Information',
       icon: faClipboardList,
       completedIcon: faCheck 
     },
@@ -27,7 +27,7 @@ const ProgressBar = ({ currentStep }) => {
     { 
       number: 3, 
       title: 'Step 03', 
-      subtitle: 'Post Ads',
+      subtitle: 'Post Jobs',
       icon: faMapMarkerAlt,
       completedIcon: faCheck 
     }

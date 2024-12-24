@@ -14,20 +14,20 @@ function Sidebar() {
   const { data: user, isLoading } = useGetCurrentLoginUserQuery();
 
   const ClientMenu = [
-    { name: 'Overview', icon: <IoGridOutline size={21} />, url: '/dashbaord/client/overview' },
-    { name: 'View Profile', icon: <HiOutlineUserCircle size={21} />, url: '/dashbaord/client/overview' },
-    { name: 'My Jobs', icon: <PiClipboardTextLight size={21} />, url: '/dashbaord/client/myAds' },
+    { name: 'Overview', icon: <IoGridOutline size={21} />, url: '/dashboard/client/overview' },
+    { name: 'View Profile', icon: <HiOutlineUserCircle size={21} />, url: '/dashboard/client/overview' },
+    { name: 'My Jobs', icon: <PiClipboardTextLight size={21} />, url: '/dashboard/client/myJobs' },
    ];
 
   const watchDogMenu = [
-    { name: 'Overview', icon: <IoGridOutline size={21} />, url: '/dashbaord/watchdog/overview' },
-    { name: 'Financial overview', icon: <HiOutlineCurrencyDollar size={21} />, url: '/dashbaord/watchdog/financial-overview' },
-    { name: 'My Jobs', icon: <PiClipboardTextLight size={21} />, url: '/dashbaord/watchdog/my-jobs' },
+    { name: 'Overview', icon: <IoGridOutline size={21} />, url: '/dashboard/watchdog/overview' },
+    { name: 'Financial overview', icon: <HiOutlineCurrencyDollar size={21} />, url: '/dashboard/watchdog/financial-overview' },
+    { name: 'My Jobs', icon: <PiClipboardTextLight size={21} />, url: '/dashboard/watchdog/my-jobs' },
     ];
   const adminMenu = [
-    { name: 'Dashboard', icon: <IoGridOutline size={21} />, url: '/dashbaord/admin/dashboard' },
-    { name: 'Clients', icon: <FaRegUserCircle size={21} />, url: '/dashbaord/admin/clients' },
-    { name: 'WatchDogs', icon: <PiClipboardTextLight size={21} />, url: '/dashbaord/admin/watchdog' },
+    { name: 'Dashboard', icon: <IoGridOutline size={21} />, url: '/dashboard/admin/dashboard' },
+    { name: 'Clients', icon: <FaRegUserCircle size={21} />, url: '/dashboard/admin/clients' },
+    { name: 'WatchDogs', icon: <PiClipboardTextLight size={21} />, url: '/dashboard/admin/watchdog' },
    ];
 
   return (

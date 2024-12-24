@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import ProgressBar from "../../../../components/progressBar/page";
-import AdsInfoSection from "@/components/ads-info/page";
+import JobsInfoSection from "@/components/jobs-info/page";
 import AdvanceInfoSection from "../../../../components/advanceInfoSection/page";
 import ContactSection from "../../../../components/contactSection/page";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -23,7 +23,7 @@ const PostJob = () => {
     conditions: "",
     authenticity: "",
     tags: "",
-    adsPrices: "",
+    jobsPrices: "",
   });
   const [contactData, setContactData] = useState({
     phone: "",
@@ -73,9 +73,9 @@ const PostJob = () => {
     // conditions: Yup.string().required("Conditions are required."),
     // // authenticity: Yup.string().required("Authenticity is required."),
     // tags: Yup.string().required("Tags are required."),
-    // adsPrices: Yup.number()
+    // jobsPrices: Yup.number()
     //   .typeError("Price must be a number.")
-    //   .required("Ads price is required."),
+    //   .required("Job price is required."),
     // negotiables: Yup.string().required("Please select if negotiable."),
   });
   // Step 2 Schema
@@ -120,7 +120,7 @@ const PostJob = () => {
     conditions: "",
     authenticity: "",
     tags: "",
-    adsPrices: "",
+    jobsPrices: "",
     negotiables: "",
     description: "",
     features: [],
@@ -135,7 +135,7 @@ const PostJob = () => {
   const handleNext = async (validateForm, setFieldTouched) => {
     // Step-wise field keys
     const schemaFieldKeys = [
-      ["adName", "category", "subCategory", "brand", "model", "conditions", "authenticity", "tags", "adsPrices", "negotiables"],
+      ["adName", "category", "subCategory", "brand", "model", "conditions", "authenticity", "tags", "jobsPrices", "negotiables"],
       ["description", "features", "images"],
       ["contactName", "email", "phoneNumber", "address"],
     ];
@@ -191,7 +191,7 @@ const PostJob = () => {
 
           {/* Step Content */}
           {currentStep === 1 && (
-            <AdsInfoSection
+            <JobsInfoSection
               values={values}
               handleChange={handleChange}
               handleBlur={handleBlur}

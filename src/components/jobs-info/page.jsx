@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Field, ErrorMessage } from 'formik';
 
-const AdsInfoSection = ({
+const JobsInfoSection = ({
   values,
   handleChange,
   handleBlur,
@@ -33,9 +33,9 @@ const AdsInfoSection = ({
 
   return (
     <section className="flex flex-col gap-4">
-      {/* Ad Name */}
+      {/* Job Name */}
       <div className="flex flex-col gap-2">
-              <label htmlFor="adName" className="text-[16px]">Ad Name</label>
+              <label htmlFor="adName" className="text-[16px]">Job Name</label>
               <Field
                 type="text"
                 id="adName"
@@ -46,7 +46,7 @@ const AdsInfoSection = ({
             </div>
 
       {/* <div className="flex flex-col gap-2">
-        <label htmlFor="adName" className="text-[16px]">Ad Name</label>
+        <label htmlFor="adName" className="text-[16px]">Job Name</label>
         <Field
           type="text"
           id="adName"
@@ -54,7 +54,7 @@ const AdsInfoSection = ({
           onChange={handleChange}
           onBlur={handleBlur}
           value={values.adName}
-          placeholder="Ad name"
+          placeholder="Job name"
           className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${getBorderClass('adName')}`}
         />
         {(hasSubmitted || touched.adName) && (
@@ -214,21 +214,21 @@ const AdsInfoSection = ({
           <ErrorMessage name="tags" component="div" className="text-red-500 text-sm" />
         )}
       </div>
-      {/* Ads Price */}
+      {/* Jobs Price */}
       <div className="w-[50%] flex flex-col gap-2">
-          <label htmlFor="adsPrices" className="text-[16px]">Ads Price</label>
+          <label htmlFor="jobsPrices" className="text-[16px]">Jobs Price</label>
           <Field
             as="input"
             type="number"
-            id="adsPrices"
-            name="adsPrices"
+            id="jobsPrices"
+            name="jobsPrices"
             onChange={handleChange}
             onBlur={handleBlur}
-            value={values.adsPrices}
-            className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.adsPrices && touched.adsPrices ? 'border-red-500' : ''}`}
+            value={values.jobsPrices}
+            className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.jobsPrices && touched.jobsPrices ? 'border-red-500' : ''}`}
           />
-          {(hasSubmitted || touched.adsPrices) && (
-            <ErrorMessage name="adsPrices" component="div" className="text-red-500 text-sm" />
+          {(hasSubmitted || touched.jobsPrices) && (
+            <ErrorMessage name="jobsPrices" component="div" className="text-red-500 text-sm" />
           )}
         </div>
 
@@ -253,4 +253,4 @@ const AdsInfoSection = ({
   );
 };
 
-export default AdsInfoSection;
+export default JobsInfoSection;

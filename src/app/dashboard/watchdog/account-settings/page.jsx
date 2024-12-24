@@ -16,7 +16,7 @@ function AccountSettings() {
   const router=useRouter();
 
   const handleProfileEdit=()=>{
-       router.push("/dashbaord/watchdog/account-settings/edit-account")
+       router.push("/dashboard/watchdog/account-settings/edit-account")
   }
 
 

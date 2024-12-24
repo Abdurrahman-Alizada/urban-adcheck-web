@@ -99,7 +99,7 @@ function Dashboard() {
         ))}
       </section>
 
-      {/* Recently Posted Ads Section */}
+      {/* Recently Posted Jobs Section */}
       <section>
         {/* Section Header */}
         <div className="flex justify-between items-center">
@@ -109,7 +109,7 @@ function Dashboard() {
           </button>
         </div>
 
-        {/* Ads Grid */}
+        {/* Jobs Grid */}
         <div className="mt-6 mb-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ">
           {adsData.map((ad, index) => (
             <div key={index} className="shadow-custom-shadow rounded-lg overflow-hidden relative z-0">

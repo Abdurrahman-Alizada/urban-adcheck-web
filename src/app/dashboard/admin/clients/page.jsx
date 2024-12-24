@@ -30,18 +30,18 @@ function MyJob() {
     useEffect(() => {
         const fetchJobs = async () => {
             const jobData = [
-                { id: 1, name: 'Building Horse', location: 'A Block st41, H20', postedAds: 100, image: '/client-user.png',alt:"job image 1" },
-                { id: 2, name: 'Painting Wall', location: 'C Block st23, H10', postedAds: 20, image: '/client-user-1.png',alt:"job image 2" },
-                { id: 3, name: 'Fixing Roof', location: 'D Block st9, H5', postedAds: 15,  image: '/client-user-2.png' , alt:"job image 3" },
-                { id: 4, name: 'Plumbing Work', location: 'E Block st12, H15', postedAds: 19,  image: '/client-user-3.png',alt:"job image 4" },
-                { id: 5, name: 'Plumbing Work', location: 'E Block st12, H15', postedAds: 18,  image: '/client-user.png',alt:"job image 5" },
-                { id: 6, name: 'Plumbing Work', location: 'E Block st12, H15', postedAds: 18,  image: '/client-user-2.png',alt:"job image 7" },
-                { id: 7, name: 'Plumbing Work', location: 'E Block st12, H15', postedAds: 180,  image: '/client-user-1.png',alt:"job image 6" },
-                { id: 8, name: 'Painting Wall', location: 'C Block st23, H10', postedAds: 20,  image: '/client-user.png',alt:"job image 8" },
-                { id: 9, name: 'Painting Wall', location: 'C Block st23, H10', postedAds: 20,  image: '/client-user-2.png', alt:"job image 9" },
-                { id: 10, name: 'Fixing Roof', location: 'D Block st9, H5', postedAds: 10,  image: '/client-user-1.png', alt:"job image 10" },
-                { id: 11, name: 'Fixing Roof', location: 'D Block st9, H5', postedAds: 120,  image: '/client-user-3.png',alt:"job image 11" },
-                { id: 12, name: 'Fixing Roof', location: 'D Block st9, H5', postedAds: 130,  image: '/client-user.png', alt:"job image 12" },
+                { id: 1, name: 'Building Horse', location: 'A Block st41, H20', postedJobs: 100, image: '/client-user.png',alt:"job image 1" },
+                { id: 2, name: 'Painting Wall', location: 'C Block st23, H10', postedJobs: 20, image: '/client-user-1.png',alt:"job image 2" },
+                { id: 3, name: 'Fixing Roof', location: 'D Block st9, H5', postedJobs: 15,  image: '/client-user-2.png' , alt:"job image 3" },
+                { id: 4, name: 'Plumbing Work', location: 'E Block st12, H15', postedJobs: 19,  image: '/client-user-3.png',alt:"job image 4" },
+                { id: 5, name: 'Plumbing Work', location: 'E Block st12, H15', postedJobs: 18,  image: '/client-user.png',alt:"job image 5" },
+                { id: 6, name: 'Plumbing Work', location: 'E Block st12, H15', postedJobs: 18,  image: '/client-user-2.png',alt:"job image 7" },
+                { id: 7, name: 'Plumbing Work', location: 'E Block st12, H15', postedJobs: 180,  image: '/client-user-1.png',alt:"job image 6" },
+                { id: 8, name: 'Painting Wall', location: 'C Block st23, H10', postedJobs: 20,  image: '/client-user.png',alt:"job image 8" },
+                { id: 9, name: 'Painting Wall', location: 'C Block st23, H10', postedJobs: 20,  image: '/client-user-2.png', alt:"job image 9" },
+                { id: 10, name: 'Fixing Roof', location: 'D Block st9, H5', postedJobs: 10,  image: '/client-user-1.png', alt:"job image 10" },
+                { id: 11, name: 'Fixing Roof', location: 'D Block st9, H5', postedJobs: 120,  image: '/client-user-3.png',alt:"job image 11" },
+                { id: 12, name: 'Fixing Roof', location: 'D Block st9, H5', postedJobs: 130,  image: '/client-user.png', alt:"job image 12" },
             
             ];
             setJobs(jobData);
@@ -72,7 +72,7 @@ function MyJob() {
                 <td className="px-5 py-4 text-[14px] leading-tight">{job.location}</td>
                 <td className="px-4 py-4">
                     <span className="bg-[#CEFEFB] px-2 py-1 text-[#068179] text-[14px] rounded-[20px]">
-                        {job.postedAds}
+                        {job.postedJobs}
                     </span>
                 </td>
                 <td className="px-4 py-4 flex justify-between items-center">
