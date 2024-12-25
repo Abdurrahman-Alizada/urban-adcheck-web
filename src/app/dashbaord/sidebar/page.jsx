@@ -33,7 +33,7 @@ function Sidebar() {
   return (
     <div>
       {/* Left Sidebar */}
-      <section className="w-[90%] lg:inline-block bg-white shadow-custom-shadow rounded-[10px] ">
+      <section className="w-[90%] lg:inline-block bg-white shadow-custom-shadow rounded-[10px] py-4">
         {/* Profile info */}
         <div className="p-3 flex justify-evenly border-b-[1px] border-gray-300">
           <Image
@@ -50,7 +50,7 @@ function Sidebar() {
         </div>
         {/* List of Items */}
         {
-          user?.role?.isClient &&
+          user?.role?.isClient && 
           <ul className="flex flex-col gap-4 px-6 mt-4">
             {ClientMenu.map((tab) => (
               <li key={tab.name} className="flex items-center gap-2 text-gray-400">
@@ -61,7 +61,7 @@ function Sidebar() {
               </li>
             ))}
           </ul>
-        }
+          }
     
         {
           user?.role?.isAdmin &&

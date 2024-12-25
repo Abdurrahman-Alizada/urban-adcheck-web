@@ -46,14 +46,19 @@ export const userApi = createApi({
       })
     }),
     resetPassword: build.mutation({
-      query: user => ({
-        url: `/user/account/reset-password`,
-        method: 'GET',
-        body: user,
-
+      query: password => ({
+        url: `/user/reset`,
+        method: 'PUT',
+        body: password,
       })
     }),
-
+    UpdateUser:build.mutation({
+      query: User => ({
+        url: `/user/self`,
+        method: 'PUT',
+        body: User,
+      })
+    }),
     signOutUser: build.mutation({
       query: () => ({
         url: `/user/session`,
@@ -72,6 +77,7 @@ export const {
   useSignupUserMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  useUpdateUserMutation,
   useGetCurrentLoginUserQuery,
   useSignOutUserMutation
 } = userApi;

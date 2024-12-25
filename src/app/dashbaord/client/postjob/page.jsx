@@ -10,25 +10,74 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 
-const AdsPost = () => {
+const PostJob = () => {
   const [currentStep, setCurrentStep] = useState(1);
+
+  
+  const [jobsInfo, setJobsInfo] = useState({
+    adName: "",
+    category: "",
+    subCategory: "",
+    brand: "",
+    model: "",
+    conditions: "",
+    authenticity: "",
+    tags: "",
+    adsPrices: "",
+  });
+  const [contactData, setContactData] = useState({
+    phone: "",
+    backupPhone: "",
+    email: "",
+    website: "",
+    selectedCountry: null,
+    selectedState: null,
+    selectedCity: null,
+  });
+  const [advanceInfoData, setAdvanceInfoData] = useState({
+    description: "",
+    features: "",
+    uploadedFiles: [],
+  });
+
+    // Handle Components Data
+  const handleJobsInfoData=(data)=>{
+    setJobsInfo(data);
+  }
+  const handleContactData = (data) => {
+    setContactData(data);
+  };
+  const handleAdvanceInfoData = (data) => {
+    setAdvanceInfoData(data);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  // Combine all data
+  const formData = {
+    ...jobsInfo,
+    ...contactData,
+    ...advanceInfoData,
+  };
+ // Print all the collected data to the console
+    console.log("Form Submitted Successfully!", formData);
+  }
 
   // Step 1 Schema
   const step1Schema = Yup.object().shape({
     adName: Yup.string().required("Ad name is required."),
     category: Yup.string().required("Category is required."),
-    subCategory: Yup.string().required("Sub-category is required."),
-    brand: Yup.string().required("Brand is required."),
-    // model: Yup.string().required("Model is required."),
-    conditions: Yup.string().required("Conditions are required."),
-    // authenticity: Yup.string().required("Authenticity is required."),
-    tags: Yup.string().required("Tags are required."),
-    adsPrices: Yup.number()
-      .typeError("Price must be a number.")
-      .required("Ads price is required."),
-    negotiables: Yup.string().required("Please select if negotiable."),
+    // subCategory: Yup.string().required("Sub-category is required."),
+    // brand: Yup.string().required("Brand is required."),
+    // // model: Yup.string().required("Model is required."),
+    // conditions: Yup.string().required("Conditions are required."),
+    // // authenticity: Yup.string().required("Authenticity is required."),
+    // tags: Yup.string().required("Tags are required."),
+    // adsPrices: Yup.number()
+    //   .typeError("Price must be a number.")
+    //   .required("Ads price is required."),
+    // negotiables: Yup.string().required("Please select if negotiable."),
   });
-
   // Step 2 Schema
   const step2Schema = Yup.object().shape({
     description: Yup.string().required("Description is required."),
@@ -48,22 +97,19 @@ const AdsPost = () => {
     //   )
     //   .min(1, "At least one image is required."),
   });
-
   // Step 3 Schema
   const step3Schema = Yup.object().shape({
     contactName: Yup.string().required("Contact name is required."),
-    email: Yup.string()
-      .email("Invalid email address.")
-      .required("Email is required."),
-    phoneNumber: Yup.string()
-      .matches(/^[0-9]{10}$/, "Phone number must be 10 digits.")
-      .required("Phone number is required."),
-    address: Yup.string().required("Address is required."),
+    // email: Yup.string()
+    //   .email("Invalid email address.")
+    //   .required("Email is required."),
+    // phoneNumber: Yup.string()
+    //   .matches(/^[0-9]{10}$/, "Phone number must be 10 digits.")
+    //   .required("Phone number is required."),
+    // address: Yup.string().required("Address is required."),
   });
-
   // Combined Validation Schemas
   const validationSchemas = [step1Schema, step2Schema, step3Schema];
-
   // Initial Values
   const initialValues = {
     adName: "",
@@ -115,11 +161,12 @@ const AdsPost = () => {
     }
   };
 
-  // Handle form submission
-  const handleSubmitHanlder = (values, actions) => {
-    console.log("Form submitted:", values);
-    actions.setSubmitting(false);
-  };
+
+  // // Handle form submission
+  // const handleSubmitHanlder = (values, actions) => {
+  //   console.log("Form submitted:", values);
+  //   actions.setSubmitting(false);
+  // };
 
   return (
     <Formik
@@ -127,7 +174,6 @@ const AdsPost = () => {
       validationSchema={validationSchemas[currentStep - 1]} // Apply validation for the current step only
       validateOnChange={false}
       validateOnBlur={false}
-      onSubmit={handleSubmitHanlder}
     >
       {({
         values,
@@ -149,6 +195,8 @@ const AdsPost = () => {
               values={values}
               handleChange={handleChange}
               handleBlur={handleBlur}
+              jobsInfo={jobsInfo}
+              onJobsInfoChnage={handleJobsInfoData}
               errors={errors}
               touched={touched}
               onNext={() => console.log("onNext")}
@@ -160,6 +208,8 @@ const AdsPost = () => {
               values={values}
               errors={errors}
               touched={touched}
+              advanceInfoData={advanceInfoData}
+              onAdvanceInfoDataChange={handleAdvanceInfoData}
               handleChange={handleChange}
               handleBlur={handleBlur}
               onNext={() => console.log("onNext")}
@@ -170,6 +220,8 @@ const AdsPost = () => {
             <ContactSection
               values={values}
               errors={errors}
+              contactData={contactData}
+              onContactDataChange={handleContactData}
               touched={touched}
               handleChange={handleChange}
               handleBlur={handleBlur}
@@ -241,10 +293,10 @@ const AdsPost = () => {
                     <button
                       type="submit"
                       className="text-[18px] px-8 py-2 bg-primary text-white rounded-[5px]"
-                      // onClick={handleSubmitHanlder}
+                       onClick={handleSubmit}
                     >
-                      Post Ads
-                      <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
+                      Post Jobs
+                    <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
                     </button>
                   </div>
                 </div>
@@ -258,4 +310,4 @@ const AdsPost = () => {
   );
 };
 
-export default AdsPost;
+export default PostJob;
