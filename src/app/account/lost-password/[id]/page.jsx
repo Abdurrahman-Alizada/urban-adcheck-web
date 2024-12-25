@@ -36,7 +36,7 @@ const NewPassword = ({ params }) => {
           (res) => {
               console.log("password rest", res?.error?.data?.message);
             if (res.data?.message == "You have successfully updated your password") {
-              router.push("/auth/login");
+              router.push("/account/login");
             }
             else if(res?.error){
                 alert(`Password didn't reset. The error maybe '${res?.error?.data?.message}'`)

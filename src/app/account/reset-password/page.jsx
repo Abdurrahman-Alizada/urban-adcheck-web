@@ -36,7 +36,7 @@ function ResetPassword() {
       try {
         const response= await resetPassword(user)
         console.log("success:" , response)
-        router.push('auth/login')
+        router.push('/account/login')
       } catch (error) {
         console.error("password changed failed",error)
       }
