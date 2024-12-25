@@ -71,7 +71,7 @@ function Signup() {
         console.log("Signup successful:", response);
 
         // Redirect to login page
-        router.push("/auth/login");
+        router.push("/account/login");
       } catch (error) {
         // Handle error from API
         console.error("Signup failed:", error);

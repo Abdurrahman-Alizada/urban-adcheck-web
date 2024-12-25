@@ -120,7 +120,7 @@ function ForgotPasswordP() {
                 <button
                   type="button"
                   className="bg-transparent flex items-center justify-center text-primary w-full h-[52px] rounded-[10px] text-[18px]"
-                  onClick={() => router.push("/auth/login")}
+                  onClick={() => router.push("/account/login")}
                 >
                   {/* <IoIosArrowBack /> */}
                   Back to Log in
