@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -6,14 +6,12 @@ import ProgressBar from "../../../../components/progressBar/page";
 import JobsInfoSection from "@/components/jobs-info/page";
 import AdvanceInfoSection from "../../../../components/advanceInfoSection/page";
 import ContactSection from "../../../../components/contactSection/page";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 const PostJob = () => {
   const [currentStep, setCurrentStep] = useState(1);
 
-  
   const [jobsInfo, setJobsInfo] = useState({
     adName: "",
     category: "",
@@ -40,10 +38,10 @@ const PostJob = () => {
     uploadedFiles: [],
   });
 
-    // Handle Components Data
-  const handleJobsInfoData=(data)=>{
+  // Handle Components Data
+  const handleJobsInfoData = (data) => {
     setJobsInfo(data);
-  }
+  };
   const handleContactData = (data) => {
     setContactData(data);
   };
@@ -53,15 +51,15 @@ const PostJob = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  // Combine all data
-  const formData = {
-    ...jobsInfo,
-    ...contactData,
-    ...advanceInfoData,
-  };
- // Print all the collected data to the console
+    // Combine all data
+    const formData = {
+      ...jobsInfo,
+      ...contactData,
+      ...advanceInfoData,
+    };
+    // Print all the collected data to the console
     console.log("Form Submitted Successfully!", formData);
-  }
+  };
 
   // Step 1 Schema
   const step1Schema = Yup.object().shape({
@@ -135,7 +133,18 @@ const PostJob = () => {
   const handleNext = async (validateForm, setFieldTouched) => {
     // Step-wise field keys
     const schemaFieldKeys = [
-      ["adName", "category", "subCategory", "brand", "model", "conditions", "authenticity", "tags", "jobsPrices", "negotiables"],
+      [
+        "adName",
+        "category",
+        "subCategory",
+        "brand",
+        "model",
+        "conditions",
+        "authenticity",
+        "tags",
+        "jobsPrices",
+        "negotiables",
+      ],
       ["description", "features", "images"],
       ["contactName", "email", "phoneNumber", "address"],
     ];
@@ -161,12 +170,12 @@ const PostJob = () => {
     }
   };
 
-
   // // Handle form submission
-  // const handleSubmitHanlder = (values, actions) => {
-  //   console.log("Form submitted:", values);
-  //   actions.setSubmitting(false);
-  // };
+  const handleSubmitHanlder = (values, actions) => {
+    e.preventDefault();
+    console.log("Form submitted:", values);
+    // actions.setSubmitting(false);
+  };
 
   return (
     <Formik
@@ -174,6 +183,7 @@ const PostJob = () => {
       validationSchema={validationSchemas[currentStep - 1]} // Apply validation for the current step only
       validateOnChange={false}
       validateOnBlur={false}
+      onSubmit={(values) => console.log("values on submit", values)}
     >
       {({
         values,
@@ -183,11 +193,14 @@ const PostJob = () => {
         setFieldTouched,
         handleChange,
         handleSubmit,
-        handleBlur
+        handleBlur,
       }) => (
         <div className="w-full">
           {/* Progress Bar */}
-          <ProgressBar currentStep={currentStep} totalSteps={validationSchemas.length} />
+          <ProgressBar
+            currentStep={currentStep}
+            totalSteps={validationSchemas.length}
+          />
 
           {/* Step Content */}
           {currentStep === 1 && (
@@ -269,8 +282,6 @@ const PostJob = () => {
                     <FontAwesomeIcon icon={faArrowRight} size="15" />
                   </button>
                 </div>
-
-
               </>
             )}
 
@@ -293,17 +304,16 @@ const PostJob = () => {
                     <button
                       type="submit"
                       className="text-[18px] px-8 py-2 bg-primary text-white rounded-[5px]"
-                       onClick={handleSubmit}
+                      onClick={handleSubmitHanlder}
                     >
                       Post Jobs
-                    <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
+                      <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
                     </button>
                   </div>
                 </div>
               </>
             )}
           </div>
-
         </div>
       )}
     </Formik>
