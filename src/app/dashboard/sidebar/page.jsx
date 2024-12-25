@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { IoGridOutline } from "react-icons/io5";
 import { HiOutlineCurrencyDollar } from "react-icons/hi";
-import { PiClipboardTextLight, PiSignOut } from "react-icons/pi";
+import { PiClipboardTextLight, PiPlusBold, PiSignOut } from "react-icons/pi";
 import { HiOutlineUserCircle } from 'react-icons/hi';
 import { FaRegUserCircle } from "react-icons/fa";
 import { useGetCurrentLoginUserQuery } from '@/redux/reducers/user/userThunk';
@@ -16,6 +16,7 @@ function Sidebar() {
   const ClientMenu = [
     { name: 'Overview', icon: <IoGridOutline size={21} />, url: '/dashboard/client/overview' },
     { name: 'View Profile', icon: <HiOutlineUserCircle size={21} />, url: '/dashboard/client/overview' },
+    { name: 'Post a job', icon: <PiPlusBold size={21} />, url: '/dashboard/client/post-job' },
     { name: 'My Jobs', icon: <PiClipboardTextLight size={21} />, url: '/dashboard/client/my-jobs' },
    ];
 

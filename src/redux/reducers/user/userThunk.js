@@ -39,20 +39,25 @@ export const userApi = createApi({
       invalidatesTags: ['signupUser'],
     }),
     forgotPassword: build.mutation({
-      query: email => ({
+      query: (email) => ({
         url: `/user/account/forget-password`,
         method: 'PUT',
-        body: email
+        body: {
+          email: email,
+        }
       })
     }),
     resetPassword: build.mutation({
-      query: password => ({
-        url: `/user/reset`,
+      query: newData => ({
+        url: `/user/account/reset-password`,
         method: 'PUT',
-        body: password,
+        body: {
+          newPassword: newData.newPassword,
+          resetLink: newData.resetToken
+        },
       })
     }),
-    UpdateUser:build.mutation({
+    UpdateUser: build.mutation({
       query: User => ({
         url: `/user/self`,
         method: 'PUT',
