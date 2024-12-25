@@ -47,6 +47,14 @@ export const userApi = createApi({
         }
       })
     }),
+    confirmEmail: build.mutation({
+      query: (confirmEmailToken) => ({
+        url: `/user/confirmation/${confirmEmailToken}`,
+        method: 'POST',
+        body: {
+        }
+      })
+    }),
     resetPassword: build.mutation({
       query: newData => ({
         url: `/user/account/reset-password`,
@@ -84,5 +92,6 @@ export const {
   useResetPasswordMutation,
   useUpdateUserMutation,
   useGetCurrentLoginUserQuery,
-  useSignOutUserMutation
+  useSignOutUserMutation,
+  useConfirmEmailMutation
 } = userApi;
