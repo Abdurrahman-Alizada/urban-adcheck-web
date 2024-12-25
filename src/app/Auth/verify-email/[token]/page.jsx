@@ -95,12 +95,12 @@ function VerifyEmail({ params }) {
 
           {/* Back Button */}
           <div className="mt-6 flex justify-center">
-            <a
+            {/* <a
               href="/"
               className="text-primary underline font-semibold flex items-center gap-2"
             >
               Go back to homepage
-            </a>
+            </a> */}
           </div>
         </section>
 
