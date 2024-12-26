@@ -1,12 +1,14 @@
-"use client"
+"use client";
 import React from "react";
 import Image from "next/image";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { IoIosArrowBack } from "react-icons/io";
 import { useForgotPasswordMutation } from "@/redux/reducers/user/userThunk";
+import { useRouter } from "next/navigation";
 
 function ForgotPasswordP() {
+  const router = useRouter();
   const [forgotPassword, { isLoading, isError }] = useForgotPasswordMutation();
 
   // Formik setup
@@ -22,8 +24,12 @@ function ForgotPasswordP() {
     onSubmit: async (values) => {
       try {
         // Send the email to the API
-        const response = await forgotPassword(values.email).unwrap();
-        console.log("Success:", response);
+        console.log("first",values.email)
+        const newData = {email:values.email}
+        forgotPassword(values.email).then((res)=>{
+          console.log("res=>",res)
+        });
+        // console.log("Success:", response);
       } catch (error) {
         console.error("Error:", error);
       }
@@ -66,7 +72,10 @@ function ForgotPasswordP() {
             </span>
           </div>
           <div className="mt-6">
-            <form onSubmit={formik.handleSubmit} className="flex flex-col gap-3">
+            <form
+              onSubmit={formik.handleSubmit}
+              className="flex flex-col gap-3"
+            >
               {/* Email */}
               <div className="flex flex-col gap-2">
                 <label htmlFor="email" className="text-[16px]">
@@ -85,7 +94,9 @@ function ForgotPasswordP() {
                   {...formik.getFieldProps("email")}
                 />
                 {formik.touched.email && formik.errors.email && (
-                  <div className="text-red-500 text-sm">{formik.errors.email}</div>
+                  <div className="text-red-500 text-sm">
+                    {formik.errors.email}
+                  </div>
                 )}
               </div>
 
@@ -109,8 +120,9 @@ function ForgotPasswordP() {
                 <button
                   type="button"
                   className="bg-transparent flex items-center justify-center text-primary w-full h-[52px] rounded-[10px] text-[18px]"
+                  onClick={() => router.push("/account/login")}
                 >
-                  <IoIosArrowBack />
+                  {/* <IoIosArrowBack /> */}
                   Back to Log in
                 </button>
               </div>

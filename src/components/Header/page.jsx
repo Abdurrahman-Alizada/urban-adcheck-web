@@ -61,7 +61,7 @@ function Header() {
       console.log("respons us", res)
       localStorage.removeItem("userInfo")
       // navigate to login/
-      router.push("/auth/login")
+      router.push("/account/login")
       
     })
   }
@@ -226,12 +226,12 @@ function Header() {
               :
                 // login & sign buttons 
                 <div className='flex gap-2'>
-                  <Link href="/auth/login">
+                  <Link href="/account/login">
                     <button className="hidden xl:inline-block px-6 py-2 rounded-[10px] bg-primary text-white hover:bg-primary">
                       Login
                     </button>
                   </Link>
-                  <Link href="/auth/signup">
+                  <Link href="/account/signup">
                     <button className="hidden xl:inline-block px-6 py-2 rounded-[10px] bg-secondary text-white hover:bg-primary">
                       SignUp
                     </button>
