@@ -128,7 +128,7 @@ function Overview() {
                   <FontAwesomeIcon icon={faLayerGroup} size="sm" />
                   {ad.category}
                 </span>
-                <h2 className="mt-2 text-[22px] font-semibold">{ad.title}</h2>
+                <h2 className="mt-2 text-[16px] font-semibold">{ad.title}</h2>
               </div>
 
               {/* Ad Footer */}
