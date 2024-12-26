@@ -1,163 +1,174 @@
-"use client";
-
-import React, { useState, useEffect } from 'react';
-import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
-import { Country, State, City } from 'country-state-city';
-import Select from 'react-select';
+import React from 'react';
+import { Field, ErrorMessage } from 'formik';
 
 const ContactSection = ({
   values,
-  errors,
-  touched,
-  onContactDataChange,
   handleChange,
   handleBlur,
+  errors,
+  touched
 }) => {
-  // Handle country, state, and city dropdowns
-  const countries = Country.getAllCountries().map((country) => ({
-    value: country.isoCode,
-    label: `${country.name} (${country.isoCode})`,
-  }));
-
-  const states = values.country
-    ? State.getStatesOfCountry(values.country.value).map((state) => ({
-        value: state.isoCode,
-        label: state.name,
-      }))
-    : [];
-
-  const cities = values.state
-    ? City.getCitiesOfState(values.country.value, values.state.value).map((city) => ({
-        value: city.name,
-        label: city.name,
-      }))
-    : [];
-
-  // Handle updates for the parent component
-  const handleFieldChange = (field, value) => {
-    onContactDataChange({
-      ...values,
-      [field]: value,
-    });
-  };
-
   return (
-    <section>
-      {/* Phone Number Fields */}
-      <div className="flex gap-3 mt-3">
-        <div className="w-[50%] flex flex-col gap-2">
-          <label htmlFor="phone" className="text-[16px]">Primary Phone</label>
-          <PhoneInput
-            placeholder="Phone"
-            defaultCountry="US"
-            value={values.phone}
-            onChange={(value) => handleFieldChange("phone", value)}
-            onBlur={handleBlur}
-            name="phone"
-          />
-          {touched.phone && errors.phone && (
-            <div className="text-red-500 text-sm">{errors.phone}</div>
-          )}
-        </div>
+    <section className="flex flex-col gap-6">
+      {/* Personal Information */}
+      <div className="mb-6">
+        <h3 className="text-lg font-medium mb-4">Personal Information</h3>
+        <div className="grid grid-cols-2 gap-4">
+          {/* Full Name */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="personalInfo.fullName" className="text-[16px]">Full Name</label>
+            <Field
+              type="text"
+              id="personalInfo.fullName"
+              name="personalInfo.fullName"
+              className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${
+                errors.personalInfo?.fullName && touched.personalInfo?.fullName ? 'border-red-500' : 'border-gray-300'
+              }`}
+              placeholder="Enter your full name"
+            />
+            <ErrorMessage name="personalInfo.fullName" component="div" className="text-red-500 text-sm" />
+          </div>
 
-        <div className="w-[50%] flex flex-col gap-2">
-          <label htmlFor="backupPhone" className="text-[16px]">Backup Phone</label>
-          <PhoneInput
-            placeholder="Backup Phone"
-            defaultCountry="US"
-            value={values.backupPhone}
-            onChange={(value) => handleFieldChange("backupPhone", value)}
-            onBlur={handleBlur}
-            name="backupPhone"
-          />
-          {touched.backupPhone && errors.backupPhone && (
-            <div className="text-red-500 text-sm">{errors.backupPhone}</div>
-          )}
-        </div>
-      </div>
-
-      {/* Email Field */}
-      <div className="flex gap-3 mt-3">
-        <div className="w-[50%] flex flex-col gap-2">
-          <label htmlFor="email" className="text-[16px]">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Email address"
-            className="text-[15.04px] border-gray-300 outline-primary border-[1px] px-3 py-3 rounded-[5px]"
-            value={values.email}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-          {touched.email && errors.email && (
-            <div className="text-red-500 text-sm">{errors.email}</div>
-          )}
-        </div>
-
-        {/* Website Field */}
-        <div className="w-[50%] flex flex-col gap-2">
-          <label htmlFor="website" className="text-[16px]">Website (Optional)</label>
-          <input
-            type="text"
-            id="website"
-            name="website"
-            placeholder="Website URL"
-            className="text-[15.04px] border-gray-300 outline-primary border-[1px] px-3 py-3 rounded-[5px]"
-            value={values.website}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-          {touched.website && errors.website && (
-            <div className="text-red-500 text-sm">{errors.website}</div>
-          )}
+          {/* Email */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="personalInfo.email" className="text-[16px]">Email</label>
+            <Field
+              type="email"
+              id="personalInfo.email"
+              name="personalInfo.email"
+              className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${
+                errors.personalInfo?.email && touched.personalInfo?.email ? 'border-red-500' : 'border-gray-300'
+              }`}
+              placeholder="Enter your email"
+            />
+            <ErrorMessage name="personalInfo.email" component="div" className="text-red-500 text-sm" />
+          </div>
         </div>
       </div>
 
-      {/* Country, State, and City Dropdowns */}
-      <div className="flex gap-3 mt-3">
-        <div className="w-[33%] flex flex-col gap-2">
-          <label htmlFor="country" className="text-[16px]">Country</label>
-          <Select
-            options={countries}
-            value={values.country}
-            onChange={(value) => handleFieldChange("country", value)}
-            onBlur={handleBlur}
-            name="country"
-          />
-          {touched.country && errors.country && (
-            <div className="text-red-500 text-sm">{errors.country}</div>
-          )}
-        </div>
+      {/* Phone Numbers */}
+      <div className="mb-6">
+        <h3 className="text-lg font-medium mb-4">Phone Numbers</h3>
+        <div className="grid grid-cols-2 gap-4">
+          {/* Primary Phone */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="phoneNumber.primary" className="text-[16px]">Primary Phone</label>
+            <Field
+              type="tel"
+              id="phoneNumber.primary"
+              name="phoneNumber.primary"
+              className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${
+                errors.phoneNumber?.primary && touched.phoneNumber?.primary ? 'border-red-500' : 'border-gray-300'
+              }`}
+              placeholder="Enter primary phone number"
+            />
+            <ErrorMessage name="phoneNumber.primary" component="div" className="text-red-500 text-sm" />
+          </div>
 
-        <div className="w-[33%] flex flex-col gap-2">
-          <label htmlFor="state" className="text-[16px]">State</label>
-          <Select
-            options={states}
-            value={values.state}
-            onChange={(value) => handleFieldChange("state", value)}
-            onBlur={handleBlur}
-            name="state"
-            isDisabled={!values.country}
-          />
-          {touched.state && errors.state && (
-            <div className="text-red-500 text-sm">{errors.state}</div>
-          )}
+          {/* Secondary Phone */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="phoneNumber.secondary" className="text-[16px]">Secondary Phone (Optional)</label>
+            <Field
+              type="tel"
+              id="phoneNumber.secondary"
+              name="phoneNumber.secondary"
+              className="text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] border-gray-300"
+              placeholder="Enter secondary phone number"
+            />
+          </div>
         </div>
+      </div>
 
-        <div className="w-[33%] flex flex-col gap-2">
-          <label htmlFor="city" className="text-[16px]">City</label>
-          <Select
-            options={cities}
-            value={values.city}
-            onChange={(value) => handleFieldChange("city", value)}
-            onBlur={handleBlur}
-            name="city"
-            isDisabled={!values.state}
-          />
-          {touched.city && errors.city && (
-            <div className="text-red-500 text-sm">{errors.city}</div>
-          )}
+      {/* Address Information */}
+      <div className="mb-6">
+        <h3 className="text-lg font-medium mb-4">Address Information</h3>
+        <div className="grid grid-cols-2 gap-4">
+          {/* Street */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="address.street" className="text-[16px]">Street</label>
+            <Field
+              type="text"
+              id="address.street"
+              name="address.street"
+              className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${
+                errors.address?.street && touched.address?.street ? 'border-red-500' : 'border-gray-300'
+              }`}
+              placeholder="Enter street address"
+            />
+            <ErrorMessage name="address.street" component="div" className="text-red-500 text-sm" />
+          </div>
+
+          {/* City */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="address.city" className="text-[16px]">City</label>
+            <Field
+              type="text"
+              id="address.city"
+              name="address.city"
+              className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${
+                errors.address?.city && touched.address?.city ? 'border-red-500' : 'border-gray-300'
+              }`}
+              placeholder="Enter city"
+            />
+            <ErrorMessage name="address.city" component="div" className="text-red-500 text-sm" />
+          </div>
+
+          {/* State/Province */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="address.state" className="text-[16px]">State/Province</label>
+            <Field
+              type="text"
+              id="address.state"
+              name="address.state"
+              className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${
+                errors.address?.state && touched.address?.state ? 'border-red-500' : 'border-gray-300'
+              }`}
+              placeholder="Enter state/province"
+            />
+            <ErrorMessage name="address.state" component="div" className="text-red-500 text-sm" />
+          </div>
+
+          {/* Country */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="address.country" className="text-[16px]">Country</label>
+            <Field
+              type="text"
+              id="address.country"
+              name="address.country"
+              className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${
+                errors.address?.country && touched.address?.country ? 'border-red-500' : 'border-gray-300'
+              }`}
+              placeholder="Enter country"
+            />
+            <ErrorMessage name="address.country" component="div" className="text-red-500 text-sm" />
+          </div>
+
+          {/* Postal Code */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="address.postalCode" className="text-[16px]">Postal Code</label>
+            <Field
+              type="text"
+              id="address.postalCode"
+              name="address.postalCode"
+              className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${
+                errors.address?.postalCode && touched.address?.postalCode ? 'border-red-500' : 'border-gray-300'
+              }`}
+              placeholder="Enter postal code"
+            />
+            <ErrorMessage name="address.postalCode" component="div" className="text-red-500 text-sm" />
+          </div>
+
+          {/* Map Location */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="address.mapLocation" className="text-[16px]">Map Location</label>
+            <Field
+              type="text"
+              id="address.mapLocation"
+              name="address.mapLocation"
+              className="text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] border-gray-300"
+              placeholder="Enter map location"
+            />
+          </div>
         </div>
       </div>
     </section>

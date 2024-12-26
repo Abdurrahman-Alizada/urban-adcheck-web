@@ -1,6 +1,4 @@
-'use client'
-
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Field, ErrorMessage } from 'formik';
 
 const JobsInfoSection = ({
@@ -8,247 +6,153 @@ const JobsInfoSection = ({
   handleChange,
   handleBlur,
   errors,
-  touched,
-  modelOptions = [],
-  authenticityOptions = [],
-  // onNext,
+  touched
 }) => {
-  const [hasSubmitted, setHasSubmitted] = useState(false);
-
-  // Trigger validation on all fields when "Next" is clicked
-  // const handleNextClick = () => {
-  //   console.log("click")
-  //   setHasSubmitted(true);
-  //   if (onNext) {
-  //     onNext();
-  //   }
-  // };
-
-  // Helper function to determine the border class based on error state
-  const getBorderClass = (fieldName) => {
-    const isFieldInvalid =
-      (hasSubmitted || touched[fieldName]) && errors[fieldName];
-    return isFieldInvalid ? 'border-red-500' : 'border-gray-300';
-  };
-
   return (
     <section className="flex flex-col gap-4">
-      {/* Job Name */}
+      {/* Job Title */}
       <div className="flex flex-col gap-2">
-              <label htmlFor="adName" className="text-[16px]">Job Name</label>
-              <Field
-                type="text"
-                id="adName"
-                name="adName"
-                className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${getBorderClass(errors, touched, 'adName')}`}
-              />
-              <ErrorMessage name="adName" component="div" className="text-red-500 text-sm" />
-            </div>
-
-      {/* <div className="flex flex-col gap-2">
-        <label htmlFor="adName" className="text-[16px]">Job Name</label>
+        <label htmlFor="jobTitle" className="text-[16px]">Job Title</label>
         <Field
           type="text"
-          id="adName"
-          name="adName"
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={values.adName}
-          placeholder="Job name"
-          className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${getBorderClass('adName')}`}
+          id="jobTitle"
+          name="jobTitle"
+          className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.jobTitle && touched.jobTitle ? 'border-red-500' : 'border-gray-300'}`}
+          placeholder="Enter job title"
         />
-        {(hasSubmitted || touched.adName) && (
-          <ErrorMessage name="adName" component="div" className="text-red-500 text-sm" />
-        )}
-      </div> */}
+        <ErrorMessage name="jobTitle" component="div" className="text-red-500 text-sm" />
+      </div>
 
-      {/* Category & Sub-category */}
+      {/* Category & Display Type */}
       <div className="flex gap-3">
-        <div className="w-[50%] flex flex-col gap-2">
+        <div className="w-1/2 flex flex-col gap-2">
           <label htmlFor="category" className="text-[16px]">Category</label>
           <Field
             as="select"
             id="category"
             name="category"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.category}
-            className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${getBorderClass('category')}`}
+            className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.category && touched.category ? 'border-red-500' : 'border-gray-300'}`}
           >
-            <option value="">Select ...</option>
-            <option value="homes">Homes</option>
-            <option value="automotive">Automotive</option>
-            <option value="garage">Garage</option>
+            <option value="">Select Category</option>
+            <option value="Outdoor Advertising">Outdoor Advertising</option>
           </Field>
-          {(hasSubmitted || touched.category) && (
-            <ErrorMessage name="category" component="div" className="text-red-500 text-sm" />
-          )}
+          <ErrorMessage name="category" component="div" className="text-red-500 text-sm" />
         </div>
 
-        <div className="w-[50%] flex flex-col gap-2">
-          <label htmlFor="subCategory" className="text-[16px]">Sub-Category</label>
+        <div className="w-1/2 flex flex-col gap-2">
+          <label htmlFor="displayType" className="text-[16px]">Display Type</label>
           <Field
             as="select"
-            id="subCategory"
-            name="subCategory"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.subCategory}
-            className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${getBorderClass('subCategory')}`}
+            id="displayType"
+            name="displayType"
+            className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.displayType && touched.displayType ? 'border-red-500' : 'border-gray-300'}`}
           >
-            <option value="">Select ...</option>
-            <option value="homes">Homes</option>
-            <option value="automotive">Automotive</option>
-            <option value="garage">Garage</option>
+            <option value="">Select Display Type</option>
+            <option value="billboard">Billboard</option>
+            <option value="digital-ad">Digital Ad</option>
+            <option value="storefront">Storefront</option>
+            <option value="construction-notice">Construction Notice</option>
+            <option value="flag">Flag</option>
+            <option value="temporary-display">Temporary Display</option>
+            <option value="permanent-display">Permanent Display</option>
           </Field>
-          {(hasSubmitted || touched.subCategory) && (
-            <ErrorMessage name="subCategory" component="div" className="text-red-500 text-sm" />
-          )}
+          <ErrorMessage name="displayType" component="div" className="text-red-500 text-sm" />
         </div>
       </div>
 
-      {/*Brand & Negotiables Dropdown */}
+      {/* Condition & Payment Type */}
       <div className="flex gap-3">
-        <div className="w-[50%] flex flex-col gap-2">
-          <label htmlFor="negotiables" className="text-[16px]">Negotiable</label>
+        <div className="w-1/2 flex flex-col gap-2">
+          <label htmlFor="condition" className="text-[16px]">Condition</label>
           <Field
             as="select"
-            id="negotiables"
-            name="negotiables"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.negotiables}
-            className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.negotiables && touched.negotiables ? 'border-red-500' : ''}`}
-          >
-            <option value="">Select</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </Field>
-          {(hasSubmitted || touched.negotiables) && (
-            <ErrorMessage name="negotiables" component="div" className="text-red-500 text-sm" />
-          )}
-        </div>
-        <div className="w-[50%] flex flex-col gap-2">
-          <label htmlFor="brand" className="text-[16px]">Brand</label>
-          <Field
-            as="select"
-            id="brand"
-            name="brand"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.brand}
-            className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${getBorderClass('brand')}`}
-          >
-            <option value="">Select ...</option>
-            <option value="brand1">Brand 1</option>
-            <option value="brand2">Brand 2</option>
-            <option value="brand3">Brand 3</option>
-          </Field>
-          {(hasSubmitted || touched.brand) && (
-            <ErrorMessage name="brand" component="div" className="text-red-500 text-sm" />
-          )}
-        </div>
-      </div> 
-
-        {/* Conditions & models Dropdown */}
-       
-      <div className="flex gap-3">
-        <div className="w-[50%] flex flex-col gap-2">
-          <label htmlFor="model" className="text-[16px]">Model</label>
-          <Field
-            as="select"
-            id="model"
-            name="model"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.model}
-            className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.model && touched.model ? 'border-red-500' : ''}`}
-          >
-            <option value="">Select Model</option>
-            {modelOptions?.map((model, index) => (
-              <option key={index} value={model}>{model}</option>
-            ))}
-          </Field>
-          {(hasSubmitted || touched.model) && (
-            <ErrorMessage name="model" component="div" className="text-red-500 text-sm" />
-          )}
-        </div>
-
-        {/* Conditions Dropdown */}
-        <div className="w-[50%] flex flex-col gap-2">
-          <label htmlFor="conditions" className="text-[16px]">Conditions</label>
-          <Field
-            as="select"
-            id="conditions"
-            name="conditions"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.conditions}
-            className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.conditions && touched.conditions ? 'border-red-500' : ''}`}
+            id="condition"
+            name="condition"
+            className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.condition && touched.condition ? 'border-red-500' : 'border-gray-300'}`}
           >
             <option value="">Select Condition</option>
-            <option value="New">New</option>
-            <option value="Used">Used</option>
-            <option value="Refurbished">Refurbished</option>
+            <option value="good">Good</option>
+            <option value="damaged">Damaged</option>
+            <option value="needs-replacement">Needs Replacement</option>
           </Field>
-          {(hasSubmitted || touched.conditions) && (
-            <ErrorMessage name="conditions" component="div" className="text-red-500 text-sm" />
+          <ErrorMessage name="condition" component="div" className="text-red-500 text-sm" />
+        </div>
+
+        <div className="w-1/2 flex flex-col gap-2">
+          <label htmlFor="paymentType" className="text-[16px]">Payment Type</label>
+          <Field
+            as="select"
+            id="paymentType"
+            name="paymentType"
+            className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.paymentType && touched.paymentType ? 'border-red-500' : 'border-gray-300'}`}
+          >
+            <option value="">Select Payment Type</option>
+            <option value="Per-Job">Per Job</option>
+            <option value="Subscription">Subscription</option>
+          </Field>
+          <ErrorMessage name="paymentType" component="div" className="text-red-500 text-sm" />
+        </div>
+      </div>
+
+      {/* Payment Details */}
+      <div className="flex flex-col gap-2">
+        <h3 className="text-lg font-medium">Payment Details</h3>
+        <div className="flex gap-3">
+          <div className="w-1/3 flex flex-col gap-2">
+            <label htmlFor="paymentDetails.amount" className="text-[16px]">Amount</label>
+            <Field
+              type="number"
+              id="paymentDetails.amount"
+              name="paymentDetails.amount"
+              className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.paymentDetails?.amount && touched.paymentDetails?.amount ? 'border-red-500' : 'border-gray-300'}`}
+            />
+            <ErrorMessage name="paymentDetails.amount" component="div" className="text-red-500 text-sm" />
+          </div>
+
+          {values.paymentType === 'Per-Job' && (
+            <div className="w-1/3 flex flex-col gap-2">
+              <label htmlFor="paymentDetails.perJobPayment.priceType" className="text-[16px]">Price Type</label>
+              <Field
+                as="select"
+                id="paymentDetails.perJobPayment.priceType"
+                name="paymentDetails.perJobPayment.priceType"
+                className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.paymentDetails?.perJobPayment?.priceType && touched.paymentDetails?.perJobPayment?.priceType ? 'border-red-500' : 'border-gray-300'}`}
+              >
+                <option value="">Select Price Type</option>
+                <option value="fixed">Fixed</option>
+                <option value="hourly">Hourly</option>
+                <option value="negotiable">Negotiable</option>
+              </Field>
+              <ErrorMessage name="paymentDetails.perJobPayment.priceType" component="div" className="text-red-500 text-sm" />
+            </div>
           )}
         </div>
       </div>
 
-      {/* Example: Tags Field */}
-      <div className="flex flex-col gap-2">
+      {/* Tags */}
+      {/* <div className="flex flex-col gap-2">
         <label htmlFor="tags" className="text-[16px]">Tags</label>
         <Field
           type="text"
           id="tags"
           name="tags"
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={values.tags}
-          placeholder="Add tags (comma separated)"
-          className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${getBorderClass('tags')}`}
+          className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.tags && touched.tags ? 'border-red-500' : 'border-gray-300'}`}
+          placeholder="Enter tags separated by commas"
         />
-        {(hasSubmitted || touched.tags) && (
-          <ErrorMessage name="tags" component="div" className="text-red-500 text-sm" />
-        )}
-      </div>
-      {/* Jobs Price */}
-      <div className="w-[50%] flex flex-col gap-2">
-          <label htmlFor="jobsPrices" className="text-[16px]">Jobs Price</label>
-          <Field
-            as="input"
-            type="number"
-            id="jobsPrices"
-            name="jobsPrices"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.jobsPrices}
-            className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.jobsPrices && touched.jobsPrices ? 'border-red-500' : ''}`}
-          />
-          {(hasSubmitted || touched.jobsPrices) && (
-            <ErrorMessage name="jobsPrices" component="div" className="text-red-500 text-sm" />
-          )}
-        </div>
-
-      {/* Next Button
-      <div className='flex justify-end items-center gap-6'>
-        <button
-          type="button"
-          className="w-[280px] bg-transparent border-grayColor border-[1px] text-black px-8 py-2 rounded-md mt-4"
-
-        >
-          View Posting Rules
-        </button>
-        <button
-          type="button"
-          className="w-[200px] bg-primary text-white px-8 py-2 rounded-md mt-4"
-          onClick={handleNextClick}
-        >
-          Next
-        </button>
+        <ErrorMessage name="tags" component="div" className="text-red-500 text-sm" />
       </div> */}
+
+      {/* Due Time */}
+      <div className="flex flex-col gap-2">
+        <label htmlFor="dueTime" className="text-[16px]">Due Time</label>
+        <Field
+          type="datetime-local"
+          id="dueTime"
+          name="dueTime"
+          className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.dueTime && touched.dueTime ? 'border-red-500' : 'border-gray-300'}`}
+        />
+        <ErrorMessage name="dueTime" component="div" className="text-red-500 text-sm" />
+      </div>
     </section>
   );
 };
