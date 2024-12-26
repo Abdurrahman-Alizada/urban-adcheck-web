@@ -1,194 +1,231 @@
-"use client"
-import React, { useState } from 'react';
-import { Field, ErrorMessage } from 'formik';
-import { IoIosAddCircleOutline } from "react-icons/io";
-import { RxCross2 } from "react-icons/rx";
-import Image from 'next/image';
+import React, { useState } from "react";
+import { Field, ErrorMessage } from "formik";
+import { MdFileUpload, MdCancel } from "react-icons/md";
 
-function AdvanceInfoSection({ handleFileUpload, values, errors, touched,   onNext,
-}) {
-  const [hasSubmitted, setHasSubmitted] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState([]); // Array to store uploaded images
-  const [loading, setLoading] = useState(false); // Loading state
-  const [errorMessage, setErrorMessage] = useState(""); // Error message for validation
+const AdvanceInfoSection = ({
+  values,
+  handleChange,
+  setFieldValue,
+  cover,
+  setCover,
+  video,
+  setVideo,
+  gallery,
+  setGallery,
+  errors,
+  touched,
+}) => {
+  const [previewUrls, setPreviewUrls] = useState({
+    gallery: [],
+    cover: "",
+    video: "",
+  });
 
-  const MAX_FILES = 5;
-  const MAX_FILE_SIZE_MB = 5;
+  // Handle file change for gallery, cover, and video uploads
+  const handleFileChange = (event, field) => {
+    // const files = Array.from(event.target.files);
+    const files = Array.from(event.currentTarget.files);
 
-
-
-  const handleNextClick = () => {
-    setHasSubmitted(true);
-    if (onNext) {
-      onNext();
-    }
-  };
-
-
-  // Handle file upload and validation
-  const handleUpload = async (event) => {
-    const files = Array.from(event.target.files); // Convert FileList to array
-    let newFiles = [...uploadedFiles]; // Clone current uploaded files
-    let error = ""; // Initialize error message
-
-    for (let file of files) {
-      // Check if total uploaded files exceed the limit
-      if (newFiles.length >= MAX_FILES) {
-        error = "You can only upload up to 5 images.";
-        break;
-      }
-
-      // Check file size limit
-      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-        error = `File size should not exceed ${MAX_FILE_SIZE_MB} MB.`;
-        break;
-      }
-
-      // Add file if valid
-      newFiles.push({
-        file,
-        preview: URL.createObjectURL(file), // Generate preview URL
-      });
-    }
-
-    // Set state based on validation
-    if (error) {
-      setErrorMessage(error);
+    if (field === "jobGallery") {
+      const newUrls = files.map((file) => URL.createObjectURL(file));
+      setPreviewUrls((prev) => ({
+        ...prev,
+        gallery: [...prev.gallery, ...newUrls],
+      }));
+      setGallery((prev) => [...prev, ...files]); // Concatenating new files
     } else {
-      setLoading(true);
-      setErrorMessage("");
-      setUploadedFiles(newFiles);
-
-      // Simulate upload delay (replace with actual upload logic)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      setLoading(false);
-
-      // Call external file handler if provided
-      if (handleFileUpload) {
-        handleFileUpload(newFiles.map((item) => item.file));
-      }
+      const url = URL.createObjectURL(files[0]);
+      setPreviewUrls((prev) => ({
+        ...prev,
+        [field === "jobCoverImage" ? "cover" : "video"]: url,
+      }));
+      field === "jobCoverImage"
+        ? setCover(event.currentTarget.files[0])
+        : setVideo(event.currentTarget.files[0]);
     }
   };
 
-  // Remove image functionality
-  const handleRemoveImage = (index) => {
-    const filteredFiles = uploadedFiles.filter((_, i) => i !== index);
-    setUploadedFiles(filteredFiles);
+  // Handle removal of uploaded files (gallery images, cover, video)
+  const removeFile = (index, field) => {
+    if (field === "jobGallery") {
+      const newGallery = gallery.filter((_, i) => i !== index);
+      const newPreviewUrls = previewUrls.gallery.filter((_, i) => i !== index);
+      setGallery(newGallery);
+      setPreviewUrls((prev) => ({
+        ...prev,
+        gallery: newPreviewUrls,
+      }));
+    } else {
+      field === "jobCoverImage" ? setCover(null) : setVideo(null);
+      setPreviewUrls((prev) => ({
+        ...prev,
+        [field === "jobCoverImage" ? "cover" : "video"]: "",
+      }));
+    }
   };
 
-  
   return (
-    <section className="flex flex-col gap-4">
-
+    <section className="flex flex-col gap-6">
       {/* Description */}
       <div className="flex flex-col gap-2">
-        <label htmlFor="description" className="text-[16px]">Description</label>
+        <label htmlFor="description" className="text-[16px] font-medium">
+          Description
+        </label>
         <Field
           as="textarea"
           id="description"
           name="description"
-          placeholder="Enter a detailed description for your ad"
-          className="text-[15.04px] border-gray-300 outline-primary border-[1px] px-3 py-3 rounded-[5px] focus:ring-2 focus:ring-primary resize-none"
-          rows="4"
+          rows="6"
+          className={`w-full p-3 rounded-md border ${
+            errors.description && touched.description
+              ? "border-red-500"
+              : "border-gray-300"
+          }`}
         />
-        <ErrorMessage name="description" component="div" className="text-red-500 text-sm" />
+        <ErrorMessage
+          name="description"
+          component="div"
+          className="text-red-500 text-sm"
+        />
       </div>
 
-      {/* Features */}
+      {/* Notes */}
       <div className="flex flex-col gap-2">
-        <label htmlFor="features" className="text-[16px]">Features</label>
+        <label htmlFor="notes" className="text-[16px] font-medium">
+          Notes
+        </label>
         <Field
           as="textarea"
-          id="features"
-          name="features"
-          placeholder="Write Features in each line. 1\nFeature 2\n..."
-          className="text-[15.04px] border-gray-300 outline-primary border-[1px] px-3 py-3 rounded-[5px] focus:ring-2 focus:ring-primary resize-none"
+          id="notes"
+          name="notes"
           rows="4"
+          className={`w-full p-3 rounded-md border ${
+            errors.notes && touched.notes ? "border-red-500" : "border-gray-300"
+          }`}
         />
-        <ErrorMessage name="features" component="div" className="text-red-500 text-sm" />
+        <ErrorMessage
+          name="notes"
+          component="div"
+          className="text-red-500 text-sm"
+        />
       </div>
 
-      {/* Upload Images */}
-      <div className="w-[100%]">
-        <label htmlFor="upload-images" className="text-[16px] font-semibold">
-          Upload Images (Max 5 images, 5MB each)
-        </label>
-
-        {/* Upload Area */}
-        <div className="flex flex-wrap gap-4 mt-3 p-4 border-gray-300 border-[1px] rounded-md">
-          {/* File Input */}
-          {uploadedFiles.length < MAX_FILES && (
-            <label
-              htmlFor="upload-images"
-              className="w-[100px] h-[100px] bg-[#F5F7FA] rounded-[5px] flex items-center justify-center cursor-pointer relative"
-            >
-              <input
-                type="file"
-                id="upload-images"
-                name="images"
-                accept=".png, .jpg, .jpeg"
-                className="hidden"
-                multiple
-                onChange={handleUpload}
+      {/* Gallery Upload */}
+      <div className="flex flex-col gap-2">
+        <label className="text-[16px] font-medium">Job Gallery</label>
+        <div className="flex flex-wrap gap-4">
+          <label className="flex flex-col items-center justify-center w-32 h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50">
+            <MdFileUpload className="w-6 h-6 mb-2" />
+            <span className="text-sm">Add Images</span>
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => handleFileChange(e, "jobGallery")}
+            />
+          </label>
+          {previewUrls.gallery.map((url, index) => (
+            <div key={index} className="relative w-32 h-32">
+              <img
+                src={url}
+                alt={`Gallery ${index}`}
+                className="w-full h-full object-cover rounded-lg"
               />
-              {loading ? (
-                <div className="loader border-4 border-primary border-t-transparent rounded-full w-8 h-8 animate-spin"></div>
-              ) : (
-                <IoIosAddCircleOutline size={35} color="#636A80" />
-              )}
-            </label>
-          )}
-
-          {/* Uploaded Image Previews */}
-          {uploadedFiles.map((file, index) => (
-            <div
-              key={index}
-              className="relative w-[100px] h-[100px] flex items-center justify-center"
-            >
-              <Image
-                src={file.preview}
-                alt={`Uploaded Preview ${index + 1}`}
-                width={200}
-                height={200}
-                className="w-full h-full object-contain rounded-md"
-              />
-              {/* Remove Image Button */}
               <button
                 type="button"
-                onClick={() => handleRemoveImage(index)}
-                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                onClick={() => removeFile(index, "jobGallery")}
+                className="absolute -top-2 -right-2 bg-white rounded-full"
               >
-                <RxCross2 size={16}/>
+                <MdCancel className="w-6 h-6 text-red-500" />
               </button>
             </div>
           ))}
         </div>
-
-      {/* Error Message */}
-      {errorMessage && (
-        <div className="text-red-500 text-sm mt-2">{errorMessage}</div>
-      )}
+        <ErrorMessage
+          name="jobGallery"
+          component="div"
+          className="text-red-500 text-sm"
+        />
       </div>
 
-      {/* Buttons */}
-      {/* <div className="flex justify-end gap-3 mt-3">
-        <button
-          type="button"
-          className="flex items-center text-[18px] px-6 py-2 border-[1px] border-grayColor rounded-[5px] bg-transparent text-Black"
-        >
-          Previous
-        </button>
-        <button
-           onClick={handleNextClick}
-          className="flex items-center gap-4 text-[18px] px-8 py-2 rounded-[5px] bg-primary text-white"
-        >
-          Next Steps
-          <FontAwesomeIcon icon={faArrowRight} size="15" />
-        </button>
-      </div> */}
+      {/* Cover Image Upload */}
+      <div className="flex flex-col gap-2">
+        <label className="text-[16px] font-medium">Cover Image</label>
+        <div className="flex items-center gap-4">
+          <label className="flex flex-col items-center justify-center w-40 h-40 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50">
+            <MdFileUpload className="w-6 h-6 mb-2" />
+            <span className="text-sm">Upload Cover</span>
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => handleFileChange(e, "jobCoverImage")}
+            />
+          </label>
+          {previewUrls.cover && (
+            <div className="relative w-40 h-40">
+              <img
+                src={previewUrls.cover}
+                alt="Cover"
+                className="w-full h-full object-cover rounded-lg"
+              />
+              <button
+                type="button"
+                onClick={() => removeFile(null, "jobCoverImage")}
+                className="absolute -top-2 -right-2 bg-white rounded-full"
+              >
+                <MdCancel className="w-6 h-6 text-red-500" />
+              </button>
+            </div>
+          )}
+        </div>
+        <ErrorMessage
+          name="jobCoverImage"
+          component="div"
+          className="text-red-500 text-sm"
+        />
+      </div>
+
+      {/* Video Upload */}
+      <div className="flex flex-col gap-2">
+        <label className="text-[16px] font-medium">Job Video</label>
+        <div className="flex items-center gap-4">
+          <label className="flex flex-col items-center justify-center w-40 h-40 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50">
+            <MdFileUpload className="w-6 h-6 mb-2" />
+            <span className="text-sm">Upload Video</span>
+            <input
+              type="file"
+              accept="video/*"
+              className="hidden"
+              onChange={(e) => handleFileChange(e, "jobVideo")}
+            />
+          </label>
+          {previewUrls.video && (
+            <div className="relative w-40 h-40">
+              <video
+                src={previewUrls.video}
+                className="w-full h-full object-cover rounded-lg"
+                controls
+              />
+              <button
+                type="button"
+                onClick={() => removeFile(null, "jobVideo")}
+                className="absolute -top-2 -right-2 bg-white rounded-full"
+              >
+                <MdCancel className="w-6 h-6 text-red-500" />
+              </button>
+            </div>
+          )}
+        </div>
+        <ErrorMessage
+          name="jobVideo"
+          component="div"
+          className="text-red-500 text-sm"
+        />
+      </div>
     </section>
   );
-}
+};
 
 export default AdvanceInfoSection;

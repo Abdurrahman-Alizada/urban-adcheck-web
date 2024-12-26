@@ -25,10 +25,15 @@ export const jobApi = createApi({
     endpoints: (build) => ({
 
         createJob: build.mutation({
-            query: job => ({
+            query: formData1 => ({
                 url: `/user/jobs`,
                 method: 'POST',
-                body: job,
+                body: formData1,
+                formData: true,
+                prepareHeaders: (headers) => {
+                    headers.delete('Content-Type');
+                    return headers;
+                },
             }),
             invalidatesTags: ['Job'],
         }),
