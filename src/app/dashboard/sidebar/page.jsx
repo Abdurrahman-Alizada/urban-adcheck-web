@@ -34,7 +34,7 @@ function Sidebar() {
   return (
     <div>
       {/* Left Sidebar */}
-      <section className="w-[90%] lg:inline-block bg-white shadow-custom-shadow rounded-[10px] py-4">
+      <section className="hidden w-[90%] lg:inline-block bg-white shadow-custom-shadow rounded-[10px] py-4">
         {/* Profile info */}
         <div className="p-3 flex justify-evenly border-b-[1px] border-gray-300">
           <Image
