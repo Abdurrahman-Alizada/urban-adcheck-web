@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Field, ErrorMessage } from "formik";
 import { MdFileUpload, MdCancel } from "react-icons/md";
+import Image from "next/image";
 
 const AdvanceInfoSection = ({
   values,
@@ -127,7 +128,9 @@ const AdvanceInfoSection = ({
           </label>
           {previewUrls.gallery.map((url, index) => (
             <div key={index} className="relative w-32 h-32">
-              <img
+              <Image
+                width={400}
+                height={400}
                 src={url}
                 alt={`Gallery ${index}`}
                 className="w-full h-full object-cover rounded-lg"
@@ -165,7 +168,9 @@ const AdvanceInfoSection = ({
           </label>
           {previewUrls.cover && (
             <div className="relative w-40 h-40">
-              <img
+              <Image
+                width={400}
+                height={400}
                 src={previewUrls.cover}
                 alt="Cover"
                 className="w-full h-full object-cover rounded-lg"
