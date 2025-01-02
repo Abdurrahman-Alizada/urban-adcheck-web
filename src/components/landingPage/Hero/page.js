@@ -31,19 +31,11 @@ function Hero() {
       </div>
   
       {/* Heading and Floating Image */}
-      <div className="relative mb-4 md:mb-4 lg:mb-12">
+      <div className="relative mb-2">
         <h2 className="text-[30px] md:text-[35px] lg:text-[60px] font-bold font-NotoSans text-white leading-[70px]">
           URBAN-AdCHECK
         </h2>
-        <Image
-          src="/hero-img-2.png"
-          width={300}
-          height={300}
-          alt="Decorative Image"
-          className="absolute  right-0 mobileM:right-[50px] mobileL:right-[90px] md:right-0 -top-[55px] -md:top-[50px] lg:right-[0px] lg:-top-16  w-[180px] h-[180px] md:w-[210px] lg:w-[340px] lg:h-[240px]   object-contain"
-        />
       </div>
-  
       {/* Description and Button */}
       <div>
         <p className="max-w-[480px] text-white font-NotoSans text-[16px] md:text-[18px] lg:text-[20px] mb-6 leading-6 md:leading-8">
