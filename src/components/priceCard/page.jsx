@@ -1,8 +1,13 @@
 'use client';
 import React from 'react';
 import Image from 'next/image';
+import { useGetCurrentLoginUserQuery } from '@/redux/reducers/user/userThunk';
+import { useSubscribePackageMutation } from '@/redux/reducers/jobs/jobThunk';
+import { useRouter } from 'next/navigation';
 
 function PriceCard({ Package }) {
+   const router=useRouter();
+  console.log(Package._id)
   const features = [
     { label: 'Validity', value: Package?.validity },
     { label: ' ', value: Package?.shortDesc },
@@ -14,9 +19,24 @@ function PriceCard({ Package }) {
     { label: 'Discount', value: `${Package?.discount?.percentage || 0}%` },
   ];
 
-
-  const handlePackageSubscribtion=()=>{
+  const { data: user } = useGetCurrentLoginUserQuery();
+  const [subscribePackage, { isError, error, isLoading }] = useSubscribePackageMutation();
+  const handlePackageSubscribtion = () => {
+    if (user) {
+      subscribePackage({ userId: user?._id, packageId: Package?._id }, { skip: !user?._id }).then((res) => 
+        { 
+          if(res?.data?.url){
+            window.open(res.data.url, '_blank');
+          }
+          else{
+            alert("somthing went wrone");
+          }
         
+        })
+    }
+    else {
+       router.push("/account/login")
+    }
   }
 
   return (

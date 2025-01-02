@@ -37,15 +37,29 @@ export const jobApi = createApi({
             }),
             invalidatesTags: ['Job'],
         }),
+        subscribePackage: build.mutation({
+            query: data => ({
+                url: `/create-checkout-session`,
+                method: 'POST',
+                body: data
+            }),
+            invalidatesTags: ['Job'],
+        }),
 
         getAllJobs: build.query({
             query: () => `/jobs`,
+            providesTags: ["Job"],
+        }),
+        jobList: build.query({
+            query: () => `/user/jobs`,
             providesTags: ["Job"],
         }),
     }),
 });
 
 export const {
+    useSubscribePackageMutation,
     useCreateJobMutation,
-    useGetAllJobsQuery
+    useGetAllJobsQuery,
+    useJobListQuery
 } = jobApi;

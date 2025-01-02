@@ -9,8 +9,14 @@ import { IoEyeOutline } from "react-icons/io5";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TiDeleteOutline } from "react-icons/ti";
 import JobsListContentLoader from "@/components/contentLoader/jobsListContentLoader/page";
+import { useJobListQuery } from "@/redux/reducers/jobs/jobThunk";
 
 function MyJobs() {
+
+  const {data:jobs,isError,isLoading}=useJobListQuery();
+  // console.log(jobs?.data?.jobs[0]?.address?.street);
+
+
   const [activeRow, setActiveRow] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -43,11 +49,10 @@ function MyJobs() {
   ];
 
   // Filter Jobs based on the search query
-  const filteredJobs = JobsData.filter((job) =>
-    job.title.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredJobs = jobs?.data?.jobs?.filter((job) =>
+    job?.title?.toLowerCase().includes(searchQuery.toLowerCase())
   );
   console.log(filteredJobs)
-
   // Toggle the popup for specific row
   const togglePopup = (rowId) => {
     setActiveRow((prevRow) => (prevRow === rowId ? null : rowId));
@@ -157,14 +162,14 @@ function MyJobs() {
                <JobsListContentLoader />
             </tr>
             :
-            filteredJobs.map((job) => (
+            filteredJobs?.map((job) => (
               <tr
                 key={job.id}
                 className="hover:rounded-md hover:shadow-custom-hover"
               >
                 <td className="px-4 py-4 flex items-center gap-2 text-[14.5px] font-semibold text-gray-900">
                   <Image
-                    src={job.image}
+                    src={job?.jobCoverImage}
                     width={74}
                     height={74}
                     alt="job-image"

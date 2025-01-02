@@ -19,7 +19,7 @@ const PostJob = () => {
     subCategory: "",
     brand: "",
     model: "",
-    conditions: "",
+    conditions: "good",
     authenticity: "",
     tags: "",
     jobsPrices: "",
@@ -39,7 +39,7 @@ const PostJob = () => {
     uploadedFiles: [],
   });
 
-  // Handle Components Data
+  
   const handleJobsInfoData = (data) => {
     setJobsInfo(data);
   };
@@ -60,15 +60,25 @@ const PostJob = () => {
     jobTitle: Yup.string().required("Job title is required"),
     category: Yup.string().required("Category is required"),
     displayType: Yup.string().required("Display type is required"),
-    condition: Yup.string().required("Condition is required"),
+    // condition: Yup.string().required("Condition is required"),
     paymentType: Yup.string().required("Payment type is required"),
     // "paymentDetails.amount": Yup.number().required("Amount is required"),
     dueTime: Yup.date().required("Due time is required"),
     // tags: Yup.string().required("Tags are required"),
+    address: Yup.object().shape({
+      street: Yup.string().required("Street address is required"),
+      city: Yup.string().required("City is required"),
+      state: Yup.string(),
+      country: Yup.string().required("Country is required"),
+      postalCode: Yup.string(),
+      mapLocation: Yup.string(),
+      coordinates: Yup.array().of(Yup.number()),
+    }),
   });
 
   // Step 2 Schema
   const step2Schema = Yup.object().shape({
+    tags: Yup.array().min(1, "Please add at least one tag."),
     description: Yup.string().required("Description is required"),
     notes: Yup.string(),
     jobGallery: Yup.array(),
@@ -85,18 +95,9 @@ const PostJob = () => {
         .required("Email is required"),
     }),
     phoneNumber: Yup.object().shape({
-      primary: Yup.string().required("Primary phone number is required"),
-      secondary: Yup.string(),
+      primary: Yup.string().required("Phone number is required"),
     }),
-    address: Yup.object().shape({
-      street: Yup.string().required("Street address is required"),
-      city: Yup.string().required("City is required"),
-      state: Yup.string(),
-      country: Yup.string().required("Country is required"),
-      postalCode: Yup.string(),
-      mapLocation: Yup.string(),
-      coordinates: Yup.array().of(Yup.number()),
-    }),
+    // location: Yup.string().required("location is required"),
   });
   // Combined Validation Schemas
   const validationSchemas = [step1Schema, step2Schema, step3Schema];
@@ -105,8 +106,20 @@ const PostJob = () => {
     jobTitle: "",
     category: "",
     displayType: "",
-    condition: "",
-    paymentType: "",
+    condition: "good",
+    paymentType: "Per-Job",
+    address:{
+    coordinates:[
+      -79.22,
+      -43.43,
+    ],
+    street:"",
+    city:"",
+    state:"",
+    country:"",
+    postalCode:"",
+    mapLocation:"",
+    },
     paymentDetails: {
       amount: "",
       currency: "CAD",
@@ -117,7 +130,7 @@ const PostJob = () => {
       },
     },
     dueTime: "2024-12-27T07:11",
-    tags: ["Billboards"],
+    tags: ["billboard"],      
     status: {
       isApproved: false,
       isPublished: false,
@@ -135,18 +148,10 @@ const PostJob = () => {
       location: "peshawar",
     },
     phoneNumber: {
-      primary: "",
-      secondary: "",
-    },
-    address: {
-      street: "",
-      city: "",
-      state: "",
-      country: "",
-      postalCode: "",
-      mapLocation: "",
-      coordinates: [23.4, 34.32],
-    },
+      primary: "2343243232",
+      secondary: "2343223432",
+    }
+    
   };
 
   // Handle "Next" Button Click
@@ -191,8 +196,9 @@ const PostJob = () => {
   };
 
   const handleFormSubmission = (values) => {
-    const formData = new FormData();
 
+    const formData = new FormData();
+    console.log(values.tags); // Access the tags from Formik's values object
     // Helper function to handle nested keys with bracket notation
     const appendNestedKeys = (obj, parentKey = "") => {
       Object.entries(obj).forEach(([key, value]) => {
@@ -255,6 +261,7 @@ const PostJob = () => {
 
           const response = await createJob(formData);
           console.log("Job created successfully:", response);
+         
         } catch (error) {
           console.error("Error submitting form:", error);
         }
@@ -284,7 +291,7 @@ const PostJob = () => {
               values={values}
               handleChange={handleChange}
               handleBlur={handleBlur}
-              jobsInfo={jobsInfo}
+              // jobsInfo={jobsInfo}
               onJobsInfoChnage={handleJobsInfoData}
               errors={errors}
               touched={touched}
@@ -297,7 +304,7 @@ const PostJob = () => {
               values={values}
               errors={errors}
               touched={touched}
-              advanceInfoData={advanceInfoData}
+              // advanceInfoData={advanceInfoData}
               onAdvanceInfoDataChange={handleAdvanceInfoData}
               handleChange={handleChange}
               setFieldValue={setFieldValue}
@@ -317,7 +324,7 @@ const PostJob = () => {
               values={values}
               errors={errors}
               touched={touched}
-              contactData={contactData}
+              // contactData={contactData}
               onContactDataChange={handleContactData}
               handleChange={handleChange}
               handleBlur={handleBlur}
