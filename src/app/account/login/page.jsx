@@ -8,6 +8,8 @@ import { useLoginUserMutation } from '@/redux/reducers/user/userThunk';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/redux/reducers/user/userSlice';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+
 
 function Login() {
   const router = useRouter();
@@ -134,6 +136,11 @@ function Login() {
                 
               </div>
             </form>
+             <div className='flex justify-center mt-2 text-primary'>
+             <Link href="/account/forgot-password">
+               Forgot Password
+            </Link>
+             </div>
           </div>
         </section>
       </div>
