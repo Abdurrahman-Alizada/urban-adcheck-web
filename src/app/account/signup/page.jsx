@@ -21,7 +21,7 @@ function Signup() {
       firstName: "",
       lastName: "",
       email: "",
-      username: "",
+      // username: "",
       password: "",
       phone: "",
     },
@@ -35,9 +35,9 @@ function Signup() {
       email: Yup.string()
         .email("Invalid email address")
         .required("Email is required"),
-      username: Yup.string()
-        .min(3, "Username must be at least 3 characters long")
-        .required("Username is required"),
+      // username: Yup.string()
+      //   .min(3, "Username must be at least 3 characters long")
+      //   .required("Username is required"),
       password: Yup.string()
         .min(6, "Password must be at least 6 characters")
         .required("Password is required"),
@@ -52,7 +52,7 @@ function Signup() {
           firstName: values.firstName,
           lastName: values.lastName,
         },
-        userName: values.username,
+        // userName: values.username,
         email: values.email,
         password: values.password,
         isConfirmed: false,
@@ -192,7 +192,7 @@ function Signup() {
             </div>
 
             {/* Username */}
-            <div className="flex flex-col gap-2">
+            {/* <div className="flex flex-col gap-2">
               <label htmlFor="username" className="text-[16px]">
                 Username
               </label>
@@ -207,7 +207,7 @@ function Signup() {
               {formik.errors.username && formik.touched.username && (
                 <div className="text-red-500 text-sm">{formik.errors.username}</div>
               )}
-            </div>
+            </div> */}
 
             {/* Email */}
             <div className="flex flex-col gap-2">

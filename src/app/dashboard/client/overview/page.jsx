@@ -1,12 +1,22 @@
-import React from 'react';
+'use client'
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faLayerGroup, faEllipsis } from '@fortawesome/free-solid-svg-icons';
+import OverviewLoader from '@/components/contentLoader/dashboardOverviewLoader/page';
 
 function Overview() {
  
  
- 
+  const [loading,setLoading]=useState(true);
+  
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+  }, []);
+  
+
   const cardsData = [
     {
       title: 'Posted jobs',
@@ -54,72 +64,82 @@ function Overview() {
 
   return (
     <div className="space-y-10 mt-5 p-3 lg:p-0">
-      {/* Cards Section */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {cardsData.map((card, index) => (
-          <div
-            key={index}
-            style={{ backgroundColor: card.bgColor }}
-            className="flex justify-between gap-2 items-center rounded-lg px-4 py-6"
-          >
-            <div className="flex flex-col">
-              <span className="text-xl font-semibold">{card.jobs}</span>
-              <span className="text-gray-500 text-[16px]">{card.title}</span>
-            </div>
-            <Image
-              src={card.image}
-              width={68}
-              height={68}
-              alt={card.alt}
-              className="object-contain"
-            />
-          </div>
-        ))}
-      </section>
-
-      {/* Recently Posted Jobs Section */}
-      <section>
-        {/* Section Header */}
-        <div className="flex justify-between items-center">
-          <h2 className="font-semibold text-lg md:text-xl">Recently Posted Jobs</h2>
-          <button className="border-b border-transparent hover:border-black transition duration-150 text-base md:text-lg font-medium">
-            View All <FontAwesomeIcon icon={faArrowRight} className="text-gray-400" size="xs" />
-          </button>
-        </div>
-
-        {/* Jobs Grid */}
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {jobsData.map((ad, index) => (
-            <div key={index} className="shadow-custom-shadow rounded-lg overflow-hidden">
-
-              {/* Ad Image */}
+  {
+    loading ? (
+      <div>
+        <OverviewLoader/>
+      </div>
+    ) : (
+      <>
+        {/* Cards Section */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {cardsData.map((card, index) => (
+            <div
+              key={index}
+              style={{ backgroundColor: card.bgColor }}
+              className="flex justify-between gap-2 items-center rounded-lg px-4 py-6"
+            >
+              <div className="flex flex-col">
+                <span className="text-xl font-semibold">{card.jobs}</span>
+                <span className="text-gray-500 text-[16px]">{card.title}</span>
+              </div>
               <Image
-                src={ad.image}
-                width={300}
-                height={240}
-                alt={ad.title}
-                className="w-full h-auto object-cover"
+                src={card.image}
+                width={68}
+                height={68}
+                alt={card.alt}
+                className="object-contain"
               />
-
-              {/* Ad Content */}
-              <div className="px-5 py-3 border-b">
-                <span className="text-gray-500 text-sm flex items-center gap-2">
-                  <FontAwesomeIcon icon={faLayerGroup} size="sm" />
-                  {ad.category}
-                </span>
-                <h2 className="mt-2 text-[16px] font-semibold">{ad.title}</h2>
-              </div>
-
-              {/* Ad Footer */}
-              <div className="px-5 py-4 flex justify-between items-center">
-                <span className="text-[#FF4F4F] font-bold">{ad.price}</span>
-                <FontAwesomeIcon icon={faEllipsis} className="text-gray-500" size="sm" />
-              </div>
             </div>
           ))}
-        </div>
-      </section>
-    </div>
+        </section>
+
+        {/* Recently Posted Jobs Section */}
+        <section>
+          {/* Section Header */}
+          <div className="flex justify-between items-center">
+            <h2 className="font-semibold text-lg md:text-xl">Recently Posted Jobs</h2>
+            <button className="border-b border-transparent hover:border-black transition duration-150 text-base md:text-lg font-medium">
+              View All <FontAwesomeIcon icon={faArrowRight} className="text-gray-400" size="xs" />
+            </button>
+          </div>
+
+          {/* Jobs Grid */}
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {jobsData.map((ad, index) => (
+              <div key={index} className="shadow-custom-shadow rounded-lg overflow-hidden">
+                {/* Ad Image */}
+                <Image
+                  src={ad.image}
+                  width={300}
+                  height={240}
+                  alt={ad.title}
+                  className="w-full h-auto object-cover"
+                />
+
+                {/* Ad Content */}
+                <div className="px-5 py-3 border-b">
+                  <span className="text-gray-500 text-sm flex items-center gap-2">
+                    <FontAwesomeIcon icon={faLayerGroup} size="sm" />
+                    {ad.category}
+                  </span>
+                  <h2 className="mt-2 text-[16px] font-semibold">{ad.title}</h2>
+                </div>
+
+                {/* Ad Footer */}
+                <div className="px-5 py-4 flex justify-between items-center">
+                  <span className="text-[#FF4F4F] font-bold">{ad.price}</span>
+                  <FontAwesomeIcon icon={faEllipsis} className="text-gray-500" size="sm" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </>
+    )
+  }
+     </div>
+
   );
 }
 

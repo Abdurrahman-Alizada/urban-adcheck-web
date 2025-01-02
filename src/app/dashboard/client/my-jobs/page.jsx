@@ -8,11 +8,11 @@ import { CiEdit } from "react-icons/ci";
 import { IoEyeOutline } from "react-icons/io5";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TiDeleteOutline } from "react-icons/ti";
+import JobsListContentLoader from "@/components/contentLoader/jobsListContentLoader/page";
 
 function MyJobs() {
   const [activeRow, setActiveRow] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-
 
   // jobs data for dynamic rendering
   const JobsData = [
@@ -46,6 +46,7 @@ function MyJobs() {
   const filteredJobs = JobsData.filter((job) =>
     job.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
+  console.log(filteredJobs)
 
   // Toggle the popup for specific row
   const togglePopup = (rowId) => {
@@ -67,12 +68,41 @@ function MyJobs() {
       text: "Delete job",
     },
   ];
+  const [loading, setLoading] = useState(false);
+  const handleChange = (e) => {
+    setSearchQuery(e.target.value)
+    setLoading(true)
+    setTimeout(() => {
+      setLoading(false)
+    }, 4000);
+   
+  }
+  const selectedCategory=(v)=>{
+    setLoading(true)
+    setTimeout(() => {
+      setLoading(false)
+    }, 4000);
+  }
+
+  const recentlyPosted=(v)=>{
+     setLoading(true)
+     setTimeout(() => {
+      setLoading(false)
+     }, 4000);
+  }
+
+  const allJobs=(v)=>{
+    setLoading(true)
+    setTimeout(() => {
+     setLoading(false)
+    }, 4000);
+ }
 
   return (
     <div className="w-full p-2 relative bg-[#FFFFFF] overflow-hidden">
       {/* Search and Filters Section */}
       <section className="w-full flex flex-col lg:flex-row items-center justify-between gap-4 mb-6">
-          {/* search for Jobs */}
+        {/* search for Jobs */}
         <div className="relative w-full sm:w-[40%]">
           <FontAwesomeIcon
             icon={faSearch}
@@ -83,23 +113,24 @@ function MyJobs() {
             type="text"
             placeholder="Jobs title, Keywords..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleChange}
+            // onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full border border-gray-300 text-[16px] rounded-[5px] pl-10 py-2 focus:outline-primary"
           />
         </div>
         {/* filters */}
         <div className="w-full sm:w-[60%] flex flex-wrap gap-4">
-          <select className="flex-1 border text-grayColor border-gray-300 text-[15px] px-3 py-2 rounded-[5px] focus:outline-primary">
+          <select onChange={(e) => selectedCategory(e.target.value)}  className="flex-1 border text-grayColor border-gray-300 text-[15px] px-3 py-2 rounded-[5px] focus:outline-primary">
             <option value="">Select Category</option>
             <option value="category1">Category 1</option>
             <option value="category2">Category 2</option>
           </select>
-          <select className="flex-1 border text-grayColor border-gray-300 text-[15px] px-3 py-2 rounded-[5px] focus:outline-primary">
+          <select onChange={(e) => recentlyPosted(e.target.value)} className="flex-1 border text-grayColor border-gray-300 text-[15px] px-3 py-2 rounded-[5px] focus:outline-primary">
             <option value="">Recently Posted</option>
             <option value="1">1 Day Ago</option>
             <option value="7">7 Days Ago</option>
           </select>
-          <select className="flex-1 border text-grayColor border-gray-300 text-[15px] px-3 py-2 rounded-[5px] focus:outline-primary">
+          <select onChange={(e) => allJobs(e.target.value)} className="flex-1 border text-grayColor border-gray-300 text-[15px] px-3 py-2 rounded-[5px] focus:outline-primary">
             <option value="">All</option>
             <option value="active">Active</option>
             <option value="archived">Archived</option>
@@ -120,7 +151,13 @@ function MyJobs() {
             </tr>
           </thead>
           <tbody>
-            {filteredJobs.map((job) => (
+            {
+            loading ?
+            <tr className="w-full overflow-x-auto">
+               <JobsListContentLoader />
+            </tr>
+            :
+            filteredJobs.map((job) => (
               <tr
                 key={job.id}
                 className="hover:rounded-md hover:shadow-custom-hover"
@@ -138,19 +175,18 @@ function MyJobs() {
                 <td className="px-4 py-4 text-[13px]">{job.date}</td>
                 <td className="px-4 py-4 text-[13px]">{job.price}</td>
                 <td
-                  className={`px-4 py-4 text-[13px] ${
-                    job.status === "Complete"
-                      ? "text- [#27C200]"
-                      : job.status === "Active"
+                  className={`px-4 py-4 text-[13px] ${job.status === "Complete"
+                    ? "text- [#27C200]"
+                    : job.status === "Active"
                       ? "text-[#007BFF]"
                       : "text-[#FF4F4F]"
-                  }`}
+                    }`}
                 >
                   ✓ {job.status}
                 </td>
                 <td className="px-1 py-4">
                   <div className="flex items-center gap-1">
-                    <button className="text-gray-700 bg-[#F5F7FA] hover:bg-[#00AAFF] hover:text-white text-[14.5px] flex gap-2 py-2 px-2 rounded-md">
+                    <button className="text-gray-700 bg-[#F5F7FA] hover:bg-[#00AAFF] hover:text-white text-[14.5px] flex gap-2 py-3 px-2 rounded-md">
                       <CiEdit size={20} className="cursor-pointer" />
                       Edit
                     </button>
@@ -178,7 +214,10 @@ function MyJobs() {
                   )}
                 </td>
               </tr>
-            ))}
+            ))
+           
+
+            }
           </tbody>
         </table>
       </div>
