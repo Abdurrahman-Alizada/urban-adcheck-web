@@ -50,3 +50,38 @@ body {
 .animate-spin {
   animation: spin 1s linear infinite;
 }
+
+
+/* Shimmer Effect */
+/* Shimmer Effect */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: 200px 0;
+  }
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(156, 163, 175, 0.3); /* Matches bg-gray-400/30 */
+}
+
+.shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
