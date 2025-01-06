@@ -130,7 +130,7 @@ const PostJob = () => {
       },
     },
     dueTime: "2024-12-27T07:11",
-    tags: ["billboard"],      
+    tags: [],      
     status: {
       isApproved: false,
       isPublished: false,
@@ -196,14 +196,25 @@ const PostJob = () => {
   };
 
   const handleFormSubmission = (values) => {
-
     const formData = new FormData();
-    console.log(values.tags); // Access the tags from Formik's values object
+  
+    // Ensure tags is an array before processing
+    const sanitizedValues = {
+      ...values,
+      tags: Array.isArray(values.tags)
+        ? values.tags
+        : typeof values.tags === "string"
+        ? values.tags.split(",").map((tag) => tag.trim()) // Convert comma-separated string to array
+        : [],
+    };
+  
+    console.log(sanitizedValues.tags); // Debug: Confirm tags are properly formatted
+  
     // Helper function to handle nested keys with bracket notation
     const appendNestedKeys = (obj, parentKey = "") => {
       Object.entries(obj).forEach(([key, value]) => {
         const fieldKey = parentKey ? `${parentKey}[${key}]` : key;
-
+  
         if (Array.isArray(value)) {
           // Handle arrays
           value.forEach((item) => {
@@ -222,27 +233,30 @@ const PostJob = () => {
         }
       });
     };
-
+  
     // Add all fields except file uploads
-    appendNestedKeys(values);
-
+    appendNestedKeys(sanitizedValues);
+  
     // Handle file fields (if any)
     if (jobGallery && jobGallery.length > 0) {
       Array.from(jobGallery).forEach((file) => {
         formData.append("jobGallery", file);
       });
     }
-
+  
     if (jobCoverImage) {
       formData.append("jobCoverImage", jobCoverImage);
     }
-
+  
     if (jobVideo) {
-      formData.append("jobVideo", values.jobVideo);
+      formData.append("jobVideo", jobVideo);
     }
-
+  
+    // Return the final FormData object
     return formData;
   };
+  
+  
 
   return (
     <Formik

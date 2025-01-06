@@ -15,7 +15,7 @@ import { useJobListQuery } from "@/redux/reducers/jobs/jobThunk";
 function MyJobs() {
 
   const {data:jobs,isError,isLoading}=useJobListQuery();
-  // console.log(jobs);
+ console.log(jobs);
 
 
   const [activeRow, setActiveRow] = useState(null);

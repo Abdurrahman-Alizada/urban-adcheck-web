@@ -3,11 +3,14 @@ import React from 'react'
 import { BsArrowLeft } from "react-icons/bs";
 import Image from 'next/image';
 import Link from 'next/link';
+import { useJobDetailsQuery } from '@/redux/reducers/jobs/jobThunk';
 
 function ViewDetails() {
+
+    const {data:jobDetails,isError,isLoading}=useJobDetailsQuery();
+    console.log(jobDetails)
   return (
-    <div className='w-full mt-4 mb-4 px-2 lg:px-6'>
-       
+    <div className='w-full mt-4 mb-4 px-2 lg:px-6'>      
           {/* navigation */}
         <div className='flex items-center gap-3'>
               <BsArrowLeft size={22}/>  
@@ -16,14 +19,14 @@ function ViewDetails() {
             </h2>
         </div>
            {/* Job Image Gallery */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-3 p-1 bg-[#F6F6F6] rounded-[10px]">
+    <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-3 p-1 bg-[#F6F6F6] rounded-[10px]">
         {/* First Column */}
         <div>
           <Image
             src={'/billboard-horizontal.png'}
             height={404}
             width={337}
-            className="object-contain "
+            className="object-contain max-w-[337px] max-h-[404px]"
             alt="Horizontal Billboard"
           />
         </div>
@@ -34,14 +37,14 @@ function ViewDetails() {
             src={'/billboard-rectangle.png'}
             height={197}
             width={337}
-            className="object-contain "
+            className="object-contain max-w-[337px] max-h-[197px]"
             alt="Rectangle Billboard 1"
           />
           <Image
             src={'/billboard-rectangle.png'}
             height={197}
             width={337}
-            className="object-contain "
+            className="object-contain max-w-[337px] max-h-[197px]"
             alt="Rectangle Billboard 2"
           />
         </div>
@@ -52,18 +55,18 @@ function ViewDetails() {
             src={'/billboard-square.png'}
             height={197}
             width={300}
-            className="object-contain "
+            className="object-contain max-w-[300px] max-h-[197px]"
             alt="Square Billboard 1"
           />
           <Image
             src={'/billboard-square.png'}
             height={197}
             width={300}
-            className="object-contain "
+            className="object-contain max-w-[300px] max-h-[197px]"
             alt="Square Billboard 2"
           />
         </div>
-        </div>
+    </div>
 
          {/* title & describtion */}
          <div className='mt-4'>
@@ -97,7 +100,6 @@ function ViewDetails() {
             <div className='mt-4'>
                 <span className="mt-2 font-nunitosans text-[#123633] font-bold text-[18.03px]">Location</span>
                 <Image src={'/map-1.png'} width={944} height={311} alt='Map' className='object-contain'/>
-
             </div>
          </div>
 

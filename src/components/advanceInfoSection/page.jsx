@@ -94,7 +94,8 @@ const addTag = () => {
           </button>
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
-          {values.tags?.map((tag, index) => (
+          {Array.isArray(values.tags) &&
+              values.tags.map((tag, index) => (
             <div
               key={index}
               className="flex items-center gap-2 bg-gray-200 px-3 py-1 rounded-full"
