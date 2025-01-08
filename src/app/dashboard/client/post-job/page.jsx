@@ -130,7 +130,7 @@ const PostJob = () => {
       },
     },
     dueTime: "2024-12-27T07:11",
-    tags: ["billboard"],      
+    tags: [],      
     status: {
       isApproved: false,
       isPublished: false,
@@ -196,14 +196,25 @@ const PostJob = () => {
   };
 
   const handleFormSubmission = (values) => {
-
     const formData = new FormData();
-    console.log(values.tags); // Access the tags from Formik's values object
+  
+    // Ensure tags is an array before processing
+    const sanitizedValues = {
+      ...values,
+      tags: Array.isArray(values.tags)
+        ? values.tags
+        : typeof values.tags === "string"
+        ? values.tags.split(",").map((tag) => tag.trim()) // Convert comma-separated string to array
+        : [],
+    };
+  
+    console.log(sanitizedValues.tags); // Debug: Confirm tags are properly formatted
+  
     // Helper function to handle nested keys with bracket notation
     const appendNestedKeys = (obj, parentKey = "") => {
       Object.entries(obj).forEach(([key, value]) => {
         const fieldKey = parentKey ? `${parentKey}[${key}]` : key;
-
+  
         if (Array.isArray(value)) {
           // Handle arrays
           value.forEach((item) => {
@@ -222,25 +233,26 @@ const PostJob = () => {
         }
       });
     };
-
+  
     // Add all fields except file uploads
-    appendNestedKeys(values);
-
+    appendNestedKeys(sanitizedValues);
+  
     // Handle file fields (if any)
     if (jobGallery && jobGallery.length > 0) {
       Array.from(jobGallery).forEach((file) => {
         formData.append("jobGallery", file);
       });
     }
-
+  
     if (jobCoverImage) {
       formData.append("jobCoverImage", jobCoverImage);
     }
-
+  
     if (jobVideo) {
-      formData.append("jobVideo", values.jobVideo);
+      formData.append("jobVideo", jobVideo);
     }
-
+  
+    // Return the final FormData object
     return formData;
   };
 
@@ -338,10 +350,10 @@ const PostJob = () => {
               <>
                 <button
                   type="submit"
-                  className="w-[280px] bg-transparent border-grayColor border-[1px] text-black px-8 py-2 rounded-md "
+                  className="w-[280px] bg-secondary border-grayColor border-[1px] text-white px-8 py-2 rounded-md "
                   // onClick={() => console.log("View Posting Rules clicked")}
                 >
-                  View Posting Rules
+                  Save Changes
                 </button>
                 <button
                   className="px-4 py-2 bg-primary text-white rounded"
@@ -357,9 +369,9 @@ const PostJob = () => {
                 <div className="flex justify-end gap-3 mt-3">
                   <button
                     type="submit"
-                    className="w-[280px] bg-transparent border-grayColor border-[1px] text-black px-8 py-2 rounded-md "
+                    className="w-[280px] bg-secondary border-grayColor border-[1px] text-white px-8 py-2 rounded-md "
                   >
-                    View Posting Rules
+                    Save Changes
                   </button>
                   <button
                     type="button"

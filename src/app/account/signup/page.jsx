@@ -292,13 +292,15 @@ function Signup() {
 
             {/* Submit Button */}
             <div className="flex justify-center">
+            {isLoading ? "Loading ...." : 
               <button
                 type="submit"
                 className="bg-primary text-white w-[249px] h-[59px] rounded-[10px] text-[18px]"
                  disabled={isLoading}
               >
-                {isLoading ? "Loading ...." : `Create Account as ${selectedRole}`}
+              `Create Account as ${selectedRole}`
               </button>
+            }  
             </div>
 
             <div className="flex justify-center">

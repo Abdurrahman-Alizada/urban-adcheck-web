@@ -126,15 +126,18 @@ function Login() {
 
               {/* Login Button */}
               <div className="flex justify-center">
+              {
+              isLoading ? <div className="spinner"> </div> : 
                 <button
                   type="submit"
                   className="bg-primary text-white w-full h-[52px] rounded-[10px]"
                   disabled={isLoading}
                 >
-                  {isLoading ? 'Logging in...' : 'Login'}
+                Login
                 </button>
-                
+              }  
               </div>
+
             </form>
              <div className='flex justify-center mt-2 text-primary'>
              <Link href="/account/forgot-password">
