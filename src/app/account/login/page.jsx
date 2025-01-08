@@ -40,7 +40,7 @@ function Login() {
         console.log('Login successful:', response);
         localStorage.setItem('userInfo',JSON.stringify(response));
         // Redirect to dashboard
-        router.push('/dashboard/client/overview');
+        router.push(`/dashboard/${response?.role}/overview`);
       } catch (error) {
         console.error('Login failed:', error);
         alert('Something went wrong');

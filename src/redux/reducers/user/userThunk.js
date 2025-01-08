@@ -82,6 +82,10 @@ export const userApi = createApi({
       query: () => `/user/self`,
       providesTags: ["User", "CurrentLoginUser"],
     }),
+    getUserStat: build.query({
+      query: () => `/user/dashboard/statistics`,
+      providesTags: ["User", "CurrentLoginUser"],
+    }),
   }),
 });
 
@@ -89,6 +93,7 @@ export const {
   useLoginUserMutation,
   useSignupUserMutation,
   useForgotPasswordMutation,
+  useGetUserStatQuery,
   useResetPasswordMutation,
   useUpdateUserMutation,
   useGetCurrentLoginUserQuery,
