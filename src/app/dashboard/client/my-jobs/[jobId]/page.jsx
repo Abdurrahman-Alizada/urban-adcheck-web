@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { BsArrowLeft } from "react-icons/bs";
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,6 +10,8 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation';
 function ViewDetails() {
   const params = useParams();
   console.log("alksdfjlsad", params?.jobId)
+
+  const [deliveryModal,setDeliveryModal]=useState(false);
 
   const { data: jobDetails, isError, isLoading } = useJobDetailsQuery(params?.jobId);
   const router = useRouter();
@@ -29,10 +31,21 @@ function ViewDetails() {
     expireAt,
     jobGallery,
     jobVideo,
+    acceptedBy,
+    watchdogReports,
+
   } = jobDetails?.data || {};
 
+  const comments={
+
+  }
+  console.log(watchdogReports);
+  const handleViewDelievery=()=>{
+       setDeliveryModal(true)
+  }
+
   return (
-    <div className="w-full mt-4 mb-4 px-2 lg:px-6 font-nunitosans">
+    <div className="w-full relative mt-4 mb-4 px-2 lg:px-6 font-nunitosans">
       {/* Navigation */}
       <div className="flex items-center gap-3">
         <button
@@ -49,22 +62,96 @@ function ViewDetails() {
         <h1 className="text-gray-800 text-[24px] lg:text-[28px] font-extrabold font-Archivoo">
           {jobTitle ?? 'N/A'}
         </h1>
-        <span className="text-gray-500 text-sm font-nunitosans">
+        <span className="text-gray-500 font-semibold text-sm font-nunitosans">
           Category: {category ?? 'N/A'}
         </span>
       </div>
 
-      {/* Tags */}
-      <div className="mt-2 flex flex-wrap gap-2">
-        {tags?.map((tag, index) => (
-          <span
-            key={index}
-            className="px-2 py-1 bg-blue-100 text-blue-600 text-sm rounded-md font-nunitosans"
-          >
-            {tag}
-          </span>
-        )) ?? <span>No tags available</span>}
+      <div>
+        <span className="text-gray-500 font-semibold text-sm font-nunitosans">
+          Accepted By:  {acceptedBy?.watchdog ? `${acceptedBy?.watchdog?.fullName?.firstName} ${acceptedBy?.watchdog?.fullName?.lastName}`  :" Not Yet" }  
+        </span>
       </div>
+
+      <div className='flex justify-between'>
+           <div>
+                {/* Expiration Date */}
+                <div className="mt-4">
+                  <h2 className="text-gray-700 text-[20px] font-bold font-Archivoo">Job Expiration</h2>
+                  <p className="text-gray-600 text-[15px] font-nunitosans">
+                    {expireAt ? new Date(expireAt).toLocaleDateString() : 'N/A'}
+                  </p>
+                </div>
+
+                {/* Tags */}
+                <div className="mt-2 flex flex-wrap gap-2">
+                <h2 className="text-gray-700 text-[20px] font-bold font-Archivoo">Tags</h2>
+                  {tags?.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="px-2 py-1 bg-blue-100 text-blue-600 text-sm rounded-md font-nunitosans"
+                    >
+                      {tag}
+                    </span>
+                  )) ?? <span>No tags available</span>}
+                </div>
+           </div>
+           <div  className='flex gap-1 relative'>
+                <button className="h-12 px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-secondary text-white hover:bg-primary">
+                   Chat Now
+                </button>
+                <button
+                onClick={handleViewDelievery}
+                className="h-12 px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-primary text-white hover:bg-primary">
+                   View Delivery
+                </button>
+           </div>
+      </div>
+              {/* popup */}
+        {
+        deliveryModal && 
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-[90%] max-w-md">
+             <h2 className="text-xl font-semibold mb-4">Watchdog reports</h2>
+             <p className="text-gray-600 mb-6">
+                Are you sure you want to mark the job as expired?
+             </p>
+
+             {/* buttons */}
+          <div className="flex justify-end gap-4">
+            <button
+              onClick={() => setDeliveryModal(false)}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                                setDeliveryModal(false);
+              }}
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+            >
+              Mark Expired
+            </button>
+          </div>
+          </div>
+          {/* Comments */}
+          
+          {
+              watchdogReports?.comments?.map((comment,index)=>(
+              <div className="mt-4">
+                <h2 className="text-gray-700 text-[20px] font-bold font-Archivoo">
+                
+                </h2>
+                <p className="text-gray-600 mt-2 text-[15px] leading-[22px] font-nunitosans">
+                  
+                </p>  
+              </div>
+          ))
+        }
+        </div>
+      }
+      
 
       {/* Job Image Gallery */}
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 p-1 bg-[#F6F6F6] rounded-[10px] mt-4">
@@ -142,14 +229,8 @@ function ViewDetails() {
           <p>Phone: {phoneNumber?.primary ?? 'N/A'}</p>
         </div>
       </div>
-
-      {/* Expiration Date */}
-      <div className="mt-4">
-        <h2 className="text-gray-700 text-[20px] font-bold font-Archivoo">Job Expiration</h2>
-        <p className="text-gray-600 text-[15px] font-nunitosans">
-          {expireAt ? new Date(expireAt).toLocaleDateString() : 'N/A'}
-        </p>
-      </div>
+ 
+      
     </div>
   );
 }

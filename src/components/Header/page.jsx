@@ -23,6 +23,8 @@ function Header() {
   console.log(currentLoginUser);
   const router=useRouter();
  
+  const userRole = currentLoginUser?.role;
+
 
   // useEffect(()=>{
   //   const userData=JSON.parse(localStorage.getItem('userInfo'));
@@ -68,7 +70,8 @@ function Header() {
 
   return (
     <>
-         <header className="w-full h-[60px] fixed lg:h-[100px] px-4 lg:px-6 xl:px-10 shadow-custom-shadow flex gap-5 justify-between items-center bg-white">
+      <div className=''>
+         <header className="w-full relative px-4 lg:px-6 xl:px-10 shadow-custom-shadow flex gap-5 justify-between items-center bg-white">
             {/* Logo Section */}
             <div>
               <Link href="/">
@@ -242,8 +245,7 @@ function Header() {
                       <FontAwesomeIcon icon={faBars} size={40} className="cursor-pointer " onClick={openSidebarMenu} />
                 </div>
              </div>
-
-
+             
               {/* Sidebar Menu for mobile and tablet */}
               {MenuOpen && (
                 <div className="w-3/5 z-10 md:w-2/5 max-h-svh lg:hidden fixed inset-0 bg-opacity-80 bg-black">
@@ -270,6 +272,7 @@ function Header() {
                 </div>
               )}
          </header> 
+      </div>
     </>
    
   );
