@@ -255,8 +255,6 @@ const PostJob = () => {
     // Return the final FormData object
     return formData;
   };
-  
-  
 
   return (
     <Formik
@@ -352,10 +350,10 @@ const PostJob = () => {
               <>
                 <button
                   type="submit"
-                  className="w-[280px] bg-transparent border-grayColor border-[1px] text-black px-8 py-2 rounded-md "
+                  className="w-[280px] bg-secondary border-grayColor border-[1px] text-white px-8 py-2 rounded-md "
                   // onClick={() => console.log("View Posting Rules clicked")}
                 >
-                  View Posting Rules
+                  Save Changes
                 </button>
                 <button
                   className="px-4 py-2 bg-primary text-white rounded"
@@ -371,9 +369,9 @@ const PostJob = () => {
                 <div className="flex justify-end gap-3 mt-3">
                   <button
                     type="submit"
-                    className="w-[280px] bg-transparent border-grayColor border-[1px] text-black px-8 py-2 rounded-md "
+                    className="w-[280px] bg-secondary border-grayColor border-[1px] text-white px-8 py-2 rounded-md "
                   >
-                    View Posting Rules
+                    Save Changes
                   </button>
                   <button
                     type="button"

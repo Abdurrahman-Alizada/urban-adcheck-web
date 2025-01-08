@@ -55,7 +55,7 @@ export const jobApi = createApi({
             providesTags: ["Job"],
         }),
         jobDetails: build.query({
-            query: () => `/user/jobs/67768ddf82a9dfb3c23d7dae`,
+            query: (jobId) => `/user/jobs/${jobId}`,
             providesTags: ["Job"],
         }),
     }),

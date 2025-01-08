@@ -10,6 +10,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --header-height: 80px; /* Adjust this based on the header height */
+  --footer-height: 100px; /* Adjust this based on the footer height */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,6 +25,12 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.sticky {
+  position: sticky;
+  top: var(--header-height);
+  bottom: var(--footer-height);
 }
 
 .placeholder-white-space::placeholder{
