@@ -35,10 +35,7 @@ function ViewDetails() {
     watchdogReports,
 
   } = jobDetails?.data || {};
-
-  const comments={
-
-  }
+  
   console.log(watchdogReports);
   const handleViewDelievery=()=>{
        setDeliveryModal(true)
@@ -117,6 +114,9 @@ function ViewDetails() {
                 Are you sure you want to mark the job as expired?
              </p>
 
+      
+        
+
              {/* buttons */}
           <div className="flex justify-end gap-4">
             <button
@@ -135,20 +135,6 @@ function ViewDetails() {
             </button>
           </div>
           </div>
-          {/* Comments */}
-          
-          {
-              watchdogReports?.comments?.map((comment,index)=>(
-              <div className="mt-4">
-                <h2 className="text-gray-700 text-[20px] font-bold font-Archivoo">
-                
-                </h2>
-                <p className="text-gray-600 mt-2 text-[15px] leading-[22px] font-nunitosans">
-                  
-                </p>  
-              </div>
-          ))
-        }
         </div>
       }
       
