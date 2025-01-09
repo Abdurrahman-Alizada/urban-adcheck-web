@@ -105,38 +105,103 @@ function ViewDetails() {
            </div>
       </div>
               {/* popup */}
-        {
-        deliveryModal && 
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-[90%] max-w-md">
-             <h2 className="text-xl font-semibold mb-4">Watchdog reports</h2>
-             <p className="text-gray-600 mb-6">
-                Are you sure you want to mark the job as expired?
-             </p>
+              {
+  deliveryModal && (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div className="bg-white rounded-lg shadow-lg p-6 m-4 w-full max-w-[80%] max-h-[95vh] overflow-y-auto">
+        {/* Modal Header */}
+        <h2 className="text-xl font-semibold mb-4">Watchdog Reports</h2>
+        <p className="text-gray-600 mb-6">Here is your job delivery:</p>
 
-      
-        
+        {/* Modal Content */}
+        {watchdogReports?.map((report, index) => (
+          <div key={index} className="mb-6">
+            {/* Drone Images Section */}
+            <div>
+              <h2 className="text-lg font-semibold mb-4">Drone Images</h2>
+              {report?.media?.filter((media) => media.subType === "drone").length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {report?.media
+                    ?.filter((media) => media.subType === "drone")
+                    .map((media, idx) => (
+                      <div key={idx}>
+                        <Image
+                          src={media?.url}
+                          width={200}
+                          height={200}
+                          className="rounded-md object-contain max-w-[200px] max-h-[200px]"
+                        />
+                      </div>
+                    ))}
+                </div>
+              ) : (
+                <p>No Drone Images Found.</p>
+              )}
+            </div>
 
-             {/* buttons */}
-          <div className="flex justify-end gap-4">
-            <button
-              onClick={() => setDeliveryModal(false)}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={() => {
-                                setDeliveryModal(false);
-              }}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-            >
-              Mark Expired
-            </button>
+            {/* Camera Images Section */}
+            <div className="mt-6">
+              <h2 className="text-lg font-semibold mb-4">Camera Images</h2>
+              {report?.media?.filter((media) => media.subType === "camera").length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {report?.media
+                    ?.filter((media) => media.subType === "camera")
+                    .map((media, idx) => (
+                      <div key={idx}>
+                        <Image
+                          src={media?.url}
+                          width={200}
+                          height={200}
+                          className="rounded-md object-contain max-w-[200px] max-h-[200px]"
+                        />
+                      </div>
+                    ))}
+                </div>
+              ) : (
+                <p>No Camera Images Found.</p>
+              )}
+            </div>
+
+            {/* comments */}
+            <div>
+            <h2 className="text-lg font-semibold mb-4">Comments</h2>
+              
+      {report?.comments &&
+        Object.entries(report.comments).map(([title, comment], index) => (
+          <div key={index} className="mb-4">
+            <h3 className="text-gray-700 font-bold text-sm">
+              {title.charAt(0).toUpperCase() + title.slice(1)} {/* Capitalize the title */}
+            </h3>
+            <p className="text-gray-500 text-sm">{comment}</p>
           </div>
-          </div>
-        </div>
+        ))
       }
+            </div>
+          </div>
+        ))}
+
+        {/* Modal Buttons */}
+        <div className="flex justify-end gap-4 mt-4">
+          <button
+            onClick={() => setDeliveryModal(false)}
+            className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-gray-300"
+          >
+            Submit a revision
+          </button>
+          <button
+            onClick={() => {
+              setDeliveryModal(false);
+            }}
+            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-red-700"
+          >
+            Accept Delivery
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
       
 
       {/* Job Image Gallery */}
@@ -145,7 +210,7 @@ function ViewDetails() {
           jobGallery.map((image, index) => (
             <Image
               key={index}
-              src={image}
+              src={"ads-img.png"}
               height={200}
               width={300}
               className="object-contain max-w-full max-h-[200px]"
