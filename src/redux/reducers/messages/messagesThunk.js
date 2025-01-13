@@ -30,6 +30,14 @@ export const messagesApi = createApi({
       }),
       invalidatesTags: ['sendMessageRoutes'],
     }),
+    updateMessageRoutes: build.mutation({
+      query: data => ({
+        url: `/users/message/room/${data?.roomId}`,
+        method: 'PUT',
+        body: data?.newMessage,
+      }),
+      invalidatesTags: ['sendMessageRoutes'],
+    }),
     getRoomById: build.query({
       query: (jobId) => `/users/message/room/getRoomByJob/${jobId}`,
       providesTags: ["messages", "getRoomById"],
@@ -44,5 +52,6 @@ export const messagesApi = createApi({
 export const {
   useGetAllMessagesRoomQuery,
   useGetRoomByIdQuery,
-  useSendMessageRoutesMutation
+  useSendMessageRoutesMutation,
+  useUpdateMessageRoutesMutation
 } = messagesApi;
