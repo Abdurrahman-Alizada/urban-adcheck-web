@@ -27,7 +27,7 @@ function Sidebar() {
   ];
 
   const adminMenu = [
-    { name: 'Dashboard', icon: <IoGridOutline size={21} />, url: '/dashboard/admin/dashboard' },
+    { name: 'Dashboard', icon: <IoGridOutline size={21} />, url: '/dashboard/admin/overview' },
     { name: 'Clients', icon: <FaRegUserCircle size={21} />, url: '/dashboard/admin/clients' },
     { name: 'WatchDogs', icon: <PiClipboardTextLight size={21} />, url: '/dashboard/admin/watchdog' },
   ];
