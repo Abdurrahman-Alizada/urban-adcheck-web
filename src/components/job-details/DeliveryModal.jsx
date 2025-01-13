@@ -25,6 +25,7 @@ const DeliveryModal = ({ watchdogReports, onClose }) => {
                                     src={media?.url}
                                     width={200}
                                     height={200}
+                                    alt='Drone-images'
                                     className="rounded-md object-contain max-w-[200px] max-h-[200px]"
                                   />
                                 </div>
@@ -48,6 +49,7 @@ const DeliveryModal = ({ watchdogReports, onClose }) => {
                                     src={media?.url}
                                     width={200}
                                     height={200}
+                                    alt='camera-image'
                                     className="rounded-md object-contain max-w-[200px] max-h-[200px]"
                                   />
                                 </div>
