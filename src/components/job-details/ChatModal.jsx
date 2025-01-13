@@ -1,3 +1,4 @@
+
 'use client';
 import React, { useState } from 'react';
 import { RxCross2 } from "react-icons/rx";
@@ -109,3 +110,4 @@ const ChatModal = ({ messages, user, refetchMessages,acceptedBy, updateMessageRo
 };
 
 export default ChatModal;
+
