@@ -3,6 +3,9 @@ import React from 'react';
 import Image from 'next/image';
 
 const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
+ 
+  
+
   const {
     jobTitle,
     category,

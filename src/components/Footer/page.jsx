@@ -6,20 +6,20 @@ import { faEnvelope, faLocationDot,faPhone } from '@fortawesome/free-solid-svg-i
 
 function Footer() {
   const footerListOne = [
-    { title: 'Footer Link 1', link: '#' },
-    { title: 'Footer Link 2', link: '#' },
-    { title: 'Footer Link 3', link: '#' },
-    { title: 'Footer Link 4', link: '#' },
-    { title: 'Footer Link 5', link: '#' },
-    { title: 'Footer Link 6', link: '#' },
+    { title: 'Our Story', link: '/our-story' },
+    { title: 'About Us', link: '/about-us' },
+    { title: 'Contact Us', link: '#' },
+    { title: 'Faq', link: '#' },
+    { title: 'Pricings', link: '#' },
+    { title: 'Features', link: '#' },
   ];
   const footerListTwo = [
-    { title: 'Footer Link 7', link: '#' },
-    { title: 'Footer Link 8', link: '#' },
-    { title: 'Footer Link 9', link: '#' },
-    { title: 'Footer Link 10', link: '#' },
-    { title: 'Footer Link 11', link: '#' },
-    { title: 'Footer Link 12', link: '#' },
+    { title: 'Terms & Conditions', link: '#' },
+    { title: 'Privacy Policy', link: '#' },
+    { title: 'Term Of use', link: '#' },
+    { title: 'Guidlines', link: '#' },
+    { title: 'Restrictions', link: '#' },
+    { title: 'Newbies', link: '#' },
   ];
 
   return (
