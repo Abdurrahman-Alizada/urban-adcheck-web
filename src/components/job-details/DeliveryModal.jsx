@@ -1,16 +1,26 @@
 'use client';
 import React from 'react';
 import Image from 'next/image';
+import DeliveryModalSkeleton from '../contentLoader/DeliveryModal/page';
+import { RxCross2 } from "react-icons/rx";
 
-const DeliveryModal = ({ watchdogReports, onClose }) => {
+const DeliveryModal = ({ watchdogReports, onClose, isLoading }) => {
   return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="bg-white rounded-lg shadow-lg p-6 m-4 w-full max-w-[80%] max-h-[95vh] overflow-y-auto">
+                 
+                 <RxCross2 size={35} onClick={onClose} className='bg-white rounded-full cursor-pointer absolute right-10 top-5'/> 
+                 
+                <div className="bg-white rounded-lg shadow-lg p-6 m-4 w-full max-w-[80%] max-h-[95vh] overflow-y-auto">
                   {/* Modal Header */}
              <h2 className="text-xl font-semibold mb-4 text-primary">Watchdog Reports</h2>
              <p className="text-gray-600 mb-6">Here is your job delivery:</p>
+                 
                   {/* Modal Content */}
-                {watchdogReports?.map((report, index) => (
+                {
+                  isLoading ?
+                  <DeliveryModalSkeleton/>
+                  :
+                  watchdogReports?.map((report, index) => (
                   <div key={index} className="mb-6">
                     {/* Drone Images Section */}
                     <div>
@@ -76,7 +86,8 @@ const DeliveryModal = ({ watchdogReports, onClose }) => {
                         }
                       </div>
                     </div>
-                  ))}
+                  ))
+                }
     
                   {/* Modal Buttons */}
                   <div className="flex justify-end gap-4 mt-4">
