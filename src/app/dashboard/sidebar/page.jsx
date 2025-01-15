@@ -10,10 +10,11 @@ import { HiOutlineUserCircle } from 'react-icons/hi';
 import { FaRegUserCircle } from "react-icons/fa";
 import { useGetCurrentLoginUserQuery } from '@/redux/reducers/user/userThunk';
 import { FaRegRegistered } from 'react-icons/fa6';
+import SidebarLoader from '@/components/contentLoader/sidebar/page';
 
 function Sidebar() {
   const { data: user, isLoading } = useGetCurrentLoginUserQuery();
-
+  console.log("user",user)
   const ClientMenu = [
     { name: 'Overview', icon: <IoGridOutline size={21} />, url: '/dashboard/client/overview' },
     { name: 'View Profile', icon: <HiOutlineUserCircle size={21} />, url: '/dashboard/client/account-setting' },
@@ -51,8 +52,15 @@ function Sidebar() {
   }
 
   return (
-    <div className="sticky top-[var(--header-height)] bottom-[var(--footer-height)] bg-white shadow-custom-shadow rounded-[10px] py-4 mt-4">
-      {/* Profile info */}
+    <>
+    {
+      isLoading ?
+      <SidebarLoader/>
+      :
+
+    <div className="sticky top-[var(--header-height)] bottom-[var(--footer-height)] bg-white shadow-custom-shadow  rounded-[10px] py-4 mt-6">
+    
+       {/* Profile info  */}
       <div className="p-3 flex justify-evenly border-b-[1px] border-gray-300">
         <Image
           src="/profile-Image.png"
@@ -109,6 +117,48 @@ function Sidebar() {
         </ul>
       )}
     </div>
+       {/* List of Items  */}
+         {user?.role?.isClient && (
+          <ul className="flex flex-col gap-4 px-6 mt-4">
+            {ClientMenu.map((tab) => (
+              <li key={tab.name} className="flex items-center gap-2 text-gray-400">
+                <Link href={tab.url} className="flex items-center gap-2 hover:text-primary">
+                  {tab.icon}
+                  <span className="text-[15.03px]">{tab.name}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+  
+        {user?.role?.isAdmin && (
+          <ul className="flex flex-col gap-4 px-6 mt-4">
+            {adminMenu.map((tab) => (
+              <li key={tab.name} className="flex items-center gap-2 text-gray-400">
+                <Link href={tab.url} className="flex items-center gap-2 hover:text-primary">
+                  {tab.icon}
+                  <span className="text-[15.03px]">{tab.name}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+  
+        {user?.role?.isWatchDog && (
+          <ul className="flex flex-col gap-4 px-6 mt-4">
+            {watchDogMenu.map((tab) => (
+              <li key={tab.name} className="flex items-center gap-2 text-gray-400">
+                <Link href={tab.url} className="flex items-center gap-2 hover:text-primary">
+                  {tab.icon}
+                  <span className="text-[15.03px]">{tab.name}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      }
+    </>
   );
 }
 

@@ -331,65 +331,65 @@ function MyJob() {
                     )}
                     {/* Job List Table */}
                     <div className="relative overflow-x-auto">
-  <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-    <thead className="text-xs text-grayColor font-normal capitalize bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-      <tr>
-        <th scope="col" className="px-6 py-3 font-normal flex items-center gap-1">
-          <BiSquareRounded size={20} className='bg-white'/>
-          Name
-        </th>
-        <th scope="col" className="font-normal px-6 py-3">Location</th>
-        <th scope="col" className="font-normal px-6 py-3">Charge ($)</th>
-        <th scope="col" className="font-normal px-6 py-3">Action</th>
-      </tr>
-    </thead>
-    <tbody>{renderJobRows(currentJobs)}</tbody>
-  </table>
+                        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                            <thead className="text-xs text-grayColor font-normal capitalize bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" className="px-6 py-3 font-normal flex items-center gap-1">
+                                <BiSquareRounded size={20} className='bg-white'/>
+                                Name
+                                </th>
+                                <th scope="col" className="font-normal px-6 py-3">Location</th>
+                                <th scope="col" className="font-normal px-6 py-3">Charge ($)</th>
+                                <th scope="col" className="font-normal px-6 py-3">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>{renderJobRows(currentJobs)}</tbody>
+                        </table>
 
-  {/* Delete Job Modal */}
-  {showDeleteModal && (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
-      <div className="w-[70%] md:w-[60%] lg:w-[50%] bg-white shadow-custom-shadow p-4 rounded-md">
-        <div className="flex flex-col items-center">
-          <RxCross2
-            color="red"
-            size={25}
-            className="cursor-pointer"
-            onClick={closeDeleteInProgressJobModal}
-          />
-          <span className="font-semibold font-nunitosans text-center">
-            Are you sure you want to cancel a job?
-          </span>
-        </div>
-        <div className="flex flex-col gap-2 p-4">
-          <label
-            htmlFor="jobCancellationReason"
-            className="text-[15px] font-semibold font-nunitosans"
-          >
-            Give Reason
-          </label>
-          <textarea
-            id="jobCancellationReason"
-            placeholder="Type here"
-            className="bg-gray-100 text-[16px] resize-none rounded-md p-2"
-            rows="4"
-          ></textarea>
-        </div>
-        <div className="flex flex-col md:flex-row justify-center gap-2">
-          <button
-            className="bg-transparent border-[1px] border-red-500 text-red-500 px-2 md:px-6 py-1 rounded-md disabled:opacity-50"
-            onClick={closeDeleteInProgressJobModal}
-          >
-            Cancel
-          </button>
-          <button className="bg-green-400 border-[1px] text-white px-2 md:px-6 py-1 rounded-md disabled:opacity-50">
-            Submit
-          </button>
-        </div>
-      </div>
-    </div>
-  )}
-</div>
+                    {/* Delete Job Modal */}
+                    {showDeleteModal && (
+                        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
+                        <div className="w-[70%] md:w-[60%] lg:w-[50%] bg-white shadow-custom-shadow p-4 rounded-md">
+                            <div className="flex flex-col items-center">
+                            <RxCross2
+                                color="red"
+                                size={25}
+                                className="cursor-pointer"
+                                onClick={closeDeleteInProgressJobModal}
+                            />
+                            <span className="font-semibold font-nunitosans text-center">
+                                Are you sure you want to cancel a job?
+                            </span>
+                            </div>
+                            <div className="flex flex-col gap-2 p-4">
+                            <label
+                                htmlFor="jobCancellationReason"
+                                className="text-[15px] font-semibold font-nunitosans"
+                            >
+                                Give Reason
+                            </label>
+                            <textarea
+                                id="jobCancellationReason"
+                                placeholder="Type here"
+                                className="bg-gray-100 text-[16px] resize-none rounded-md p-2"
+                                rows="4"
+                            ></textarea>
+                            </div>
+                            <div className="flex flex-col md:flex-row justify-center gap-2">
+                            <button
+                                className="bg-transparent border-[1px] border-red-500 text-red-500 px-2 md:px-6 py-1 rounded-md disabled:opacity-50"
+                                onClick={closeDeleteInProgressJobModal}
+                            >
+                                Cancel
+                            </button>
+                            <button className="bg-green-400 border-[1px] text-white px-2 md:px-6 py-1 rounded-md disabled:opacity-50">
+                                Submit
+                            </button>
+                            </div>
+                        </div>
+                        </div>
+                    )}
+            </div>
 
 
                     {/* Pagination Controls */}
