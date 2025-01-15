@@ -13,7 +13,7 @@ import { FaRegRegistered } from 'react-icons/fa6';
 
 function Sidebar() {
   const { data: user, isLoading } = useGetCurrentLoginUserQuery();
-
+  console.log("user",user)
   const ClientMenu = [
     { name: 'Overview', icon: <IoGridOutline size={21} />, url: '/dashboard/client/overview' },
     { name: 'View Profile', icon: <HiOutlineUserCircle size={21} />, url: '/dashboard/client/account-setting' },

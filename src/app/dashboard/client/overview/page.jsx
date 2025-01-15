@@ -5,9 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faLayerGroup, faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import OverviewLoader from '@/components/contentLoader/dashboardOverviewLoader/page';
 
-function Overview() {
- 
- 
+function Overview() { 
   const [loading,setLoading]=useState(true);
   
   useEffect(() => {
