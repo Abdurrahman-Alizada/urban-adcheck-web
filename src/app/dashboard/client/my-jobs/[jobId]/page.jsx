@@ -10,6 +10,7 @@ import { components } from 'react-select';
 import ChatModal from '@/components/job-details/ChatModal';
 import JobDetailsSection from '@/components/job-details/JobDetailsSection';
 import DeliveryModal from '@/components/job-details/DeliveryModal';
+import JobDetailsLoader from '@/components/contentLoader/jobDetailsSection/page';
 
 function ViewDetails() {
   const params = useParams();
@@ -29,8 +30,8 @@ function ViewDetails() {
   const { data: jobDetails, isError, isLoading } = useJobDetailsQuery(params?.jobId);
   const router = useRouter();
 
-  if (isLoading) return <div className="text-center text-gray-700 font-nunitosans">Loading...</div>;
-  if (isError || !jobDetails) return <div className="text-center text-red-500 font-nunitosans">Error loading job details.</div>;
+  // if (isLoading) return <div className="text-center text-gray-700 font-nunitosans">Loading...</div>;
+  // if (isError || !jobDetails) return <div className="text-center text-red-500 font-nunitosans">Error loading job details.</div>;
   
   
   return (
@@ -47,17 +48,23 @@ function ViewDetails() {
       </div>
 
       {/* job details */}
-      <JobDetailsSection
+      {
+        isLoading ?
+         <JobDetailsLoader/>
+        :
+        <JobDetailsSection
         jobDetails={jobDetails}
         setDeliveryModal={setDeliveryModal}
         setChatModal={setChatModal}
       />
+      }
      
         {/* popup */}
         {deliveryModal && (
           <DeliveryModal
             watchdogReports={jobDetails?.data?.watchdogReports}
             onClose={() => setDeliveryModal(false)}
+            isLoading={isLoading}
           />
         )}
         {/* chat popup */}  
@@ -65,6 +72,8 @@ function ViewDetails() {
           <ChatModal
             messages={messages}
             user={user}
+            messagesLoading={loading}
+            userLoading={isLoading}
             refetchMessages={refetch}
             updateMessageRoutes={updateMessageRoutes}
             messageInput={messageInput}
