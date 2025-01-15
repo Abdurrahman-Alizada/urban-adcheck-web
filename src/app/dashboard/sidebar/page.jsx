@@ -52,7 +52,6 @@ function Sidebar() {
 
   return (
     <div className="sticky top-[var(--header-height)] bottom-[var(--footer-height)] bg-white shadow-custom-shadow rounded-[10px] py-4 mt-4">
-      {/* Profile info */}
       <div className="p-3 flex justify-evenly border-b-[1px] border-gray-300">
         <Image
           src="/profile-Image.png"
