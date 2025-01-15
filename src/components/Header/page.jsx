@@ -148,7 +148,7 @@ function Header() {
                       </div>
                      {
                       showNotifications && (
-                       <Notification/>
+                       <Notification setShowNotifications={setShowNotifications}/>
                       )
 
                      }
