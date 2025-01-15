@@ -10,6 +10,7 @@ import { HiOutlineUserCircle } from 'react-icons/hi';
 import { FaRegUserCircle } from "react-icons/fa";
 import { useGetCurrentLoginUserQuery } from '@/redux/reducers/user/userThunk';
 import { FaRegRegistered } from 'react-icons/fa6';
+import SidebarLoader from '@/components/contentLoader/sidebar/page';
 
 function Sidebar() {
   const { data: user, isLoading } = useGetCurrentLoginUserQuery();
