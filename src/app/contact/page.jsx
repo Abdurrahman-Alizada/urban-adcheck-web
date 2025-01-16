@@ -20,7 +20,7 @@ function Contact() {
   ];
 
   return (
-    <section className="w-full min-h-auto flex flex-col md:flex-row gap-3 mt-16 mb-10 px-3 md:px-10 lg:px-16">
+    <section className="w-full min-h-auto  flex flex-col md:flex-row gap-3 mt-24 mb-10 px-3 md:px-10 lg:px-16">
       {/* Left Side */}
       <div className="w-full md:w-1/2">
         <div className="mb-5 md:mb-8">

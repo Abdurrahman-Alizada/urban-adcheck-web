@@ -2,12 +2,14 @@
 import Messages from "@/components/inbox/messages";
 import UsersList from "@/components/inbox/usersList";
 import { useGetAllMessagesRoomQuery } from "@/redux/reducers/messages/messagesThunk";
+import { useGetCurrentLoginUserQuery } from "@/redux/reducers/user/userThunk";
 import React from "react";
 
 
 export default function Inbox() {
-    const {data:userList}=useGetAllMessagesRoomQuery();
+       const {data:userList}=useGetAllMessagesRoomQuery();
        console.log(userList)
+       
   return (
     <div className="w-full flex flex-col lg:flex-row lg:gap-4 justify-between mb-[100px]">
       {/* Sidebar */}

@@ -14,7 +14,7 @@ const NotificationComponent = () => {
     setLoading(false);
   }, 3000);
   return (
-    <div>
+    <div className="mt-20">
       <ul className="w-full overflow-x-auto text-sm text-left rtl:text-right text-gray-500">
         <li
          

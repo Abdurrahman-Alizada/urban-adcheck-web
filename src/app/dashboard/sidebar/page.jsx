@@ -20,6 +20,7 @@ function Sidebar() {
     { name: 'View Profile', icon: <HiOutlineUserCircle size={21} />, url: '/dashboard/client/account-setting' },
     { name: 'Post a job', icon: <PiPlusBold size={21} />, url: '/dashboard/client/post-job' },
     { name: 'My Jobs', icon: <PiClipboardTextLight size={21} />, url: '/dashboard/client/my-jobs' },
+    { name: 'Inbox', icon: <PiClipboardTextLight size={21} />, url: '/dashboard/client/inbox' },
   ];
 
   const watchDogMenu = [

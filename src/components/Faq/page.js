@@ -33,7 +33,7 @@ function FAQ() {
   };
 
   return (
-       <section className='w-full h-auto mx-auto mb-10'>
+       <section className='w-full h-auto mt-3 mx-auto mb-10'>
         {/* section title */}
           <h2 className='text-center font-Archivoo font-black text-[20px] md:text-[30px] lg:text-[39.57]'>Frequently asked questions</h2>
           <p className='text-[#585858] px-3 text-center font-nunitosans font-normal text-[16px]'>Everything you need to know about the product and billing.</p>
