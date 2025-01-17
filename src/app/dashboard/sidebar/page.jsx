@@ -4,12 +4,13 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { IoGridOutline, IoPersonOutline } from "react-icons/io5";
-import { HiOutlineCurrencyDollar } from "react-icons/hi";
+import { HiOutlineCurrencyDollar, HiOutlineUserCircle } from "react-icons/hi";
 import { BiTask, BiPlusCircle } from "react-icons/bi";
 import { MdOutlineManageAccounts } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import { useGetCurrentLoginUserQuery } from '@/redux/reducers/user/userThunk';
 import SidebarLoader from '@/components/contentLoader/sidebar/page';
+import { PiClipboardTextLight, PiPlusBold } from 'react-icons/pi';
 
 function Sidebar() {
   const { data: user, isLoading } = useGetCurrentLoginUserQuery();
