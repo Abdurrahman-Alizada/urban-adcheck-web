@@ -23,7 +23,7 @@ function Footer() {
   ];
 
   return (
-    <footer className="bg-black w-full">
+    <footer className="bg-black w-full z-50">
       {/* Footer Top */}
       <div className="w-full flex flex-col md:flex-row justify-around items-center py-4 px-4 border-b-[1px] border-gray-700">
         {/* Text Section */}
