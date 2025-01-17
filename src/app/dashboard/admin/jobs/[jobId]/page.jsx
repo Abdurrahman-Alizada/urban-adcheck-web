@@ -1,37 +1,53 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { BsArrowLeft } from "react-icons/bs";
-import Image from 'next/image';
-import Link from 'next/link';
-import { useJobDetailsQuery } from '@/redux/reducers/jobs/jobThunk';
-import { useParams, useRouter } from 'next/navigation';
+import React, { useState } from "react";
+import { BsArrowLeft, BsFillSendCheckFill } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
-import { BsFillSendCheckFill } from "react-icons/bs";
-import { useGetRoomByIdQuery, useUpdateMessageRoutesMutation } from '@/redux/reducers/messages/messagesThunk';
-import { useGetCurrentLoginUserQuery } from '@/redux/reducers/user/userThunk';
+import Image from "next/image";
+import { useJobDetailsQuery } from "@/redux/reducers/jobs/jobThunk";
+import { useParams, useRouter } from "next/navigation";
+import {
+  useGetRoomByIdQuery,
+  useUpdateMessageRoutesMutation,
+} from "@/redux/reducers/messages/messagesThunk";
+import { useGetCurrentLoginUserQuery } from "@/redux/reducers/user/userThunk";
+import { IoClose } from "react-icons/io5";
+import { MessageCircle } from "lucide-react";
+import CommonLoader from "@/components/contentLoader/CommonLoader";
+import AdminJobDetailsSkeleton from "@/components/contentLoader/jobDetailSkeleton/JobDetailSkeleton";
 
-function ViewDetails() {
+function AdminJobDetails() {
   const params = useParams();
-  // console.log("alksdfjlsad", params?.jobId)
-
-  const { data: messages, refetch,isLoading:loading } = useGetRoomByIdQuery(params?.jobId);
-  console.log("messages", messages)
-  const { data: user } = useGetCurrentLoginUserQuery();
-  console.log("user", user)
-  const [updateMessageRoutes,] = useUpdateMessageRoutesMutation();
-  const [deliveryModal, setDeliveryModal] = useState(false);
-  const [deliveryRevision, setDeliveryRevision] = useState(false)
-  const [chatModal, setChatModal] = useState(false);
-  const [messageInput, setMessageInput] = useState('');
-
-  const { data: jobDetails, isError, isLoading } = useJobDetailsQuery(params?.jobId);
   const router = useRouter();
+  const { data: messages, refetch } = useGetRoomByIdQuery(params?.jobId);
+  const { data: user } = useGetCurrentLoginUserQuery();
+  const [updateMessageRoutes] = useUpdateMessageRoutesMutation();
 
-  if (isLoading) return <div className="text-center text-gray-700 font-nunitosans">Loading...</div>;
-  if (isError || !jobDetails) return <div className="text-center text-red-500 font-nunitosans">Error loading job details.</div>;
+  // State management
+  const [chatModal, setChatModal] = useState(false);
+  const [messageInput, setMessageInput] = useState("");
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [selectedReport, setSelectedReport] = useState(null);
 
-  // job details object variables
+  const {
+    data: jobDetails,
+    isError,
+    isLoading,
+  } = useJobDetailsQuery(params?.jobId);
+
+  // if (isLoading)
+  //   return (
+  //     <div className="flex items-center justify-center h-screen">
+  //       <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+  //     </div>
+  //   );
+  // if (isError || !jobDetails)
+  //   return (
+  //     <div className="text-center text-red-500 p-4">
+  //       Error loading job details.
+  //     </div>
+  //   );
+
   const {
     jobTitle,
     description,
@@ -46,369 +62,536 @@ function ViewDetails() {
     jobVideo,
     acceptedBy,
     watchdogReports,
-
+    status,
   } = jobDetails?.data || {};
 
-  console.log("watchdog", watchdogReports);
-
-  // delivery modal
-  const handleViewDelievery = () => {
-    setDeliveryModal(true)
-  }
-  // chat modal
-  const handleChatModal = () => {
-    setChatModal(true);
-  }
-
-  const handleRevision = () => {
-
-  }
-
   const handleMessageRoute = () => {
-    try {
-      if (messageInput.trim() === '') {
-        alert("Message must be at least 1 character");
-        return;
-      }
-      else {
-        const isWatchDog = user._id === messages?.data?.members?.watchDog;
-
-        const newData = {
-          roomId: messages?.data?._id,
-          newMessage: {
-            sender: isWatchDog ? messages?.data?.members?.watchDog : messages?.data?.members?.client,
-            receiver: isWatchDog ? messages?.data?.members?.client : messages?.data?.members?.watchDog,
-            message: messageInput,
-            timestamp: new Date()
-          }
-        };
-
-        updateMessageRoutes(newData)
-          .then((res) => {
-            if (res?.data) {
-              refetch();
-              setMessageInput("")
-              console.log(res);
-            }
-            else {
-              alert("message sent failed", res.error)
-            }
-          })
-      }
-    } catch (err) {
-      console.log("Error Sending Messages", err);
-      alert('Something went wrong. Please try again later.');
+    if (!messageInput.trim()) {
+      alert("Message cannot be empty");
+      return;
     }
-  }
 
-  return (
-    <div className="w-full relative mt-4 mb-4 px-2 lg:px-6 font-nunitosans">
-      {/* Navigation */}
-      <div className="flex items-center gap-3">
-        <button
-          onClick={() => router.back()}
-          className="flex items-center gap-2 text-gray-700 font-Archivoo hover:text-gray-900"
-        >
-          <BsArrowLeft size={22} />
-          Back to Job List
-        </button>
-      </div>
+    const isWatchDog = user._id === messages?.data?.members?.watchDog;
+    const newData = {
+      roomId: messages?.data?._id,
+      newMessage: {
+        sender: isWatchDog
+          ? messages?.data?.members?.watchDog
+          : messages?.data?.members?.client,
+        receiver: isWatchDog
+          ? messages?.data?.members?.client
+          : messages?.data?.members?.watchDog,
+        message: messageInput,
+        timestamp: new Date(),
+      },
+    };
 
-      {/* Job Title */}
-      <div className="mt-4">
-        <h1 className="text-gray-800 text-[24px] lg:text-[28px] font-extrabold font-Archivoo">
-          {jobTitle ?? 'N/A'}
-        </h1>
-        <span className="text-gray-500 font-semibold text-sm font-nunitosans">
-          Category: {category ?? 'N/A'}
-        </span>
-      </div>
+    updateMessageRoutes(newData)
+      .then((res) => {
+        if (res?.data) {
+          refetch();
+          setMessageInput("");
+        } else {
+          alert("Failed to send message");
+        }
+      })
+      .catch((err) => {
+        console.error("Error sending message:", err);
+        alert("Failed to send message");
+      });
+  };
 
-      <div>
-        <span className="text-gray-500 font-semibold text-sm font-nunitosans">
-          Accepted By:  {acceptedBy?.watchdog ? `${acceptedBy?.watchdog?.fullName?.firstName} ${acceptedBy?.watchdog?.fullName?.lastName}` : " Not Yet"}
-        </span>
-      </div>
+  const [selectedMedia, setSelectedMedia] = useState(null);
+  const [mediaModal, setMediaModal] = useState(false);
 
-      <div className='flex flex-col lg:flex-row justify-between'>
-        <div>
-          {/* Expiration Date */}
-          <div className="mt-4">
-            <h2 className="text-gray-700 text-[20px] font-bold font-Archivoo">Job Expiration</h2>
-            <p className="text-gray-600 text-[15px] font-nunitosans">
-              {expireAt ? new Date(expireAt).toLocaleDateString() : 'N/A'}
-            </p>
-          </div>
-        </div>
-        {/* buttons */}
-        <div className='flex  gap-1 relative mt-4 mb-4'>
+  // Helper function to group media by subtype
+  const groupMediaByType = (media) => {
+    return media?.reduce((acc, item) => {
+      const key = item.subType || "other";
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+      acc[key].push(item);
+      return acc;
+    }, {});
+  };
+  // Media modal component
+  const MediaModal = ({ media, onClose }) => {
+    if (!media) return null;
+
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+        <div className="relative max-w-[90vw] max-h-[90vh]">
           <button
-            onClick={handleChatModal}
-            className="h-8 md:h-12 px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-secondary text-white hover:bg-primary">
-            Chat Now
+            onClick={onClose}
+            className="absolute -top-10 right-0 text-white hover:text-gray-300"
+          >
+            <IoClose size={24} />
           </button>
-          <button
-            onClick={handleViewDelievery}
-            className="h-8 md:h-12 px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-primary text-white hover:bg-primary">
-            View Delivery
-          </button>
+          {media.type === "video" ? (
+            <video controls className="max-w-full max-h-[80vh]" src={media.url}>
+              Your browser does not support the video tag.
+            </video>
+          ) : (
+            <Image
+              src={media.url}
+              width={800}
+              height={600}
+              alt="Media preview"
+              className="object-contain max-h-[80vh]"
+            />
+          )}
         </div>
       </div>
-      {/* popup */}
-      {
-        deliveryModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="bg-white rounded-lg shadow-lg p-6 m-4 w-full max-w-[80%] max-h-[95vh] overflow-y-auto">
-              {/* Modal Header */}
-              <h2 className="text-xl font-semibold mb-4 text-primary">Watchdog Reports</h2>
-              <p className="text-gray-600 mb-6">Here is your job delivery:</p>
+    );
+  };
 
-              {/* Modal Content */}
-              {watchdogReports?.map((report, index) => (
-                <div key={index} className="mb-6">
-                  {/* Drone Images Section */}
-                  <div>
-                    <h2 className="text-lg font-semibold mb-4 text-primary">Drone Images</h2>
-                    {report?.media?.filter((media) => media.subType === "drone").length > 0 ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {report?.media
-                          ?.filter((media) => media.subType === "drone")
-                          .map((media, idx) => (
-                            <div key={idx}>
-                              <Image
-                                src={media?.url}
-                                width={200}
-                                height={200}
-                                className="rounded-md object-contain max-w-[200px] max-h-[200px]"
-                              />
-                            </div>
-                          ))}
-                      </div>
-                    ) : (
-                      <p>No Drone Images Found.</p>
-                    )}
+  // Replace the existing Watchdog Reports section with this updated version
+  const WatchdogReportsSection = () => (
+    <section className="bg-white p-6 rounded-lg shadow-sm">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-bold text-gray-800">Watchdog Reports</h2>
+        <div className="flex gap-2">
+          <span className="text-sm text-gray-500">
+            Total Reports: {watchdogReports?.length || 0}
+          </span>
+        </div>
+      </div>
+
+      {watchdogReports?.map((report, index) => {
+        const groupedMedia = groupMediaByType(report.media);
+        const statusStyle = getStatusStyles(report.status);
+
+        return (
+          <div
+            key={index}
+            className="mb-8 border border-gray-200 rounded-lg overflow-hidden"
+          >
+            {/* Report Header */}
+            <div className="bg-gray-50 p-4 border-b border-gray-200">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <span className="text-sm text-gray-500">
+                    Report #{index + 1}
+                  </span>
+                  <span
+                    className={`px-3 py-1 rounded-full text-sm ${statusStyle.bg} ${statusStyle.text}`}
+                  >
+                    {statusStyle.label}
+                  </span>
+                </div>
+                <div className="flex items-center gap-4 text-sm text-gray-500">
+                  <span>
+                    Submitted:{" "}
+                    {new Date(report.submittedAt).toLocaleDateString()}
+                  </span>
+                  {report.reviewedAt && (
+                    <span>
+                      Reviewed:{" "}
+                      {new Date(report.reviewedAt).toLocaleDateString()}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Report Meta Information */}
+              <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div>
+                  <span className="text-gray-500">Submission Count:</span>
+                  <span className="ml-2 font-medium">
+                    {report.resubmissionRequestsCount
+                      ? `Original + ${report.resubmissionRequestsCount} revisions`
+                      : "Original submission"}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-gray-500">Media Items:</span>
+                  <span className="ml-2 font-medium">
+                    {report.media?.length || 0} files
+                  </span>
+                </div>
+                <div>
+                  <span className="text-gray-500">Revision Required:</span>
+                  <span className="ml-2 font-medium">
+                    {report.isResubmissionRequested ? "Yes" : "No"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Report Content */}
+            <div className="p-4">
+              {/* Media sections by type */}
+              {Object.entries(groupedMedia).map(([type, mediaItems]) => (
+                <div key={type} className="mb-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-lg font-semibold text-gray-700 capitalize">
+                      {type} Media
+                    </h3>
+                    <span className="text-sm text-gray-500">
+                      {mediaItems.length} items
+                    </span>
                   </div>
-
-                  {/* Camera Images Section */}
-                  <div className="mt-6">
-                    <h2 className="text-lg font-semibold mb-4 text-primary">Camera Images</h2>
-                    {report?.media?.filter((media) => media.subType === "camera").length > 0 ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {report?.media
-                          ?.filter((media) => media.subType === "camera")
-                          .map((media, idx) => (
-                            <div key={idx}>
-                              <Image
-                                src={media?.url}
-                                width={200}
-                                height={200}
-                                className="rounded-md object-contain max-w-[200px] max-h-[200px]"
-                              />
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {mediaItems.map((media, idx) => (
+                      <div
+                        key={idx}
+                        onClick={() => {
+                          setSelectedMedia(media);
+                          setMediaModal(true);
+                        }}
+                        className="cursor-pointer relative group"
+                      >
+                        {media.type === "video" ? (
+                          <div className="aspect-square relative bg-gray-100 rounded-lg overflow-hidden">
+                            <video
+                              src={media.url}
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-all">
+                              <span className="text-white">Play Video</span>
                             </div>
-                          ))}
+                          </div>
+                        ) : (
+                          <div className="aspect-square relative">
+                            <Image
+                              src={media.url}
+                              alt={`${type} ${idx + 1}`}
+                              fill
+                              className="rounded-lg object-cover group-hover:opacity-90 transition-opacity"
+                            />
+                          </div>
+                        )}
                       </div>
-                    ) : (
-                      <p>No Camera Images Found.</p>
-                    )}
-                  </div>
-
-                  {/* comments */}
-                  <div className='mt-4'>
-                    <h2 className="text-lg font-semibold mb-4 text-primary">Comments</h2>
-
-                    {report?.comments &&
-                      Object.entries(report.comments).map(([title, comment], index) => (
-                        <div key={index} className="mb-4">
-                          <h3 className="text-gray-700 font-bold text-sm">
-                            {title.charAt(0).toUpperCase() + title.slice(1)} {/* Capitalize the title */}
-                          </h3>
-                          <p className="text-gray-500 text-sm">{comment}</p>
-                        </div>
-                      ))
-                    }
+                    ))}
                   </div>
                 </div>
               ))}
 
-              {/* Modal Buttons */}
-              <div className="flex justify-end gap-4 mt-4">
-                <button
-                  onClick={handleRevision}
-                  className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-gray-300"
-                >
-                  Submit a revision
-                </button>
-                <button
-                  onClick={() => {
-                    setDeliveryModal(false);
-                  }}
-                  className="px-4 py-2 bg-primary text-white rounded-md hover:bg-red-700"
-                >
-                  Accept Delivery
-                </button>
-              </div>
-            </div>
-          </div>
-        )
-      }
-      {/* chat popup */}
-
-      {
-        chatModal &&
-        <div className='fixed inset-0 z-50 w-full h-full  bg-black/50'>
-          <div className=' bg-white max-w-[95%] max-h-[85vh] h-[85vh] md:max-w-[70%] md:max-h-[85vh] md:h-[85vh] mx-auto m-12 rounded-md border-gray-200 border-[1px]'>
-            <div className='flex flex-col h-full'>
-              {/* Chat Header */}
-              <div className='flex items-center justify-between bg-gray-100 p-3 border-b border-gray-200'>
-                <div className='flex items-center gap-3'>
-                  <Image
-                    src={'/Avatar-2.png'}
-                    width={60}
-                    height={60}
-                    alt={'profile-image'}
-                    className='rounded-full object-contain'
-                  />
-                  <span className="text-gray-500 font-semibold text-sm font-nunitosans">
-                    {acceptedBy?.watchdog?.fullName?.firstName} {acceptedBy?.watchdog?.fullName?.lastName}
-                  </span>
+              {/* Comments section with enhanced styling */}
+              {report.comments && (
+                <div className="mt-6 bg-gray-50 p-4 rounded-lg">
+                  <h3 className="text-lg font-semibold text-gray-700 mb-4">
+                    Assessment Comments
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {Object.entries(report.comments).map(
+                      ([key, value], idx) => (
+                        <div key={idx} className="p-3 bg-white rounded-lg">
+                          <span className="font-medium text-gray-700 block mb-1 capitalize">
+                            {key}:
+                          </span>
+                          <span className="text-gray-600">{value}</span>
+                        </div>
+                      )
+                    )}
+                  </div>
                 </div>
-                <RxCross2 size={25} onClick={() => setChatModal(false)} className='cursor-pointer p-1 bg-primary rounded-full text-white ' />
-              </div>
+              )}
 
-              {/* Chat Body */}
-              <div className='flex flex-col flex-1 overflow-y-auto bg-gray-50 p-4'>
-                {/* Sender message & reciever message*/}
-                {
-                  messages?.data?.messages?.map((message, index) => (
-                    <div key={index} className={`mb-2 ${ user?._id == message?.sender ? 'self-end' : ' self-start'}`}>
-                     {console.log("message is ", message,user?._id)}
-                      <span className="block text-black max-w-[max]">
-                        {user?._id == message?.sender
-                          ? messages?.data?.members?.client?.fullName?.firstName
-                          : messages?.data?.members?.watchDog?.fullName?.firstName}
-                      </span>
-                      <span
-                        className={`block px-3 py-2 rounded-lg max-w-[max] ${user?._id === message?.sender ? 'bg-primary text-white' : 'bg-gray-300 text-black'
-                          }`}
-                      >
-                        {message?.message}
-                      </span>
-                    </div>
-                  ))
-                }
-              </div>
-
-              {/* Chat Input */}
-              <div className="p-4 border-t border-gray-200 flex gap-2 items-center">
-                <input
-                  type="text"
-                  placeholder="Type a message..."
-                  value={messageInput}
-                  onChange={(e) => setMessageInput(e.target.value)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-                {/* send button */}
-                <BsFillSendCheckFill size={20} className="cursor-pointer w-12 h-10 p-1 bg-secondary text-white rounded-lg hover:bg-primary"
-                  onClick={handleMessageRoute}
-                />
-              </div>
+              {/* Revision History */}
+              {report.resubmissions && report.resubmissions.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold text-gray-700 mb-3">
+                    Revision History
+                  </h3>
+                  <div className="space-y-3">
+                    {report.resubmissions.map((revision, idx) => (
+                      <div key={idx} className="p-3 bg-gray-50 rounded-lg">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="font-medium">
+                            Revision #{idx + 1}
+                          </span>
+                          <span className="text-sm text-gray-500">
+                            {new Date(
+                              revision.submittedAt
+                            ).toLocaleDateString()}
+                          </span>
+                        </div>
+                        {revision.comments && (
+                          <p className="text-gray-600 text-sm">
+                            {revision.comments}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-        </div>
-      }
+        );
+      })}
+    </section>
+  );
 
-      {/* Job Image Gallery */}
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 p-1 bg-[#F6F6F6] rounded-[10px] mt-4">
-        {jobGallery?.length > 0 ? (
-          jobGallery.map((image, index) => (
-            <Image
-              key={index}
-              src={"/ads-img.png"}
-              height={200}
-              width={300}
-              className="object-contain max-w-full max-h-[200px]"
-              alt={`Job Image ${index + 1}`}
-            />
-          ))
-        ) : (
-          <span className="text-gray-600 font-nunitosans">No images available</span>
-        )}
-      </div>
+  const getStatusStyles = (status) => {
+    const statusMap = {
+      pending: {
+        bg: "bg-yellow-50",
+        text: "text-yellow-700",
+        label: "Pending Review",
+      },
+      approved: {
+        bg: "bg-green-50",
+        text: "text-green-700",
+        label: "Approved",
+      },
+      rejected: {
+        bg: "bg-red-50",
+        text: "text-red-700",
+        label: "Rejected",
+      },
+    };
+    return statusMap[status] || statusMap.pending;
+  };
 
-      {/* Job Video */}
-      {jobVideo && (
-        <div className="mt-4">
-          <h2 className="text-gray-700 text-[20px] font-bold font-Archivoo">Job Video</h2>
-          <video
-            controls
-            className="w-full rounded-md mt-2"
-            src={jobVideo}
-          >
-            Your browser does not support the video tag.
-          </video>
+  return (
+    <div className="w-full relative mt-4 mb-4 px-2 lg:px-6 font-nunitosans">
+      {/* Header Section */}
+      {isLoading ? (
+        <AdminJobDetailsSkeleton />
+      ) : (
+        <div>
+          <div className="flex justify-between items-center">
+            <button
+              onClick={() => router.back()}
+              className="flex items-center gap-2 text-gray-700 hover:text-gray-900"
+            >
+              <BsArrowLeft size={22} />
+              Back to jobs
+            </button>
+          </div>
+
+          {/* Job Status Banner */}
+          <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <StatusCard
+                title="Payment Status"
+                status={paymentDetails?.status}
+                color={
+                  paymentDetails?.status === "completed" ? "green" : "yellow"
+                }
+              />
+              <StatusCard
+                title="Job Status"
+                status={status?.isCompleted ? "Completed" : "In Progress"}
+                color={status?.isCompleted ? "green" : "blue"}
+              />
+              <StatusCard
+                title="Watchdog Assignment"
+                status={acceptedBy?.watchdog ? "Assigned" : "Pending"}
+                color={acceptedBy?.watchdog ? "green" : "yellow"}
+              />
+              <StatusCard
+                title="Reports"
+                status={`${watchdogReports?.length || 0} Submitted`}
+                color="blue"
+              />
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left Column - Job Details */}
+            <div className="lg:col-span-2 space-y-6">
+              <section className="bg-white p-6 rounded-lg shadow-sm">
+                <h1 className="text-2xl font-bold text-gray-800 mb-2">
+                  {jobTitle}
+                </h1>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {tags?.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-gray-600">{description}</p>
+              </section>
+
+              {/* Watchdog Reports Section */}
+              <WatchdogReportsSection />
+            </div>
+
+            {/* Right Column - Quick Info */}
+            <div className="space-y-6">
+              <section className="bg-white p-6 rounded-lg shadow-sm">
+                <h2 className="text-xl font-bold text-gray-800 mb-4">
+                  Payment Details
+                </h2>
+                <div className="space-y-2">
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">Amount:</span>
+                    <span className="font-semibold">
+                      {paymentDetails?.currency} {paymentDetails?.amount}
+                    </span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">Service Fee:</span>
+                    <span className="font-semibold">
+                      {paymentDetails?.currency} {paymentDetails?.serviceFee}
+                    </span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">Total:</span>
+                    <span className="font-semibold">
+                      {paymentDetails?.currency} {paymentDetails?.totalAmount}
+                    </span>
+                  </p>
+                </div>
+              </section>
+
+              <section className="bg-white p-6 rounded-lg shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-bold text-gray-800">
+                    Client Information
+                  </h2>
+                  {/* <button
+                    onClick={() => setChatModal(true)}
+                    className=" text-gray-700 hover:text-gray-900"
+                  >
+                    <MessageCircle size={22} />
+                  </button> */}
+                </div>
+
+                <div className="space-y-2">
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">Name:</span>
+                    <span>{personalInfo?.fullName}</span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">Email:</span>
+                    <span>{personalInfo?.email}</span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">Phone:</span>
+                    <span>{phoneNumber?.primary}</span>
+                  </p>
+                </div>
+              </section>
+
+              {acceptedBy?.watchdog && (
+                <section className="bg-white p-6 rounded-lg shadow-sm">
+                  <h2 className="text-xl font-bold text-gray-800 mb-4">
+                    Watchdog Information
+                  </h2>
+                  <div className="space-y-2">
+                    <p className="flex justify-between">
+                      <span className="text-gray-600">Name:</span>
+                      <span>
+                        {acceptedBy?.watchdog?.fullName?.firstName}{" "}
+                        {acceptedBy?.watchdog?.fullName?.lastName}
+                      </span>
+                    </p>
+                    <p className="flex justify-between">
+                      <span className="text-gray-600">Email:</span>
+                      <span>{acceptedBy?.watchdog?.email}</span>
+                    </p>
+                    <p className="flex justify-between">
+                      <span className="text-gray-600">Phone:</span>
+                      <span>{acceptedBy?.watchdog?.phoneNumber}</span>
+                    </p>
+                  </div>
+                </section>
+              )}
+
+              <section className="bg-white p-6 rounded-lg shadow-sm">
+                <h2 className="text-xl font-bold text-gray-800 mb-4">
+                  Job Location
+                </h2>
+                <p className="text-gray-600">
+                  {address?.street}, {address?.city}, {address?.state},{" "}
+                  {address?.country}
+                </p>
+                <p className="text-gray-600">
+                  Postal Code: {address?.postalCode}
+                </p>
+              </section>
+            </div>
+          </div>
         </div>
       )}
 
-      {/* Description */}
-      <div className="mt-4">
-        <h2 className="text-gray-700 text-[20px] font-bold font-Archivoo">Description</h2>
-        <p className="text-gray-600 mt-2 text-[15px] leading-[22px] font-nunitosans">
-          {description ?? 'No description provided.'}
-        </p>
-      </div>
-
-      {/* Payment Details */}
-      <div className="mt-4">
-        <h2 className="text-gray-700 text-[20px] font-bold font-Archivoo">Payment Details</h2>
-        <div className="mt-2 text-gray-600 text-[15px] font-nunitosans">
-          <p>Type: {paymentDetails?.paymentType ?? 'N/A'}</p>
-          <p>Amount: {paymentDetails?.currency} {paymentDetails?.amount ?? 'N/A'}</p>
-          <p>Service Fee: {paymentDetails?.currency} {paymentDetails?.serviceFee ?? 'N/A'}</p>
-          <p>Total: {paymentDetails?.currency} {paymentDetails?.totalAmount ?? 'N/A'}</p>
+      {/* Chat Modal */}
+      {chatModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+          <div className="bg-white w-full max-w-2xl rounded-lg shadow-lg">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h2 className="text-lg font-semibold">Chat with Client</h2>
+              <button onClick={() => setChatModal(false)}>
+                <RxCross2 size={24} />
+              </button>
+            </div>
+            <div className="h-96 overflow-y-auto p-4">
+              {messages?.data?.messages?.map((message, index) => (
+                <div
+                  key={index}
+                  className={`mb-4 ${
+                    user?._id === message?.sender ? "text-right" : "text-left"
+                  }`}
+                >
+                  <div
+                    className={`inline-block p-3 rounded-lg ${
+                      user?._id === message?.sender
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-100 text-gray-800"
+                    }`}
+                  >
+                    {message?.message}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="p-4 border-t flex gap-2">
+              <input
+                type="text"
+                value={messageInput}
+                onChange={(e) => setMessageInput(e.target.value)}
+                className="flex-1 border rounded-lg px-4 py-2"
+                placeholder="Type a message..."
+              />
+              <button
+                onClick={handleMessageRoute}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+              >
+                <BsFillSendCheckFill size={20} />
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Location */}
-      <div className="mt-4">
-        <h2 className="text-gray-700 text-[20px] font-bold font-Archivoo">Location</h2>
-        <div className="mt-2 text-gray-600 text-[15px] font-nunitosans">
-          <p>{address?.street}, {address?.city}, {address?.state}, {address?.country}</p>
-          <p>Postal Code: {address?.postalCode ?? 'N/A'}</p>
-        </div>
-        <Image
-          src={'/map-1.png'}
-          width={944}
-          height={311}
-          alt="Map"
-          className="object-contain mt-2"
+      {mediaModal && (
+        <MediaModal
+          media={selectedMedia}
+          onClose={() => {
+            setMediaModal(false);
+            setSelectedMedia(null);
+          }}
         />
-      </div>
-
-      {/* Contact Information */}
-      <div className="mt-4">
-        <h2 className="text-gray-700 text-[20px] font-bold font-Archivoo">Contact Information</h2>
-        <div className="mt-2 text-gray-600 text-[15px] font-nunitosans">
-          <p>Full Name: {personalInfo?.fullName ?? 'N/A'}</p>
-          <p>Email: {personalInfo?.email ?? 'N/A'}</p>
-          <p>Phone: {phoneNumber?.primary ?? 'N/A'}</p>
-        </div>
-      </div>
-
-      {/* Tags */}
-      <div className="mt-2 flex flex-wrap gap-2">
-        <h2 className="text-gray-700 text-[20px] font-bold font-Archivoo">Tags</h2>
-        {tags?.map((tag, index) => (
-          <span
-            key={index}
-            className="px-2 py-1 bg-blue-100 text-blue-600 text-sm rounded-md font-nunitosans"
-          >
-            {tag}
-          </span>
-        )) ?? <span>No tags available</span>}
-      </div>
-
+      )}
     </div>
   );
 }
 
-export default ViewDetails;
+// Helper component for status cards
+const StatusCard = ({ title, status, color }) => {
+  const colors = {
+    green: "bg-green-50 text-green-700",
+    yellow: "bg-yellow-50 text-yellow-700",
+    blue: "bg-blue-50 text-blue-700",
+    red: "bg-red-50 text-red-700",
+  };
+
+  return (
+    <div className="p-4 rounded-lg bg-white border border-gray-200">
+      <h3 className="text-sm text-gray-600 mb-1">{title}</h3>
+      <p className={`text-lg font-semibold ${colors[color]}`}>{status}</p>
+    </div>
+  );
+};
+
+export default AdminJobDetails;
