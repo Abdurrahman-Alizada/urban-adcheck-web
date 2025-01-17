@@ -1,10 +1,9 @@
 'use client';
-import Watchdog from "@/app/dashboard/admin/watchdog/page";
-import { useGetAllMessagesRoomQuery } from "@/redux/reducers/messages/messagesThunk";
+
 import React from "react";
 import { FaSearch, FaUser } from "react-icons/fa"; // Example: Importing FontAwesome's User icon
 
-export default function UsersList({userList}) {
+export default function UsersList({userList ,setSelectedRoom}) {
    console.log("members",userList)
   return (
     <div className=" h-full w-full  rounded-lg shadow-2xl">
@@ -27,7 +26,7 @@ export default function UsersList({userList}) {
 
       {
        userList?.data?.map((user,index)=>(
-          <div key={index} className="max-h-[330px] overflow-y-auto p-2">
+          <div onClick={()=>setSelectedRoom(user)} key={index} className="max-h-[330px] overflow-y-auto p-2">
           <div className="flex items-center hover:bg-white hover:shadow-custom-shadow rounded-md cursor-pointer transition-colors duration-200  ">
             <FaUser className="h-8 w-8 text-gray-600 rounded-full bg-slate-300" />
             <div className="flex flex-col pl-3">

@@ -6,7 +6,7 @@ import Image from 'next/image';
 function ProductPricing({packages,isLoading}) {
 
       return (
-    <section className='w-full h-auto mx-auto p-4 md:p-10 lg:px-12 lg:py-0 '>
+    <section className='w-full h-auto mx-auto mt-5 p-4 md:p-10 lg:px-12 lg:py-0 '>
           <h2 className='text-center font-nunitosans font-bold text-[20px] md:text-[30px] lg:text-[38.57]'>Product <span className='text-primary'>Offering</span></h2>
           <div className='w-full mx-auto mt-10 grid md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 lg:px-[160px] '>
             {

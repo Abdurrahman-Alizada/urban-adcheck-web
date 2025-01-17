@@ -16,6 +16,7 @@ import Notification from '../notification/page';
 
 
 
+
 function Header() {
   const [MenuOpen, setMenuOpen] = useState(false);
   const [user,setUser]=useState({});
@@ -78,10 +79,14 @@ function Header() {
   };
   
 
+  const handlePostJobClick = () => {
+    router.push("/dashboard/client/post-job");
+  };
+
   return (
     <>
       <div className=''>
-         <header className="w-full relative px-4 lg:px-6 xl:px-10 shadow-custom-shadow flex gap-5 justify-between items-center bg-white">
+         <header className="w-full fixed z-50 top-0 px-4 lg:px-6 xl:px-10 shadow-custom-shadow flex gap-5 justify-between items-center bg-white">
             {/* Logo Section */}
             <div>
               <Link href="/">
@@ -155,7 +160,9 @@ function Header() {
 
                     </div>
                     <div>
-                      <button className="hidden md:inline-block px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-secondary text-white hover:bg-primary">
+                      <button 
+                      onClick={handlePostJobClick}
+                      className="hidden md:inline-block px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-secondary text-white hover:bg-primary">
                           Post a Job
                       </button>
                     </div>

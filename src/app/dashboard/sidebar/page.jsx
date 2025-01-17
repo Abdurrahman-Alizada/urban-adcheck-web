@@ -4,21 +4,24 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { IoGridOutline, IoPersonOutline } from "react-icons/io5";
-import { HiOutlineCurrencyDollar } from "react-icons/hi";
+import { HiOutlineCurrencyDollar, HiOutlineUserCircle } from "react-icons/hi";
 import { BiTask, BiPlusCircle } from "react-icons/bi";
 import { MdOutlineManageAccounts } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import { useGetCurrentLoginUserQuery } from '@/redux/reducers/user/userThunk';
 import SidebarLoader from '@/components/contentLoader/sidebar/page';
+import { PiClipboardTextLight, PiPlusBold } from 'react-icons/pi';
 
 function Sidebar() {
   const { data: user, isLoading } = useGetCurrentLoginUserQuery();
 
   const ClientMenu = [
-    { name: 'Dashboard', icon: <IoGridOutline size={22} />, url: '/dashboard/client/overview' },
-    { name: 'Profile', icon: <IoPersonOutline size={22} />, url: '/dashboard/client/account-setting' },
-    { name: 'Post Job', icon: <BiPlusCircle size={22} />, url: '/dashboard/client/post-job' },
-    { name: 'My Jobs', icon: <BiTask size={22} />, url: '/dashboard/client/my-jobs' },
+    { name: 'Overview', icon: <IoGridOutline size={21} />, url: '/dashboard/client/overview' },
+    { name: 'View Profile', icon: <HiOutlineUserCircle size={21} />, url: '/dashboard/client/account-setting' },
+    { name: 'Post a job', icon: <PiPlusBold size={21} />, url: '/dashboard/client/post-job' },
+    { name: 'My Jobs', icon: <PiClipboardTextLight size={21} />, url: '/dashboard/client/my-jobs' },
+    { name: 'Inbox', icon: <PiClipboardTextLight size={21} />, url: '/dashboard/client/inbox' },
+
   ];
 
   const WatchDogMenu = [
