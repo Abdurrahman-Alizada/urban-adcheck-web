@@ -86,6 +86,19 @@ export const userApi = createApi({
       query: () => `/user/dashboard/statistics`,
       providesTags: ["User", "CurrentLoginUser"],
     }),
+    getAllUsers: build.query({
+      query: (query) => {
+        const params = new URLSearchParams(query).toString();
+        return `/user/getAll?${params}`;
+      },
+      providesTags: ["User"],
+    }),
+    getUserDetails: build.query({
+      query: (userId) => {
+        return `/user/details/${userId}`;
+      },
+      providesTags: ["User"],
+    }),
   }),
 });
 
@@ -98,5 +111,7 @@ export const {
   useUpdateUserMutation,
   useGetCurrentLoginUserQuery,
   useSignOutUserMutation,
-  useConfirmEmailMutation
+  useConfirmEmailMutation,
+  useGetAllUsersQuery,
+  useGetUserDetailsQuery
 } = userApi;

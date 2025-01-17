@@ -138,7 +138,7 @@ const JobFilterComponent = () => {
   return (
     <div className="mx-auto p-4 bg-white">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Jobs</h1>
+        <h1 className="text-2xl font-bold">Jobs Managment</h1>
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowFilters(!showFilters)}
@@ -222,14 +222,14 @@ const JobFilterComponent = () => {
           </div>
 
           <div className="flex items-center justify-between mt-4">
-            <div className="relative flex-1 max-w-md">
+            <div className="relative flex-1 ">
               <input
                 type="text"
                 name="jobTitle"
                 placeholder="Search by job title..."
                 value={filters.jobTitle}
                 onChange={handleFilterChange}
-                className="w-full pl-10 pr-4 py-2 border rounded bg-white"
+                className="w-full pl-10 py-2 border rounded bg-white"
               />
               <BsSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
             </div>
