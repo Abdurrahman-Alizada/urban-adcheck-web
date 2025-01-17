@@ -3,11 +3,6 @@
 import React, { useState } from "react";
 import { BsArrowLeft, BsFillSendCheckFill } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
-<<<<<<< HEAD
-import { BsFillSendCheckFill } from "react-icons/bs";
-import {  useGetRoomByJobIdQuery, useUpdateMessageRoutesMutation } from '@/redux/reducers/messages/messagesThunk';
-import { useGetCurrentLoginUserQuery } from '@/redux/reducers/user/userThunk';
-=======
 import Image from "next/image";
 import { useJobDetailsQuery } from "@/redux/reducers/jobs/jobThunk";
 import { useParams, useRouter } from "next/navigation";
@@ -20,26 +15,9 @@ import { IoClose } from "react-icons/io5";
 import { MessageCircle } from "lucide-react";
 import CommonLoader from "@/components/contentLoader/CommonLoader";
 import AdminJobDetailsSkeleton from "@/components/contentLoader/jobDetailSkeleton/JobDetailSkeleton";
->>>>>>> 5a3a47cf6fb78e4d11175732c9601a2bf8a87db1
 
 function AdminJobDetails() {
   const params = useParams();
-<<<<<<< HEAD
-  // console.log("alksdfjlsad", params?.jobId)
-
-  const { data: messages, refetch,isLoading:loading } = useGetRoomByJobIdQuery(params?.jobId);
-  console.log("messages", messages)
-  const { data: user } = useGetCurrentLoginUserQuery();
-  console.log("user", user)
-  const [updateMessageRoutes,] = useUpdateMessageRoutesMutation();
-  const [deliveryModal, setDeliveryModal] = useState(false);
-  const [deliveryRevision, setDeliveryRevision] = useState(false)
-  const [chatModal, setChatModal] = useState(false);
-  const [messageInput, setMessageInput] = useState('');
-
-  const { data: jobDetails, isError, isLoading } = useJobDetailsQuery(params?.jobId);
-=======
->>>>>>> 5a3a47cf6fb78e4d11175732c9601a2bf8a87db1
   const router = useRouter();
   const { data: messages, refetch } = useGetRoomByIdQuery(params?.jobId);
   const { data: user } = useGetCurrentLoginUserQuery();
