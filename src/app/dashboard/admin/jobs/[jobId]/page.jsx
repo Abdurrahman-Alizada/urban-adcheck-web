@@ -8,14 +8,14 @@ import { useJobDetailsQuery } from '@/redux/reducers/jobs/jobThunk';
 import { useParams, useRouter } from 'next/navigation';
 import { RxCross2 } from "react-icons/rx";
 import { BsFillSendCheckFill } from "react-icons/bs";
-import { useGetRoomByIdQuery, useUpdateMessageRoutesMutation } from '@/redux/reducers/messages/messagesThunk';
+import {  useGetRoomByJobIdQuery, useUpdateMessageRoutesMutation } from '@/redux/reducers/messages/messagesThunk';
 import { useGetCurrentLoginUserQuery } from '@/redux/reducers/user/userThunk';
 
 function ViewDetails() {
   const params = useParams();
   // console.log("alksdfjlsad", params?.jobId)
 
-  const { data: messages, refetch,isLoading:loading } = useGetRoomByIdQuery(params?.jobId);
+  const { data: messages, refetch,isLoading:loading } = useGetRoomByJobIdQuery(params?.jobId);
   console.log("messages", messages)
   const { data: user } = useGetCurrentLoginUserQuery();
   console.log("user", user)
