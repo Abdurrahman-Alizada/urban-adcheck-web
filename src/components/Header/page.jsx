@@ -86,7 +86,7 @@ function Header() {
   return (
     <>
       <div className=''>
-         <header className="w-full fixed z-50 top-0 px-4 lg:px-6 xl:px-10 shadow-custom-shadow flex gap-5 justify-between items-center bg-white">
+         <header className="w-full z-50 top-0 px-4 lg:px-6 xl:px-10 shadow-custom-shadow flex gap-5 justify-between items-center bg-white">
             {/* Logo Section */}
             <div>
               <Link href="/">
