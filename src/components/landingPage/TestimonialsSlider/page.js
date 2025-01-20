@@ -7,6 +7,7 @@ import 'swiper/css';
 import 'swiper/css/autoplay';
 import Image from 'next/image';
 
+
 const testimonials = [
   {
     title: 'Incredible Opportunities for Job Seekers',
@@ -50,9 +51,9 @@ const testimonials = [
 
 
 const Testimonials = () => (
-  <section className="bg-white  mb-[100px]">
+  <section className="h-[33rem] w-full dark:bg-black bg-white   dark:bg-dot-white/[0.2] bg-dot-black/[0.2]   mb-[100px]">
     {/* Testimonials Header */}
-    <div className="text-center">
+    <div className="text-center flex justify-center items-center flex-col pt-10">
       <p className="text-primary text-[16px] md:text-[24px] leading-6 md:leading-9 mb-3">
         See Our Review
       </p>
@@ -78,7 +79,7 @@ const Testimonials = () => (
       {testimonials.map((testimonial, index) => (
         <SwiperSlide
           key={index}
-          className="cursor-pointer m-4 p-6 rounded-lg shadow-md"
+          className="cursor-pointer m-4 p-6 rounded-lg bg-white shadow-md"
         >
           <div>
             <h2 className="text-[#1B1C57] font-semibold mb-5 text-[16px] lg:text-[18px] font-lexendexa leading-5 lg:leading-8">

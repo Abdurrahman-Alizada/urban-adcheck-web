@@ -11,12 +11,18 @@ import {  PiSignOut } from "react-icons/pi";
 import { useRouter } from 'next/navigation';
 import { MdOutlineChat } from "react-icons/md";
 import { IoIosNotificationsOutline } from "react-icons/io";
+import { FaBell } from "react-icons/fa6";
+import Notification from '../notification/page';
+
+
 
 
 function Header() {
   const [MenuOpen, setMenuOpen] = useState(false);
   const [user,setUser]=useState({});
   const [showDropdown,setShowDropdown]=useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+
  
   const [signOutUser, {}]=useSignOutUserMutation();
   const {data:currentLoginUser}=useGetCurrentLoginUserQuery();
@@ -68,10 +74,19 @@ function Header() {
     })
   }
 
+  const handleNotification = () => {
+    setShowNotifications(prev => !prev);
+  };
+  
+
+  const handlePostJobClick = () => {
+    router.push("/dashboard/client/post-job");
+  };
+
   return (
     <>
       <div className=''>
-         <header className="w-full relative px-4 lg:px-6 xl:px-10 shadow-custom-shadow flex gap-5 justify-between items-center bg-white">
+         <header className="w-full z-50 top-0 px-4 lg:px-6 xl:px-10 shadow-custom-shadow flex gap-5 justify-between items-center bg-white">
             {/* Logo Section */}
             <div>
               <Link href="/">
@@ -104,8 +119,8 @@ function Header() {
                 currentLoginUser?.role.isClient  ? 
                 <div className="flex items-center gap-2">                 
                   <div className='flex gap-4'>
-                    <div className='flex items-center gap-3'>
-                      <MdOutlineChat size={25} color='green'/>
+                    <div className='relative flex items-center gap-3'>
+                      <FaBell size={25} color='green' className='cursor-pointer' onClick={handleNotification}/>
                       <div
                       className='relative inline-block'
                       onClick={toggleDropdown}
@@ -136,9 +151,18 @@ function Header() {
                               </div>
                             )}
                       </div>
+                     {
+                      showNotifications && (
+                       <Notification setShowNotifications={setShowNotifications}/>
+                      )
+
+                     }
+
                     </div>
                     <div>
-                      <button className="hidden md:inline-block px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-secondary text-white hover:bg-primary">
+                      <button 
+                      onClick={handlePostJobClick}
+                      className="hidden md:inline-block px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-secondary text-white hover:bg-primary">
                           Post a Job
                       </button>
                     </div>
@@ -153,6 +177,7 @@ function Header() {
                       className='relative inline-block'
                       onClick={toggleDropdown}
                       >
+                       <FaBell size={25} color='green'/>
                         <Image 
                               src="/profile-image.png" 
                               width={40} 
@@ -192,8 +217,8 @@ function Header() {
               <div className="flex items-center gap-2">                 
                 <div className='flex'>
                   <div className='flex items-center gap-3'>
-                    <IoIosNotificationsOutline size={25} color='green'/>
-                    <div
+                  <FaBell size={25} color='green'/>
+                  <div
                     className='relative inline-block'
                     onClick={toggleDropdown}
                     >

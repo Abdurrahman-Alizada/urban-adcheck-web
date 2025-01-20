@@ -6,7 +6,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 
 const SidebarLoader = () => {
   return (
-    <div className="sticky top-[var(--header-height)] bottom-[var(--footer-height)] bg-white shadow-custom-shadow rounded-[10px] py-4 mt-4">
+    <div className="  bg-white  py-4 ">
       {/* Profile info Loader */}
       <div className="p-3 flex justify-evenly border-b-[1px] border-gray-300">
         <Skeleton circle width={60} height={60} />

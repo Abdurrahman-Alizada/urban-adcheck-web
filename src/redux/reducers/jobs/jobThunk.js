@@ -37,6 +37,14 @@ export const jobApi = createApi({
             }),
             invalidatesTags: ['Job'],
         }),
+        updateJob: build.mutation({
+            query: data => ({
+                url: `/user/jobs/${data?._id}`,
+                method: 'PUT',
+                body: data?.data
+            }),
+            invalidatesTags: ['Job'],
+        }),
         subscribePackage: build.mutation({
             query: data => ({
                 url: `/create-checkout-session`,
@@ -59,7 +67,10 @@ export const jobApi = createApi({
             providesTags: ["Job"],
         }),
         jobList: build.query({
-            query: () => `/user/jobs`,
+            query: (filters) => {
+                const queryString = new URLSearchParams(filters).toString();
+                return `/user/jobs?${queryString}`;
+            },
             providesTags: ["Job"],
         }),
         jobDetails: build.query({
@@ -75,5 +86,6 @@ export const {
     useAcceptOrRejectWatchdogMutation,
     useGetAllJobsQuery,
     useJobListQuery,
-    useJobDetailsQuery
+    useJobDetailsQuery,
+    useUpdateJobMutation
 } = jobApi;

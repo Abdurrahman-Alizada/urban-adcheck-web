@@ -11,6 +11,7 @@ import OverviewLoader from "@/components/contentLoader/dashboardOverviewLoader/p
 import { useGetUserStatQuery } from "@/redux/reducers/user/userThunk";
 import { BiBriefcase } from "react-icons/bi";
 import DashboardCards from "@/components/dashboard/cards";
+import RecentlySubscribedUsers from "@/components/dashboard/RecentlySubscribedUsers";
 
 function Overview() {
   const [loading, setLoading] = useState(true);
@@ -67,10 +68,9 @@ function Overview() {
   ];
 
   const { data:cardsInfo } = useGetUserStatQuery();
-  console.log("data", cardsInfo?.data);
 
   return (
-    <div className="space-y-10 mt-5 p-3 lg:p-0">
+    <div className="space-y-10 mt-5 bg-white">
       {loading ? (
         <div>
           <OverviewLoader />
@@ -81,62 +81,8 @@ function Overview() {
           <DashboardCards info={cardsInfo?.data} />
 
           {/* Recently Posted Jobs Section */}
-          <section>
-            {/* Section Header */}
-            <div className="flex justify-between items-center">
-              <h2 className="font-semibold text-lg md:text-xl">
-                Recently Posted Jobs
-              </h2>
-              <button className="border-b border-transparent hover:border-black transition duration-150 text-base md:text-lg font-medium">
-                View All{" "}
-                <FontAwesomeIcon
-                  icon={faArrowRight}
-                  className="text-gray-400"
-                  size="xs"
-                />
-              </button>
-            </div>
+          <RecentlySubscribedUsers users={cardsInfo?.recentlySubscribedUsers || []} />
 
-            {/* Jobs Grid */}
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {jobsData.map((ad, index) => (
-                <div
-                  key={index}
-                  className="shadow-custom-shadow rounded-lg overflow-hidden"
-                >
-                  {/* Ad Image */}
-                  <Image
-                    src={ad.image}
-                    width={300}
-                    height={240}
-                    alt={ad.title}
-                    className="w-full h-auto object-cover"
-                  />
-
-                  {/* Ad Content */}
-                  <div className="px-5 py-3 border-b">
-                    <span className="text-gray-500 text-sm flex items-center gap-2">
-                      <FontAwesomeIcon icon={faLayerGroup} size="sm" />
-                      {ad.category}
-                    </span>
-                    <h2 className="mt-2 text-[16px] font-semibold">
-                      {ad.title}
-                    </h2>
-                  </div>
-
-                  {/* Ad Footer */}
-                  <div className="px-5 py-4 flex justify-between items-center">
-                    <span className="text-[#FF4F4F] font-bold">{ad.price}</span>
-                    <FontAwesomeIcon
-                      icon={faEllipsis}
-                      className="text-gray-500"
-                      size="sm"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
         </>
       )}
     </div>
