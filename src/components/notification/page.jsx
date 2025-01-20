@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { FaUser } from "react-icons/fa";
-import moment from "moment/moment";
+// import moment from "moment/moment";
 import { FaBell } from "react-icons/fa6";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -31,7 +31,7 @@ const Notification = ({setShowNotifications}) => {
                     {notification?.message}
                   </p>
                   <span className="text-xs text-gray-400 block">
-                  {moment(notification?.timestamp).format('HH:mm A'  )}
+                  {/* {moment(notification?.timestamp).format('HH:mm A'  )} */}
                   </span>
                 </li>
                ))
