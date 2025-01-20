@@ -1,6 +1,8 @@
 'use client';
 import React from 'react';
 import Image from 'next/image';
+import GoogleMapComponent from '../googleMap/page';
+
 
 const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
  
@@ -134,13 +136,7 @@ const handleChatModal = () => {
                <p>{address?.street}, {address?.city}, {address?.state}, {address?.country}</p>
                <p>Postal Code: {address?.postalCode ?? 'N/A'}</p>
              </div>
-             <Image
-               src={'/map-1.png'}
-               width={944}
-               height={311}
-               alt="Map"
-               className="object-contain mt-2"
-             />
+             <GoogleMapComponent address={address}/>
            </div>
      
            {/* Contact Information */}

@@ -33,7 +33,7 @@ function ViewDetails() {
   // if (isLoading) return <div className="text-center text-gray-700 font-nunitosans">Loading...</div>;
   // if (isError || !jobDetails) return <div className="text-center text-red-500 font-nunitosans">Error loading job details.</div>;
   
-  
+
   return (
     <div className="w-full relative mt-4 mb-4 px-2 lg:px-6 font-nunitosans">
       {/* Navigation */}
