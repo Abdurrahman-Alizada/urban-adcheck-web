@@ -69,10 +69,20 @@ export const jobApi = createApi({
             query: (jobId) => `/user/jobs/${jobId}`,
             providesTags: ["Job"],
         }),
+        jobSummary: build.query({
+            query: () => `/user/jobs/watchdog/jobsSummary`,
+            providesTags: ["Job"],
+        }),
+        jobbystatus: build.query({
+            query: () => `/jobs/jobsByStatus`,
+            providesTags: ["Job"],
+        }),
     }),
 });
 
 export const {
+    useJobSummaryQuery,
+    useJobbystatusQuery,
     useSubscribePackageMutation,
     useCreateJobMutation,
     useGetAllJobsQuery,
