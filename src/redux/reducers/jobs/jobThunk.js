@@ -20,7 +20,7 @@ export const jobApi = createApi({
         },
     }),
 
-    tagTypes: ["Job",],
+    tagTypes: ["Job","acceptOrRejectWatchdog"],
     reducerPath: "jobApi",
     endpoints: (build) => ({
 
@@ -53,7 +53,15 @@ export const jobApi = createApi({
             }),
             invalidatesTags: ['Job'],
         }),
-      
+        acceptOrRejectWatchdog: build.mutation({
+            query: data => ({
+                url: `/user/jobs/${data.jobId}/watchdog-report/${data.reportId}/action`,
+                method: 'POST',
+                body: data.body,
+            }),
+            invalidatesTags: ['Job'],
+        }),
+
         getAllJobs: build.query({
             query: () => `/jobs`,
             providesTags: ["Job"],
@@ -85,6 +93,7 @@ export const {
     useJobbystatusQuery,
     useSubscribePackageMutation,
     useCreateJobMutation,
+    useAcceptOrRejectWatchdogMutation,
     useGetAllJobsQuery,
     useJobListQuery,
     useJobDetailsQuery,
