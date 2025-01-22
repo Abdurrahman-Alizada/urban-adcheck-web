@@ -1,3 +1,4 @@
+'use client';
 import {
     MdWork,
     MdPeople,
@@ -19,6 +20,7 @@ import {
   };
   
   export default function DashboardCards({ info }) {
+    console.log("info", info);
     return (
       <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {info?.map((card, index) => {
