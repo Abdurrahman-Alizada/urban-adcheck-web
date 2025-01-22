@@ -77,6 +77,7 @@ const JobFilterComponent = () => {
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
+    console.log(name,value)
     setFilters((prev) => ({
       ...prev,
       [name]: value,
