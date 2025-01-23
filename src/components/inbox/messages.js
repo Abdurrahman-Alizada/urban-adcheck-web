@@ -78,7 +78,7 @@ export default function Messages({ selectRoom }) {
       </div>
 
       {/* Messages Body */}
-      <div className="flex flex-col bg-gray-50 h-[300px] p-4 rounded-lg overflow-y-auto space-y-4 "ref={chatBodyRef}>
+      <div className="flex flex-col bg-gray-50 h-[300px] p-4 rounded-lg overflow-y-auto space-y-4 " ref={chatBodyRef}>
         {messages?.data?.messages?.map((message, index) => {
           const isSender = CurrentLoginUser?._id === message?.sender;
           return (

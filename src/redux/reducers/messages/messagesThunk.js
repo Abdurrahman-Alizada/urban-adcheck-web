@@ -40,7 +40,7 @@ export const messagesApi = createApi({
     }),
     getRoomByJobId: build.query({
       query: (jobId) => `/users/message/room/getRoomByJob/${jobId}`,
-      providesTags: ["messages", "getRoomById"],
+      providesTags: ["messages"],
     }),
     getRoomById: build.query({
       query: (Id) => `/users/message/room/${Id}`,

@@ -25,26 +25,22 @@ const NotificationComponent = () => {
           <span className="text-[13px]">Status</span>
         </li>
 
-        {loading ? (
+        {
+        loading ? 
+        (
           [...Array(4)].map((_, index) => (
             <li
               key={index}
-              className="hover:rounded-md hover:shadow-custom-hover grid grid-cols-[2fr_1fr_1fr_1fr] gap-4 items-center px-6 py-4 min-w-[600px]"
-            >
-              <div className="flex items-center gap-2">
-                <div className="w-[74px] h-[74px] bg-gray-400/30 rounded-md shimmer"></div>
-                <p className="bg-gray-400/30 px-16 py-3 shimmer"></p>
-              </div>
+              className="  grid grid-cols-[2fr_1fr_1fr_1fr] gap-4 items-center px-6 py-4 min-w-[600px]"
+            > 
+              <p className="bg-gray-400/30 px-6 py-3 shimmer"></p>
               <p className="bg-gray-400/30 px-14 py-3 shimmer"></p>
-              <p className="bg-gray-400/30 px-14 py-3 shimmer"></p>
-              <p className="bg-gray-400/30 px-14 py-3 shimmer"></p>
-              <div className="flex gap-1">
-                <div className="px-5 py-4 bg-gray-400/30 rounded-md shimmer"></div>
-                <div className="px-4 py-4 bg-gray-400/30 rounded-md shimmer"></div>
-              </div>
+              <p className="bg-gray-400/30 px-6 py-3 shimmer"></p>
             </li>
           ))
-        ) : (
+         ) 
+         : 
+         (
          
           <>
           

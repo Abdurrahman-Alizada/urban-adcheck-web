@@ -21,7 +21,7 @@ function Sidebar() {
     { name: 'Post a job', icon: <PiPlusBold size={21} />, url: '/dashboard/client/post-job' },
     { name: 'My Jobs', icon: <PiClipboardTextLight size={21} />, url: '/dashboard/client/my-jobs' },
     { name: 'Inbox', icon: <PiClipboardTextLight size={21} />, url: '/dashboard/client/inbox' },
-
+    { name: 'Financials', icon: <HiOutlineCurrencyDollar size={22} />, url: '/dashboard/client/financial-overview' },
   ];
 
   const WatchDogMenu = [
