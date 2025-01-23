@@ -7,6 +7,7 @@ import { useGetCurrentLoginUserQuery } from '@/redux/reducers/user/userThunk';
 import ProfileContentLoader from '@/components/contentLoader/profileContentLoader/page';
 import { useRouter } from 'next/navigation';
 
+
 // Extracted Package Feature component
 const PackageFeature = memo(({ label, value }) => (
   <div className="p-2 bg-blue-50 rounded-lg text-sm text-blue-700">
@@ -48,12 +49,20 @@ const ProfileHeader = memo(({ user }) => (
               Member since {new Date(user.createdAt).toLocaleDateString()}
             </p>
           </div>
+          <div className='flex gap-2'>
           <button 
-              onClick={() => router.push('dashboard/client/account-setting/edit-account')} // or whatever edit route you have
+              onClick={()=> handleEditProfile} // or whatever edit route you have
               className="px-4 py-2 rounded-md text-sm font-medium text-white bg-primary hover:bg-secondary transition-colors duration-200 flex items-center gap-2"
             >
-           Edit Profile
+           Edit Profile  
           </button>
+          <button 
+              onClick={()=> handleEditPassword} // or whatever edit route you have
+              className="px-4 py-2 rounded-md text-sm font-medium text-white bg-primary hover:bg-secondary transition-colors duration-200 flex items-center gap-2"
+            >
+           Edit Password
+          </button>
+          </div>
             
         </div>
         <div className="mt-4 flex items-center gap-4">
@@ -133,6 +142,15 @@ SubscriptionDetails.displayName = 'SubscriptionDetails';
 const AccountSettings = () => {
   const { data: userData, isLoading, error } = useGetCurrentLoginUserQuery();
   const router=useRouter();
+
+  const handleEditProfile=()=>{
+    router.push('/dashboard/client/account-setting/edit-account')
+  }
+  const handleEditPassword=()=>{
+    router.push('/dashboard/client/account-setting/edit-password')
+  }
+
+
   if (isLoading) {
     return <ProfileContentLoader />;
   }
@@ -148,7 +166,7 @@ const AccountSettings = () => {
   if (!userData) {
     return null;
   }
-
+ 
   return (
     <div className="min-h-screen p-6">
       <div className="max-w-5xl mx-auto">
