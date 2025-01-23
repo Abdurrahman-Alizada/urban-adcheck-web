@@ -1,15 +1,20 @@
-'use client';
-import React, { useState } from 'react';
-import Image from 'next/image';
+"use client";
+import React, { useState } from "react";
+import Image from "next/image";
 // import GoogleMapComponent from '../googleMap/page';
 import { BsArrowLeft } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
-import { useRouter } from 'next/navigation';
-
+import { useRouter } from "next/navigation";
+import { useAcceptOrRejectWatchdogMutation } from "@/redux/reducers/jobs/jobThunk";
+import { FaS } from "react-icons/fa6";
+import { FaStar } from "react-icons/fa";
+import FeedbackForm from "./feedbackForm";
 
 const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
- const [selectedMedia, setSelectedMedia] = useState(null);
+  const [selectedMedia, setSelectedMedia] = useState(null);
   const [mediaModal, setMediaModal] = useState(false);
+  const [acceptOrRejectWatchdog] = useAcceptOrRejectWatchdogMutation();
+
   const {
     jobTitle,
     description,
@@ -26,17 +31,17 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
     watchdogReports,
     status,
   } = jobDetails?.data || {};
- 
-  const router=useRouter();
+
+  const router = useRouter();
 
   // chat modal
   const handleChatModal = () => {
     setChatModal(true);
-  }
+  };
   // delivery modal
   const handleViewDelievery = () => {
-    setDeliveryModal(true)
-  }
+    setDeliveryModal(true);
+  };
 
   const groupMediaByType = (media) => {
     return media?.reduce((acc, item) => {
@@ -251,24 +256,34 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
                 </div>
               )}
             </div>
+
+            {
+              report.status === "pending" && (
+                <div className="flex justify-start gap-4 mt-4">
+                <button
+                  onClick={rejectDelivery}
+                  className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-gray-300"
+                >
+                  Submit a revision
+                </button>
+                <button
+                  onClick={() => acceptDelivery(report._id)}
+                  className="px-4 py-2 bg-primary text-white rounded-md hover:bg-red-700"
+                >
+                  Accept Delivery
+                </button>
+                </div>
+              )
+            }
+            {
+              report.status === "accepted" && (
+                <FeedbackForm/>
+                )  
+              }
           </div>
         );
       })}
-        {/* Modal Buttons */}
-        <div className="flex justify-start gap-4 mt-4">
-          <button
-             onClick={rejectDelivery}
-            className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-gray-300"
-          >
-            Submit a revision
-          </button>
-          <button
-             onClick={acceptDelivery}
-            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-red-700"
-          >
-            Accept Delivery
-          </button>
-        </div>
+      {/* Modal Buttons */}
     </section>
   );
 
@@ -284,6 +299,11 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
         text: "text-green-700",
         label: "Approved",
       },
+      accepted: {
+        bg: "bg-green-50",
+        text: "text-green-700",
+        label: "Approved",
+      },
       rejected: {
         bg: "bg-red-50",
         text: "text-red-700",
@@ -293,33 +313,36 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
     return statusMap[status] || statusMap.pending;
   };
 
-  const acceptDelivery = () => {
+  const acceptDelivery = (reportId) => {
     let data = {
       body: {
-        action: "accept"
+        action: "accept",
       },
-      jobId: "",
-      reportId: ""
-    }
-    acceptOrRejectWatchdog(data).then((res) => { console.log("delivery accepted ", res) })
-  }
+      jobId: jobDetails?.data?._id,
+      reportId: reportId,
+    };
+    acceptOrRejectWatchdog(data).then((res) => {
+      console.log("delivery accepted ", res);
+    });
+  };
 
   const rejectDelivery = () => {
     let data = {
       body: {
-        "action": "reject",
-        "comments": "Please provide additional images.",
-        "requestResubmission": true
+        action: "reject",
+        comments: "Please provide additional images.",
+        requestResubmission: true,
       },
       jobId: "",
-      reportId: ""
-    }
-     acceptOrRejectWatchdog(data).then((res) => { console.log("first ", res) })
-  }
+      reportId: "",
+    };
+    acceptOrRejectWatchdog(data).then((res) => {
+      console.log("first ", res);
+    });
+  };
 
   return (
     <div>
-
       {/* Back to jobs */}
       <div className="flex justify-between items-center">
         <button
@@ -337,9 +360,7 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
           <StatusCard
             title="Payment Status"
             status={paymentDetails?.status}
-            color={
-              paymentDetails?.status === "completed" ? "green" : "yellow"
-            }
+            color={paymentDetails?.status === "completed" ? "green" : "yellow"}
           />
           <StatusCard
             title="Job Status"
@@ -460,15 +481,16 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
                 </p>
                 <button
                   onClick={handleChatModal}
-                  className="h-8 md:h-12 px-3 md:px-6 py-2 text-xl  rounded-[10px] bg-secondary text-white hover:bg-primary">
+                  className="h-8 md:h-12 px-3 md:px-6 py-2 text-xl  rounded-[10px] bg-secondary text-white hover:bg-primary"
+                >
                   Chat Now
                 </button>
                 <button
                   onClick={handleViewDelievery}
-                  className="h-8 md:h-12 px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-primary text-white hover:bg-primary">
+                  className="h-8 md:h-12 px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-primary text-white hover:bg-primary"
+                >
                   View Delivery
                 </button>
-
               </div>
             </section>
           )}
@@ -481,9 +503,7 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
               {address?.street}, {address?.city}, {address?.state},{" "}
               {address?.country}
             </p>
-            <p className="text-gray-600">
-              Postal Code: {address?.postalCode}
-            </p>
+            <p className="text-gray-600">Postal Code: {address?.postalCode}</p>
           </section>
 
           {/* <GoogleMapComponent /> */}
@@ -499,13 +519,11 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
           }}
         />
       )}
-
     </div>
   );
 };
 
 export default JobDetailsSection;
-
 
 // Helper component for status cards
 const StatusCard = ({ title, status, color }) => {
