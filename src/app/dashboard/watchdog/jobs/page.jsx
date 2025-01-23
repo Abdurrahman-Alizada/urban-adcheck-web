@@ -1,5 +1,5 @@
 "use client";
-import { useJobListQuery } from "@/redux/reducers/jobs/jobThunk";
+import { useJobbystatusQuery, } from "@/redux/reducers/jobs/jobThunk";
 import React, { useState, useMemo } from "react";
 import { BsThreeDots, BsEye, BsCheckCircle, BsSearch } from "react-icons/bs";
 import { CiEdit } from "react-icons/ci";
@@ -22,7 +22,7 @@ const JobFilterComponent = () => {
   const router = useRouter();
 
   const [filters, setFilters] = useState({
-    jobsType: [],
+    jobsStatus: [],
     jobTitle: "",
     minAmount: "",
     maxAmount: "",
@@ -32,13 +32,12 @@ const JobFilterComponent = () => {
     sortOrder: "descending",
   });
 
-  const jobTypeOptions = [
-    { value: "featured", label: "Featured Jobs" },
-    { value: "approved", label: "Approved by Admin" },
-    { value: "not-approved", label: "Not Approved" },
+  const jobsStatusOption = [
+    { value: "available", label: "Available " },
     { value: "completed", label: "Completed" },
-    { value: "cancelled", label: "Cancelled" },
-    { value: "expired", label: "Expired" },
+    { value: "hidden", label: "Hidden" },
+    { value: "inprogress", label: "InProgress" },
+    
   ];
 
   const sortOptions = [
@@ -50,18 +49,17 @@ const JobFilterComponent = () => {
     { value: "amount-descending", label: "Amount (High to Low)" },
   ];
 
-  const { data: jobsData = {}, isLoading, error } = useJobListQuery(filters);
+  const { data: jobsData = {}, isLoading, error } = useJobbystatusQuery(filters);
   const jobs = jobsData.data?.jobs || [];
   const totalJobs = jobsData.data?.jobsCount || 0;
 
   const getStatusColor = (status) => {
     const statusColors = {
-      Featured: "bg-purple-100 text-purple-800",
-      Approved: "bg-green-100 text-green-800",
-      "Not Approved": "bg-yellow-100 text-yellow-800",
+      Available: "bg-green-100 text-green-800",
+      InProgress: "bg-yellow-100 text-yellow-800",
       Completed: "bg-blue-100 text-blue-800",
-      Cancelled: "bg-red-100 text-red-800",
-      Expired: "bg-gray-100 text-gray-800"
+      Hidden: "bg-red-100 text-red-800",
+      
     };
     return statusColors[status] || "bg-gray-100 text-gray-800";
   };
@@ -71,13 +69,12 @@ const JobFilterComponent = () => {
     const values = e.map((option) => option.value);
     setFilters((prev) => ({
       ...prev,
-      jobsType: values,
+      jobsStatus: values,
     }));
   };
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    console.log(name,value)
     setFilters((prev) => ({
       ...prev,
       [name]: value,
@@ -95,7 +92,7 @@ const JobFilterComponent = () => {
 
   const clearFilters = () => {
     setFilters({
-      jobsType: [],
+      jobsStatus: [],
       jobTitle: "",
       minAmount: "",
       maxAmount: "",
@@ -164,15 +161,15 @@ const JobFilterComponent = () => {
         <div className="bg-gray-50 p-4 rounded-lg mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Job Types</label>
+              <label className="text-sm font-medium text-gray-700">Job Status</label>
               <Select
                 isMulti
                 name="jobTypes"
-                options={jobTypeOptions}
+                options={jobsStatusOption}
                 className="basic-multi-select"
                 classNamePrefix="select"
-                value={jobTypeOptions.filter((option) =>
-                  filters.jobsType.includes(option.value)
+                value={jobsStatusOption.filter((option) =>
+                  filters.jobsStatus.includes(option.value)
                 )}
                 onChange={handleJobTypeChange}
                 placeholder="Select job types"

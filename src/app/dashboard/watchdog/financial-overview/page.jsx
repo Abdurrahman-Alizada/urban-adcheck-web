@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { RxCross1 } from "react-icons/rx";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { FaArrowLeftLong } from "react-icons/fa6";
+import { FaDownload } from 'react-icons/fa';
 
 
 function FinancialOverview() {
@@ -58,18 +59,18 @@ function FinancialOverview() {
     useEffect(() => {
         const fetchJobs = async () => {
             const jobData = [
-                { id: 1, name: 'Building Horse', location: 'A Block st41, H20', charge: 100, Date: '1/12/2025', image: '/img-jobs.png',alt:"job images" },
-                { id: 2, name: 'Painting Wall', location: 'C Block st23, H10', charge: 200, Date: '1/12/2025', image: '/img-jobs.png',alt:"job images 2" },
-                { id: 3, name: 'Fixing Roof', location: 'D Block st9, H5', charge: 150, Date: '1/12/2025', image: '/img-jobs.png' , alt:"job images 3" },
-                { id: 4, name: 'Plumbing Work', location: 'E Block st12, H15', charge: 180, Date: '1/12/2025', image: '/img-jobs.png',alt:"job images 4" },
-                { id: 5, name: 'Plumbing Work', location: 'E Block st12, H15', charge: 180, Date: '1/12/2025', image: '/img-jobs.png',alt:"job images 5" },
-                { id: 6, name: 'Plumbing Work', location: 'E Block st12, H15', charge: 180, Date: '1/12/2025', image: '/img-jobs.png',alt:"job images 7" },
-                { id: 7, name: 'Plumbing Work', location: 'E Block st12, H15', charge: 180, Date: '1/12/2025', image: '/img-jobs.png',alt:"job images 6" },
-                { id: 8, name: 'Painting Wall', location: 'C Block st23, H10', charge: 200, Date: '1/12/2025', image: '/img-jobs.png',alt:"job images 8" },
-                { id: 9, name: 'Painting Wall', location: 'C Block st23, H10', charge: 200, Date: '1/12/2025', image: '/img-jobs.png', alt:"job images 9" },
-                { id: 10, name: 'Fixing Roof', location: 'D Block st9, H5', charge: 1000, Date: '1/12/2025', image: '/img-jobs.png', alt:"job images 10" },
-                { id: 11, name: 'Fixing Roof', location: 'D Block st9, H5', charge: 1120, Date: '1/12/2025', image: '/img-jobs.png',alt:"job images 11" },
-                { id: 12, name: 'Fixing Roof', location: 'D Block st9, H5', charge: 1230, Date: '1/12/2025', image: '/img-jobs.png', alt:"job images 12" },
+                { id: 1, invoice: 'Invoice#98', amount: '1,987,093', Date: '1/12/2025', status:"Succes"  },
+                { id: 2, invoice: 'Invoice#97', amount: '1,987,093', Date: '1/12/2025', status:"Succes"  },
+                { id: 3, invoice: 'Invoice#96', amount:'1,987,093', Date: '1/12/2025', status:"Pending"  },
+                { id: 4, invoice: 'Invoice#95', amount: '1,986,878', Date: '1/12/2025', status:"Pending"  },
+                { id: 5, invoice: 'Invoice#94', amount: '1,983,653', Date: '1/12/2025', status:"Failed"  },
+                { id: 6, invoice: 'Invoice#93', amount: '6,981,093', Date: '1/12/2025', status:"Failed"  },
+                { id: 7, invoice: 'Invoice#92', amount: '3,987,093', Date: '1/12/2025', status:"Succes" },
+                { id: 8, invoice: 'Invoice#91', amount: '1,982,093', Date: '1/12/2025', status:"Succes" },
+                { id: 9, invoice: 'Invoice#88', amount: '2,987,093', Date: '1/12/2025', status:"Pending" },
+                { id: 10, invoice: 'Invoice#77', amount:'1,988,093',  Date: '1/12/2025', status:"Pending" },
+                { id: 11, invoice: 'Invoice#76', amount:'9,187,096',  Date: '1/12/2025', status:"Failed"  },
+                { id: 12, invoice: 'Invoice#75', amount:'1,985,053',  Date: '1/12/2025', status:"Failed" },
             
             ];
             setJobs(jobData);
@@ -107,22 +108,29 @@ function FinancialOverview() {
                     scope="row"
                     className="flex gap-2 items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                    <span className="font-bold">{index + 1}</span>
-                    <Image
-                        src={job.image}
-                        width={55}
-                        height={55}
-                        alt={job.alt}
-                        className="rounded-md"
-                    />
-                    <h4 className="text-[14px]">{job.name}</h4>
+                    
+                    
+                    <h4 className="text-[14px]">{job.invoice}</h4>
                 </th>
-                <td className="px-5 py-4 text-[14px] leading-tight">{job.location}</td>
+                <td className="px-5 py-4 text-[14px] leading-tight">${job.amount}</td>
                 <td className="px-4 py-4">
                 {job.Date}
                 </td>
-                <td className="px-4 py-4 text-primary ">
-                   ${job.charge}
+                <td
+    className={`px-4 py-4 ${
+        job.status === 'Success'
+        ? 'text-green-500'
+        : job.status === 'Pending'
+        ? 'text-yellow-500'
+        : job.status === 'Failed'
+        ? 'text-red-500'
+        : 'text-primary'
+    }`}
+>
+    {job.status}
+</td>
+<td className="px-4 py-4 ">
+    <button className="text-[14px] flex items-center gap-2 text-primary font-semibold"><FaDownload/>Download</button>
                 </td>
             </tr>
         ));
@@ -273,11 +281,12 @@ function FinancialOverview() {
                             <thead className="text-xs text-grayColor font-normal capitalize bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
                                     <th scope="col" className="px-6 py-3 font-normal flex items-center gap-1">
-                                        Jobs
+                                        Payment Invoice
                                     </th>
-                                    <th scope="col" className="font-normal px-6 py-3">Details</th>
-                                    <th scope="col" className="font-normal px-6 py-3">Date</th>
                                     <th scope="col" className="font-normal px-6 py-3">Amount</th>
+                                    <th scope="col" className="font-normal px-6 py-3">Date</th>
+                                    <th scope="col" className="font-normal px-6 py-3">Status</th>
+                                    <th scope="col" className="font-normal px-6 py-3"></th>
                                 </tr>
                             </thead>
                             <tbody>{renderJobRows(currentJobs)}</tbody>

@@ -1,10 +1,23 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { FaSearch, FaUser } from "react-icons/fa";
 import moment from "moment"; // To format timestamps
 
 export default function UsersList({ userList, setSelectedRoom }) {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Filter users based on the search query
+  const filteredUsers = userList?.data?.filter((user) => {
+    const userName = user?.members?.watchDog?.fullName?.firstName || "";
+    const lastMessage = user?.messages?.[user.messages.length - 1]?.message || "";
+
+    return (
+      userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
+
   return (
     <div className="h-full w-full rounded-lg shadow-2xl">
       {/* Header */}
@@ -16,6 +29,8 @@ export default function UsersList({ userList, setSelectedRoom }) {
           <input
             type="text"
             placeholder="Search a chat"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)} // Update search query
             className="w-full pl-10 py-2 bg-white text-gray-700 placeholder-gray-400 rounded-lg focus-visible:ring-0 focus-visible:ring-offset-0"
           />
           <FaSearch
@@ -27,7 +42,7 @@ export default function UsersList({ userList, setSelectedRoom }) {
 
       {/* User List */}
       <div className="max-h-[330px] overflow-y-auto p-2">
-        {userList?.data?.map((user, index) => {
+        {filteredUsers?.map((user, index) => {
           // Extract the last message
           const lastMessage = user?.messages?.[user.messages.length - 1] || null;
 
@@ -59,6 +74,13 @@ export default function UsersList({ userList, setSelectedRoom }) {
             </div>
           );
         })}
+
+        {/* No Results Found */}
+        {filteredUsers?.length === 0 && (
+          <div className="text-center text-gray-500 mt-4">
+            No chats match your search.
+          </div>
+        )}
       </div>
     </div>
   );

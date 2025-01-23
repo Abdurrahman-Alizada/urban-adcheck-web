@@ -21,13 +21,13 @@ function Sidebar() {
     { name: 'Post a job', icon: <PiPlusBold size={21} />, url: '/dashboard/client/post-job' },
     { name: 'My Jobs', icon: <PiClipboardTextLight size={21} />, url: '/dashboard/client/my-jobs' },
     { name: 'Inbox', icon: <PiClipboardTextLight size={21} />, url: '/dashboard/client/inbox' },
-
+    { name: 'Financials', icon: <HiOutlineCurrencyDollar size={22} />, url: '/dashboard/client/financial-overview' },
   ];
 
   const WatchDogMenu = [
     { name: 'Dashboard', icon: <IoGridOutline size={22} />, url: '/dashboard/watchdog/overview' },
     { name: 'Financials', icon: <HiOutlineCurrencyDollar size={22} />, url: '/dashboard/watchdog/financial-overview' },
-    { name: 'My Jobs', icon: <BiTask size={22} />, url: '/dashboard/watchdog/my-jobs' },
+    { name: 'Jobs Summary', icon: <BiTask size={22} />, url: '/dashboard/watchdog/jobs-summary' },
   ];
 
   const AdminMenu = [
