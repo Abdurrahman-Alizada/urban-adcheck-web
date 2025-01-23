@@ -11,6 +11,7 @@ import ChatModal from '@/components/job-details/ChatModal';
 import JobDetailsSection from '@/components/job-details/JobDetailsSection';
 import DeliveryModal from '@/components/job-details/DeliveryModal';
 import JobDetailsLoader from '@/components/contentLoader/jobDetailsSection/page';
+import AdminJobDetailsSkeleton from '@/components/contentLoader/jobDetailSkeleton/JobDetailSkeleton';
 
 function ViewDetails() {
   const params = useParams();
@@ -33,24 +34,14 @@ function ViewDetails() {
   // if (isLoading) return <div className="text-center text-gray-700 font-nunitosans">Loading...</div>;
   // if (isError || !jobDetails) return <div className="text-center text-red-500 font-nunitosans">Error loading job details.</div>;
   
-  
+
   return (
     <div className="w-full relative mt-4 mb-4 px-2 lg:px-6 font-nunitosans">
-      {/* Navigation */}
-      <div className="flex items-center gap-3">
-        <button
-          onClick={() => router.back()}
-          className="flex items-center gap-2 text-gray-700 font-Archivoo hover:text-gray-900"
-        >
-          <BsArrowLeft size={22} />
-          Back to Job List
-        </button>
-      </div>
 
       {/* job details */}
       {
         isLoading ?
-         <JobDetailsLoader/>
+         <AdminJobDetailsSkeleton/>
         :
         <JobDetailsSection
         jobDetails={jobDetails}

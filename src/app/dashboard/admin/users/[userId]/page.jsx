@@ -13,6 +13,7 @@ import UserProfileLoader from "@/components/contentLoader/profileContentLoader/p
 const UserProfile = () => {
   const params = useParams();
   const { data: userDetail, isLoading, error } = useGetUserDetailsQuery(params?.userId);
+  console.log(userDetail)
   if (isLoading) {
     return (
      <UserProfileLoader />
