@@ -28,7 +28,7 @@ const DeliveryModal = ({ watchdogReports, onClose, isLoading }) => {
       jobId: "",
       reportId: ""
     }
-    acceptOrRejectWatchdog(data).then((res) => { console.log("first ", res) })
+    acceptOrRejectWatchdog(data).then((res) => { console.log("delivery accepted ", res) })
   }
 
   const rejectDelivery = () => {
@@ -41,7 +41,7 @@ const DeliveryModal = ({ watchdogReports, onClose, isLoading }) => {
       jobId: "",
       reportId: ""
     }
-    // acceptOrRejectWatchdog(data).then((res) => { console.log("first ", res) })
+     acceptOrRejectWatchdog(data).then((res) => { console.log("first ", res) })
   }
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">

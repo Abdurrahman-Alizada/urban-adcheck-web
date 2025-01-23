@@ -1,9 +1,11 @@
 'use client';
 import React, { useState } from 'react';
 import Image from 'next/image';
-import GoogleMapComponent from '../googleMap/page';
+// import GoogleMapComponent from '../googleMap/page';
 import { BsArrowLeft } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
+import { useRouter } from 'next/navigation';
+
 
 const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
  const [selectedMedia, setSelectedMedia] = useState(null);
@@ -24,7 +26,8 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
     watchdogReports,
     status,
   } = jobDetails?.data || {};
-
+ 
+  const router=useRouter();
 
   // chat modal
   const handleChatModal = () => {
@@ -251,6 +254,21 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
           </div>
         );
       })}
+        {/* Modal Buttons */}
+        <div className="flex justify-start gap-4 mt-4">
+          <button
+             onClick={rejectDelivery}
+            className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-gray-300"
+          >
+            Submit a revision
+          </button>
+          <button
+             onClick={acceptDelivery}
+            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-red-700"
+          >
+            Accept Delivery
+          </button>
+        </div>
     </section>
   );
 
@@ -274,6 +292,31 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
     };
     return statusMap[status] || statusMap.pending;
   };
+
+  const acceptDelivery = () => {
+    let data = {
+      body: {
+        action: "accept"
+      },
+      jobId: "",
+      reportId: ""
+    }
+    acceptOrRejectWatchdog(data).then((res) => { console.log("delivery accepted ", res) })
+  }
+
+  const rejectDelivery = () => {
+    let data = {
+      body: {
+        "action": "reject",
+        "comments": "Please provide additional images.",
+        "requestResubmission": true
+      },
+      jobId: "",
+      reportId: ""
+    }
+     acceptOrRejectWatchdog(data).then((res) => { console.log("first ", res) })
+  }
+
   return (
     <div>
 
@@ -443,7 +486,7 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
             </p>
           </section>
 
-          <GoogleMapComponent />
+          {/* <GoogleMapComponent /> */}
         </div>
       </div>
 

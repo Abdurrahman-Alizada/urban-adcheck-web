@@ -4,7 +4,7 @@ import { BsArrowLeft } from "react-icons/bs";
 import Image from 'next/image';
 import { useJobDetailsQuery } from '@/redux/reducers/jobs/jobThunk';
 import { useParams, useRouter } from 'next/navigation';
-import { useGetRoomByIdQuery, useUpdateMessageRoutesMutation } from '@/redux/reducers/messages/messagesThunk';
+import { useGetRoomByIdQuery, useGetRoomByJobIdQuery, useUpdateMessageRoutesMutation } from '@/redux/reducers/messages/messagesThunk';
 import { useGetCurrentLoginUserQuery } from '@/redux/reducers/user/userThunk';
 import { components } from 'react-select';
 import ChatModal from '@/components/job-details/ChatModal';
@@ -15,14 +15,14 @@ import AdminJobDetailsSkeleton from '@/components/contentLoader/jobDetailSkeleto
 
 function ViewDetails() {
   const params = useParams();
-  // console.log("alksdfjlsad", params?.jobId)
+  console.log("alksdfjlsad", params?.jobId)
 
-  const { data: messages, refetch,isLoading:loading } = useGetRoomByIdQuery(params?.jobId);
-
+  const { data: messages, refetch,isLoading:loading } = useGetRoomByJobIdQuery(params?.jobId);
+  
   console.log("messages", messages)
   const { data: user } = useGetCurrentLoginUserQuery();
   console.log("user", user)
-  const [updateMessageRoutes,] = useUpdateMessageRoutesMutation();
+  const [updateMessageRoutes] = useUpdateMessageRoutesMutation();
   const [deliveryModal, setDeliveryModal] = useState(false);
   const [deliveryRevision, setDeliveryRevision] = useState(false)
   const [chatModal, setChatModal] = useState(false);

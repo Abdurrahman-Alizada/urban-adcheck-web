@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useRef, useEffect } from "react";
 import { FaUser } from "react-icons/fa6";
 import { BsFillSendCheckFill } from "react-icons/bs";
 import moment from "moment";
@@ -18,7 +18,16 @@ export default function Messages({ selectRoom }) {
     skip: !selectRoom?._id,
   });
 
-  const [messageInput, setMessageInput] = useState("");
+  
+ const [messageInput, setMessageInput] = useState('');
+  const chatBodyRef = useRef(null);
+
+  useEffect(() => {
+    if (chatBodyRef.current) {
+      chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
+    }
+  }, [messages]);
+
 
   const handleMessageSend = () => {
     if (messageInput.trim() === "") {
@@ -69,7 +78,7 @@ export default function Messages({ selectRoom }) {
       </div>
 
       {/* Messages Body */}
-      <div className="flex flex-col bg-gray-50 h-[300px] p-4 rounded-lg overflow-y-auto space-y-4">
+      <div className="flex flex-col bg-gray-50 h-[300px] p-4 rounded-lg overflow-y-auto space-y-4 " ref={chatBodyRef}>
         {messages?.data?.messages?.map((message, index) => {
           const isSender = CurrentLoginUser?._id === message?.sender;
           return (
