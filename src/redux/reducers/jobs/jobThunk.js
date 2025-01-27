@@ -62,6 +62,15 @@ export const jobApi = createApi({
             invalidatesTags: ['Job'],
         }),
 
+        acceptJobByWatchDog: build.mutation({
+            query: data => ({
+                url: `/user/jobs/${data.jobId}/accept`,
+                method: 'PUT',
+                body: data.body,
+            }),
+            invalidatesTags: ['Job'],
+        }),
+
         getAllJobs: build.query({
             query: () => `/jobs`,
             providesTags: ["Job"],

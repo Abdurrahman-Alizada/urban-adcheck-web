@@ -1,33 +1,29 @@
 'use client';
 import React, { memo } from 'react';
 import Image from 'next/image';
-import { BiUser } from "react-icons/bi";
 import { TbPackage, TbMail } from "react-icons/tb";
 import { useGetCurrentLoginUserQuery } from '@/redux/reducers/user/userThunk';
 import ProfileContentLoader from '@/components/contentLoader/profileContentLoader/page';
 import { useRouter } from 'next/navigation';
 
-
-// Extracted Package Feature component
+// Package Feature Component
 const PackageFeature = memo(({ label, value }) => (
   <div className="p-2 bg-blue-50 rounded-lg text-sm text-blue-700">
     {label}: {typeof value === 'boolean' ? (value ? 'Yes' : 'No') : value}
   </div>
 ));
-
 PackageFeature.displayName = 'PackageFeature';
 
-// Extracted Status Badge component
+// Status Badge Component
 const StatusBadge = memo(({ isActive }) => (
   <span className={`text-${isActive ? 'green' : 'red'}-500`}>
     {isActive ? 'Active' : 'Inactive'}
   </span>
 ));
-
 StatusBadge.displayName = 'StatusBadge';
 
 // Profile Header Component
-const ProfileHeader = memo(({ user }) => (
+const ProfileHeader = memo(({ user, onEditProfile, onEditPassword }) => (
   <div className="bg-white p-6 rounded-xl shadow-sm">
     <div className="flex items-start gap-6">
       <div className="relative w-24 h-24">
@@ -49,21 +45,20 @@ const ProfileHeader = memo(({ user }) => (
               Member since {new Date(user.createdAt).toLocaleDateString()}
             </p>
           </div>
-          <div className='flex gap-2'>
-          <button 
-              onClick={()=> handleEditProfile} // or whatever edit route you have
-              className="px-4 py-2 rounded-md text-sm font-medium text-white bg-primary hover:bg-secondary transition-colors duration-200 flex items-center gap-2"
+          <div className="flex gap-2">
+            <button
+              onClick={onEditProfile}
+              className="px-4 py-2 rounded-md text-sm font-medium text-white bg-primary hover:bg-secondary transition-colors duration-200"
             >
-           Edit Profile  
-          </button>
-          <button 
-              onClick={()=> handleEditPassword} // or whatever edit route you have
-              className="px-4 py-2 rounded-md text-sm font-medium text-white bg-primary hover:bg-secondary transition-colors duration-200 flex items-center gap-2"
+              Edit Profile
+            </button>
+            <button
+              onClick={onEditPassword}
+              className="px-4 py-2 rounded-md text-sm font-medium text-white bg-primary hover:bg-secondary transition-colors duration-200"
             >
-           Edit Password
-          </button>
+              Edit Password
+            </button>
           </div>
-            
         </div>
         <div className="mt-4 flex items-center gap-4">
           <div className="flex items-center gap-2 text-gray-600">
@@ -75,7 +70,6 @@ const ProfileHeader = memo(({ user }) => (
     </div>
   </div>
 ));
-
 ProfileHeader.displayName = 'ProfileHeader';
 
 // Subscription Details Component
@@ -97,7 +91,6 @@ const SubscriptionDetails = memo(({ packageDetails }) => {
             <StatusBadge isActive={packageDetails.isSubscribed} />
           </p>
         </div>
-        
         {Object.entries({
           'Package Name': currentPlan.packageName,
           'Status': currentPlan.status,
@@ -117,39 +110,29 @@ const SubscriptionDetails = memo(({ packageDetails }) => {
         <div className="mt-4">
           <h4 className="text-md font-semibold mb-2 text-gray-700">Package Features</h4>
           <div className="grid grid-cols-2 gap-2">
-            <PackageFeature 
-              label="Priority Support" 
-              value={currentPlan.features.prioritySupport} 
-            />
-            <PackageFeature 
-              label="Job Duration" 
-              value={`${currentPlan.features.jobDuration} days`} 
-            />
-            <PackageFeature 
-              label="Auto Renewal" 
-              value={currentPlan.features.autoRenewal} 
-            />
+            <PackageFeature label="Priority Support" value={currentPlan.features.prioritySupport} />
+            <PackageFeature label="Job Duration" value={`${currentPlan.features.jobDuration} days`} />
+            <PackageFeature label="Auto Renewal" value={currentPlan.features.autoRenewal} />
           </div>
         </div>
       )}
     </div>
   );
 });
-
 SubscriptionDetails.displayName = 'SubscriptionDetails';
 
 // Main Component
 const AccountSettings = () => {
   const { data: userData, isLoading, error } = useGetCurrentLoginUserQuery();
-  const router=useRouter();
+  const router = useRouter();
 
-  const handleEditProfile=()=>{
-    router.push('/dashboard/client/account-setting/edit-account')
-  }
-  const handleEditPassword=()=>{
-    router.push('/dashboard/client/account-setting/edit-password')
-  }
+  const handleEditProfile = () => {
+    router.push('/dashboard/client/account-setting/edit-account');
+  };
 
+  const handleEditPassword = () => {
+    router.push('/dashboard/client/account-setting/edit-password');
+  };
 
   if (isLoading) {
     return <ProfileContentLoader />;
@@ -166,7 +149,7 @@ const AccountSettings = () => {
   if (!userData) {
     return null;
   }
- 
+
   return (
     <div className="min-h-screen p-6">
       <div className="max-w-5xl mx-auto">
@@ -174,9 +157,12 @@ const AccountSettings = () => {
           <h1 className="text-2xl font-bold text-gray-900">Account Settings</h1>
           <p className="text-gray-500">View your account information</p>
         </div>
-        
         <div className="space-y-8">
-          <ProfileHeader user={userData} />
+          <ProfileHeader
+            user={userData}
+            onEditProfile={handleEditProfile}
+            onEditPassword={handleEditPassword}
+          />
           {userData.role.isClient && userData.packageDetails && (
             <SubscriptionDetails packageDetails={userData.packageDetails} />
           )}

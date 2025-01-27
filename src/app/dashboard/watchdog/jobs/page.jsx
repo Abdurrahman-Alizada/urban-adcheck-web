@@ -1,6 +1,6 @@
 "use client";
 import { useJobbystatusQuery, } from "@/redux/reducers/jobs/jobThunk";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { BsThreeDots, BsEye, BsCheckCircle, BsSearch } from "react-icons/bs";
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineCancel, MdFilterList } from "react-icons/md";
@@ -64,7 +64,7 @@ const JobFilterComponent = () => {
     return statusColors[status] || "bg-gray-100 text-gray-800";
   };
 
-
+  const title={ value: "available", label: "Available " };
   const handleJobTypeChange = (e) => {
     const values = e.map((option) => option.value);
     setFilters((prev) => ({
@@ -72,6 +72,19 @@ const JobFilterComponent = () => {
       jobsStatus: values,
     }));
   };
+
+  const handleJobStatusQuery = (e) => {
+    // const values = e.map((option) => option.value);
+    setFilters((prev) => ({
+      ...prev,
+      jobsStatus: [e],
+    }));
+  };
+
+  useEffect(() => {
+         handleJobStatusQuery(title);
+  }, []);
+
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;

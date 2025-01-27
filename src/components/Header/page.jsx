@@ -249,7 +249,7 @@ function Header() {
                             className="cursor-pointer object-contain"
                           />
                           {showDropdown && (
-                            <div className="absolute -right-12 mt-2 w-32 z-10 bg-white border rounded shadow-lg">
+                            <div className="absolute -right-14 mt-2 w-32 z-10 bg-white border rounded shadow-lg">
                               <ul className='flex flex-col gap-3 px-1 py-2'>
                                     <li className="flex items-center gap-4 text-gray-400">
                                         <Link href={"/dashboard/watchdog/account-settings"}  className="flex items-center gap-2 hover:text-primary">
