@@ -28,6 +28,7 @@ function Sidebar() {
     { name: 'Dashboard', icon: <IoGridOutline size={22} />, url: '/dashboard/watchdog/overview' },
     { name: 'Financials', icon: <HiOutlineCurrencyDollar size={22} />, url: '/dashboard/watchdog/financial-overview' },
     { name: 'Jobs Summary', icon: <BiTask size={22} />, url: '/dashboard/watchdog/jobs-summary' },
+    { name: 'My Jobs', icon: <BiTask size={22} />, url: '/dashboard/watchdog/my-jobs' },
   ];
 
   const AdminMenu = [

@@ -1,144 +1,167 @@
-'use client'
-import React, { useState } from 'react'
-import 'react-phone-number-input/style.css';
-import {  useResetPasswordMutation } from '@/redux/reducers/user/userThunk';
-import { useFormik } from 'formik';
+'use client';
+import React, { useState } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { useResetPasswordMutation } from '@/redux/reducers/user/userThunk';
 
+function ManagePassword() {
+  const [resetPassword, { isLoading: isUpdating }] = useResetPasswordMutation();
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-function ResetPassword() {
+  const validationSchema = Yup.object({
+    currentPassword: Yup.string()
+      .required('Current password is required')
+      .min(8, 'Password must be at least 8 characters long'),
+    newPassword: Yup.string()
+      .required('New password is required')
+      .min(8, 'Password must be at least 8 characters long')
+      .notOneOf([Yup.ref('currentPassword')], 'New password must be different from current password')
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
+      ),
+    confirmPassword: Yup.string()
+      .required('Please confirm your new password')
+      .oneOf([Yup.ref('newPassword')], 'Passwords must match'),
+  });
 
-  const [resetPassword]=useResetPasswordMutation();
-  
-  
-// Validation Schema using Yup
-    const validationSchema = Yup.object({
-        currentPassword: Yup.string().required('Current password is required'),
-        newPassword: Yup.string()
-        .min(8, 'Password must be at least 8 characters')
-        .required('New password is required'),
-        confirmPassword: Yup.string()
-        .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
-        .required('Confirm password is required'),
-    });
-    
-    const formik = useFormik({
-        initialValues: {
-          currentPassword: '',
-          newPassword: '',
-          confirmPassword: '',
-        },
-        validationSchema,
-        onSubmit: async (values, { setSubmitting, setFieldError, resetForm }) => {
-          try {
-            const response = await resetPassword({
-                currentPassword: values.currentPassword,
-                newPassword: values.newPassword,
-                confirmPassword:values.confirmPassword,
-            }).unwrap();
-    
-            if (response?.success) {
-              resetForm();
-              alert('Password updated successfully');
-            } else {
-              setFieldError('currentPassword', response?.message || 'Invalid password');
-            }
-          } catch (err) {
-            setFieldError('currentPassword', err?.data?.message || 'An error occurred');
-          } finally {
-            setSubmitting(false);
-          }
-        },
-      });
+  const initialValues = {
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  };
 
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    try {
+      setErrorMessage('');
+      setShowSuccess(false);
+      
+      const response = await resetPassword({
+        currentPassword: values.currentPassword,
+        newPassword: values.newPassword,
+        confirmPassword: values.confirmPassword,
+      }).unwrap();
+      
+      setShowSuccess(true);
+      resetForm();
+      
+    } catch (error) {
+      setErrorMessage(
+        error.data?.message || 
+        'Failed to update password. Please check your current password.'
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
-    <div className="w-full p-2 mt-4">
-      {/* Password form */}
-      <div className="mt-6">
-        <h2 className="text-gray-700 text-[20px] lg:text-[24px] font-extrabold font-Archivoo">
-          Change Password
-        </h2>
-        <form onSubmit={formik.handleSubmit} className="mt-4">
-          <div className="flex flex-col md:flex-row gap-4 mb-4">
-            {/* Current Password */}
-            <div className="w-[100%] md:w-[50%] lg:w-[33%] flex flex-col gap-2">
-              <label htmlFor="currentPassword" className="text-[16px] text-gray-800 font-nunitosans">
+    <div className="w-full p-4 mt-6">
+      <h2 className="text-gray-700 text-[20px] lg:text-[24px] font-extrabold">
+        Manage Password
+      </h2>
+      
+      {showSuccess && (
+        <div className="mb-4 p-4 bg-green-100 text-green-700 rounded-md">
+          Password updated successfully!
+        </div>
+      )}
+      
+      {errorMessage && (
+        <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-md">
+          {errorMessage}
+        </div>
+      )}
+
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ isSubmitting }) => (
+          <Form className="mt-4 space-y-4">
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="currentPassword"
+                className="text-[16px] text-gray-800 font-semibold"
+              >
                 Current Password
               </label>
-              <input
+              <Field
                 type="password"
-                id="currentPassword"
                 name="currentPassword"
-                value={formik.values.currentPassword}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className={`text-[16px] text-gray-800 font-nunitosans border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary ${
-                  formik.touched.currentPassword && formik.errors.currentPassword ? 'border-red-500' : ''
-                }`}
+                id="currentPassword"
+                className="text-[16px] text-gray-800 border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
+                autoComplete="current-password"
               />
-              {formik.touched.currentPassword && formik.errors.currentPassword && (
-                <span className="text-red-500 text-sm">{formik.errors.currentPassword}</span>
-              )}
+              <ErrorMessage
+                name="currentPassword"
+                component="div"
+                className="text-red-500 text-sm"
+              />
             </div>
-            {/* New Password */}
-            <div className="w-[100%] md:w-[50%] lg:w-[33%] flex flex-col gap-2">
-              <label htmlFor="newPassword" className="text-[16px] text-gray-800 font-nunitosans">
+
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="newPassword"
+                className="text-[16px] text-gray-800 font-semibold"
+              >
                 New Password
               </label>
-              <input
+              <Field
                 type="password"
-                id="newPassword"
                 name="newPassword"
-                value={formik.values.newPassword}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className={`text-[16px] text-gray-800 font-nunitosans border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary ${
-                  formik.touched.newPassword && formik.errors.newPassword ? 'border-red-500' : ''
-                }`}
+                id="newPassword"
+                className="text-[16px] text-gray-800 border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
+                autoComplete="new-password"
               />
-              {formik.touched.newPassword && formik.errors.newPassword && (
-                <span className="text-red-500 text-sm">{formik.errors.newPassword}</span>
-              )}
+              <ErrorMessage
+                name="newPassword"
+                component="div"
+                className="text-red-500 text-sm"
+              />
             </div>
-            {/* Confirm Password */}
-            <div className="w-[100%] md:w-[50%] lg:w-[33%] flex flex-col gap-2">
-              <label htmlFor="confirmPassword" className="text-[16px] text-gray-800 font-nunitosans">
+
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="confirmPassword"
+                className="text-[16px] text-gray-800 font-semibold"
+              >
                 Confirm Password
               </label>
-              <input
+              <Field
                 type="password"
-                id="confirmPassword"
                 name="confirmPassword"
-                value={formik.values.confirmPassword}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className={`text-[16px] text-gray-800 font-nunitosans border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary ${
-                  formik.touched.confirmPassword && formik.errors.confirmPassword ? 'border-red-500' : ''
-                }`}
+                id="confirmPassword"
+                className="text-[16px] text-gray-800 border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
+                autoComplete="new-password"
               />
-              {formik.touched.confirmPassword && formik.errors.confirmPassword && (
-                <span className="text-red-500 text-sm">{formik.errors.confirmPassword}</span>
-              )}
+              <ErrorMessage
+                name="confirmPassword"
+                component="div"
+                className="text-red-500 text-sm"
+              />
             </div>
-          </div>
-          {/* Save button */}
-          <div className="mt-4">
-            <button
-              type="submit"
-              disabled={formik.isSubmitting}
-              className={`text-[15px] px-6 py-2 font-semibold rounded-[5px] ${
-                formik.isSubmitting ? 'bg-gray-400' : 'bg-primary text-white'
-              }`}
-            >
-              {formik.isSubmitting ? 'Saving...' : 'Save Changes'}
-            </button>
-          </div>
-        </form>
-      </div>
-      <hr className="h-2 w-full mt-4" />
+
+            <div>
+              <button
+                type="submit"
+                disabled={isSubmitting || isUpdating}
+                className={`text-[15px] px-6 py-2 font-semibold rounded-[5px] ${
+                  isSubmitting || isUpdating
+                    ? 'bg-gray-400 text-white'
+                    : 'bg-primary text-white hover:bg-primary/90 transition-colors'
+                }`}
+              >
+                {isSubmitting || isUpdating ? 'Updating...' : 'Update Password'}
+              </button>
+            </div>
+          </Form>
+        )}
+      </Formik>
     </div>
-  )
+  );
 }
 
-export default ResetPassword
+export default ManagePassword;

@@ -18,7 +18,6 @@ const JobFilterComponent = () => {
 
   const [activeRow, setActiveRow] = useState(null);
   const [showExpirePopup, setShowExpirePopup] = useState(false);
-  const [showMarkAsApprovePopup, setShowMarkAsApprovedPopup] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -117,10 +116,7 @@ const JobFilterComponent = () => {
     setActiveRow((prevRow) => (prevRow === rowId ? null : rowId));
   };
 
-  const handleApprovePopup = (job) => {
-    setSelectedJob(job);
-    setShowMarkAsApprovedPopup(true);
-  };
+  
 
 
   return (
@@ -251,7 +247,6 @@ const JobFilterComponent = () => {
                     job={job}
                     activeRow={activeRow}
                     togglePopup={togglePopup}
-                    handleApprovePopup={handleApprovePopup}
                     router={router}
                     getStatusColor={getStatusColor}
                   />
@@ -266,15 +261,6 @@ const JobFilterComponent = () => {
         )}
       </div>
      
-       {/* Mark as Approved Modal */}
-            {showMarkAsApprovePopup && (
-              <MarkAsApproved
-                selectedJob={selectedJob}
-                setShowMarkAsApprovedPopup={setShowMarkAsApprovedPopup}
-              />
-      
-            )}
-      
             {/* Mark as Expired Modal */}
             {showExpirePopup && (
               <MarkAsExpired
@@ -319,7 +305,7 @@ const JobTableHeader = () => {
 };
 
 
-const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }) => {
+const JobTableRow = ({ job, activeRow, togglePopup, router }) => {
   return (
     <tr className="border-b hover:bg-gray-50 transition-colors">
       <td className="p-2">
@@ -382,24 +368,9 @@ const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }
               </div>
               <div className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors">
                 <CiEdit size={16} className="text-gray-600" />
-                <span className="text-sm text-gray-600">Edit Job</span>
+                <span className="text-sm text-gray-600">Accept Job</span>
               </div>
-              <div 
-                onClick={() => handleApprovePopup(job)}
-                className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors"
-              >
-                {job.status?.isApproved ? (
-                  <>
-                    <MdOutlineCancel size={16} className="text-gray-600" />
-                    <span className="text-sm text-gray-600">Disapprove Job</span>
-                  </>
-                ) : (
-                  <>
-                    <BsCheckCircle size={16} className="text-gray-600" />
-                    <span className="text-sm text-gray-600">Approve Job</span>
-                  </>
-                )}
-              </div>
+              
             </div>
           )}
       </td>

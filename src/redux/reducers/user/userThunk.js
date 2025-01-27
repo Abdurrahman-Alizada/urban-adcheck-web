@@ -61,7 +61,8 @@ export const userApi = createApi({
         method: 'PUT',
         body: {
           newPassword: newData.newPassword,
-          resetLink: newData.resetToken
+          resetLink: newData.resetToken,
+          newPassword: newData.newPassword,
         },
       })
     }),
