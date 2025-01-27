@@ -9,11 +9,14 @@ import { useAcceptOrRejectWatchdogMutation } from "@/redux/reducers/jobs/jobThun
 import { FaS } from "react-icons/fa6";
 import { FaStar } from "react-icons/fa";
 import FeedbackForm from "./feedbackForm";
+import { useGetCurrentLoginUserQuery } from "@/redux/reducers/user/userThunk";
 
 const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [mediaModal, setMediaModal] = useState(false);
   const [acceptOrRejectWatchdog] = useAcceptOrRejectWatchdogMutation();
+
+  const { data: currentLoginUser, isLoading, error } = useGetCurrentLoginUserQuery();
 
   const {
     jobTitle,
@@ -258,28 +261,28 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
             </div>
 
             {
-              report.status === "pending" && (
+              report.status === "pending" &&  currentLoginUser?.role?.isClient == true &&(
                 <div className="flex justify-start gap-4 mt-4">
-                <button
-                  onClick={rejectDelivery}
-                  className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-gray-300"
-                >
-                  Submit a revision
-                </button>
-                <button
-                  onClick={() => acceptDelivery(report._id)}
-                  className="px-4 py-2 bg-primary text-white rounded-md hover:bg-red-700"
-                >
-                  Accept Delivery
-                </button>
+                  <button
+                    onClick={rejectDelivery}
+                    className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-gray-300"
+                  >
+                    Submit a revision
+                  </button>
+                  <button
+                    onClick={() => acceptDelivery(report._id)}
+                    className="px-4 py-2 bg-primary text-white rounded-md hover:bg-red-700"
+                  >
+                    Accept Delivery
+                  </button>
                 </div>
               )
             }
             {
               report.status === "accepted" && (
-                <FeedbackForm/>
-                )  
-              }
+                <FeedbackForm />
+              )
+            }
           </div>
         );
       })}
@@ -340,6 +343,8 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
       console.log("first ", res);
     });
   };
+
+ 
 
   return (
     <div>
@@ -434,66 +439,126 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
             </div>
           </section>
 
-          {/* Client Information
-          <section className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-gray-800">
-                Client Information
-              </h2>
+          { 
+            currentLoginUser?.role?.isWatchDog == true && acceptedBy?.watchdog ? (
+              // Client Information
+              <section className="bg-white p-6 rounded-lg shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-bold text-gray-800">Client Information</h2>
+                </div>
+                <div className="space-y-2">
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">Name:</span>
+                    <span>{personalInfo?.fullName || "N/A"}</span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">Email:</span>
+                    <span>{personalInfo?.email || "N/A"}</span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">Phone:</span>
+                    <span>{phoneNumber?.primary || "N/A"}</span>
+                  </p>
+                </div>
+              </section>
+            ) : currentLoginUser?.role?.isClient == true ? (
+              // Watchdog Information
+              <section className="bg-white p-6 rounded-lg shadow-sm">
+                <h2 className="text-xl font-bold text-gray-800 mb-4">Watchdog Information</h2>
+                <div className="space-y-2">
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">Name:</span>
+                    <span>
+                      {acceptedBy?.watchdog?.fullName?.firstName || "N/A"}{" "}
+                      {acceptedBy?.watchdog?.fullName?.lastName || "N/A"}
+                    </span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">Email:</span>
+                    <span>{acceptedBy?.watchdog?.email || "N/A"}</span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">Phone:</span>
+                    <span>{acceptedBy?.watchdog?.phoneNumber || "N/A"}</span>
+                  </p>
+                  <button
+                    onClick={handleChatModal}
+                    className="h-8 md:h-12 px-3 md:px-6 py-2 text-xl rounded-[10px] bg-secondary text-white hover:bg-primary"
+                  >
+                    Chat Now
+                  </button>
+                  <button
+                    onClick={handleViewDelievery}
+                    className="h-8 md:h-12 px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-primary text-white hover:bg-primary"
+                  >
+                    View Delivery
+                  </button>
+                </div>
+              </section>
+            ) : (
+              currentLoginUser?.role?.isAdmin == true &&
+              <>
+                {/* Default Case: Client Information */}
+                <section className="bg-white p-6 rounded-lg shadow-sm">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl font-bold text-gray-800">Client Information</h2>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="flex justify-between">
+                      <span className="text-gray-600">Name:</span>
+                      <span>{personalInfo?.fullName || "N/A"}</span>
+                    </p>
+                    <p className="flex justify-between">
+                      <span className="text-gray-600">Email:</span>
+                      <span>{personalInfo?.email || "N/A"}</span>
+                    </p>
+                    <p className="flex justify-between">
+                      <span className="text-gray-600">Phone:</span>
+                      <span>{phoneNumber?.primary || "N/A"}</span>
+                    </p>
+                  </div>
+                </section>
+
+                {/* Default Case: Watchdog Information */}
+                  <section className="bg-white p-6 rounded-lg shadow-sm">
+                    <h2 className="text-xl font-bold text-gray-800 mb-4">Watchdog Information</h2>
+                    <div className="space-y-2">
+                      <p className="flex justify-between">
+                        <span className="text-gray-600">Name:</span>
+                        <span>
+                          {acceptedBy?.watchdog?.fullName?.firstName || "N/A"}{" "}
+                          {acceptedBy?.watchdog?.fullName?.lastName || "N/A"}
+                        </span>
+                      </p>
+                      <p className="flex justify-between">
+                        <span className="text-gray-600">Email:</span>
+                        <span>{acceptedBy?.watchdog?.email || "N/A"}</span>
+                      </p>
+                      <p className="flex justify-between">
+                        <span className="text-gray-600">Phone:</span>
+                        <span>{acceptedBy?.watchdog?.phoneNumber || "N/A"}</span>
+                      </p>
+                      <button
+                        onClick={handleChatModal}
+                        className="h-8 md:h-12 px-3 md:px-6 py-2 text-xl rounded-[10px] bg-secondary text-white hover:bg-primary"
+                      >
+                        Chat Now
+                      </button>
+                      <button
+                        onClick={handleViewDelievery}
+                        className="h-8 md:h-12 px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-primary text-white hover:bg-primary"
+                      >
+                        View Delivery
+                      </button>
+                    </div>
+                  </section>
               
-            </div>
-            <div className="space-y-2">
-              <p className="flex justify-between">
-                <span className="text-gray-600">Name:</span>
-                <span>{personalInfo?.fullName}</span>
-              </p>
-              <p className="flex justify-between">
-                <span className="text-gray-600">Email:</span>
-                <span>{personalInfo?.email}</span>
-              </p>
-              <p className="flex justify-between">
-                <span className="text-gray-600">Phone:</span>
-                <span>{phoneNumber?.primary}</span>
-              </p>
-            </div>
-          </section> */}
-          {/* Watchdog Information */}
-          {acceptedBy?.watchdog && (
-            <section className="bg-white p-6 rounded-lg shadow-sm">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">
-                Watchdog Information
-              </h2>
-              <div className="space-y-2">
-                <p className="flex justify-between">
-                  <span className="text-gray-600">Name:</span>
-                  <span>
-                    {acceptedBy?.watchdog?.fullName?.firstName}{" "}
-                    {acceptedBy?.watchdog?.fullName?.lastName}
-                  </span>
-                </p>
-                <p className="flex justify-between">
-                  <span className="text-gray-600">Email:</span>
-                  <span>{acceptedBy?.watchdog?.email}</span>
-                </p>
-                <p className="flex justify-between">
-                  <span className="text-gray-600">Phone:</span>
-                  <span>{acceptedBy?.watchdog?.phoneNumber}</span>
-                </p>
-                <button
-                  onClick={handleChatModal}
-                  className="h-8 md:h-12 px-3 md:px-6 py-2 text-xl  rounded-[10px] bg-secondary text-white hover:bg-primary"
-                >
-                  Chat Now
-                </button>
-                <button
-                  onClick={handleViewDelievery}
-                  className="h-8 md:h-12 px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-primary text-white hover:bg-primary"
-                >
-                  View Delivery
-                </button>
-              </div>
-            </section>
-          )}
+              </>
+            )
+          }
+
+
+
           {/* Job Location */}
           <section className="bg-white p-6 rounded-lg shadow-sm">
             <h2 className="text-xl font-bold text-gray-800 mb-4">
