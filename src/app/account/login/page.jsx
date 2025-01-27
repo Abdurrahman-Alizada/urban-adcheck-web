@@ -127,23 +127,28 @@ function Login() {
               {/* Login Button */}
               <div className="flex justify-center">
               {
-              isLoading ? <div className="spinner"> </div> : 
+              isLoading ? 
+              <button
+                  className="bg-primary w-full h-[60px] rounded-[10px] flex justify-center items-center"
+                >
+               <div className="spinner text-white"> </div>
+              </button> 
+              
+              : 
                 <button
                   type="submit"
                   className="bg-primary text-white w-full h-[52px] rounded-[10px]"
                   disabled={isLoading}
                 >
-                Login
+                 Login
                 </button>
               }  
               </div>
 
             </form>
-             <div className='flex justify-center mt-2 text-primary'>
-             <Link href="/account/forgot-password">
-               Forgot Password
-            </Link>
-             </div>
+            <div className='flex justify-center mt-2 text-primary'>
+               <span onClick={()=>router.push('/account/forgot-password')}>Forgot Password</span>
+              </div>
           </div>
         </section>
       </div>
