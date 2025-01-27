@@ -30,7 +30,7 @@ const Notification = ({setShowNotifications}) => {
                notification?.data?.notification?.map((notification,index)=>(
                 <li key={index} className="flex justify-between items-center px-4 py-2 border-b ">
                   <FaUser className="bg-slate-300 rounded-full w-10 h-10" />
-                  <p className="text-gray-500 flex-1 px-2 py-1">
+                  <p className={`text-gray-500 flex-1 px-2 py-1 ${notification?.status == "UNREAD" ? "font-bold":""}`}>
                     {notification?.message}
                   </p>
                   <span className="text-xs text-gray-400 block">

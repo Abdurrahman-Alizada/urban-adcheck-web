@@ -20,7 +20,7 @@ export const notificationApi = createApi({
         },
     }),
 
-    tagTypes: ["notification","getAllNotification"],
+    tagTypes: ["notification"],
     reducerPath: "notificationApi",
     endpoints: (build) => ({
 
@@ -35,16 +35,26 @@ export const notificationApi = createApi({
                     return headers;
                 },
             }),
-            invalidatesTags: ['Job'],
+            invalidatesTags: ['notification'],
         }),
+
+        UpdateNotification: build.mutation({
+            query: (data) => ({
+              url: `/users/notifications/catalog/${data.notifcationId}`,
+              method: 'PUT',
+              body:data.info
+            }),
+            invalidatesTags: ["notification"],
+          }),
         
         getAllNotification: build.query({
             query: () => `/users/notifications/catalog`,
-            providesTags: ["getAllNotification"],
+            providesTags: ["notification"],
         }),
     }),
 });
 
 export const {
-    useGetAllNotificationQuery
+    useGetAllNotificationQuery,
+    useUpdateNotificationMutation
 } = notificationApi;
