@@ -10,11 +10,12 @@ import DeleteJob from "@/components/dashboard/adminJobs/deleteJob";
 import MarkAsApproved from "@/components/dashboard/adminJobs/markAsApproved";
 import moment from "moment";
 import Image from "next/image";
-import { useJobListQuery } from "@/redux/reducers/jobs/jobThunk";
+import { useAcceptJobByWatchDogMutation, useJobListQuery } from "@/redux/reducers/jobs/jobThunk";
 
 
 
 const JobFilterComponent = () => {
+  const [acceptJobByWatchDog]=useAcceptJobByWatchDogMutation();
 
   const [activeRow, setActiveRow] = useState(null);
   const [showExpirePopup, setShowExpirePopup] = useState(false);
@@ -23,6 +24,7 @@ const JobFilterComponent = () => {
   const [showFilters, setShowFilters] = useState(false);
   const router = useRouter();
 
+  
   const [filters, setFilters] = useState({
     jobsType: [],
     jobTitle: "",
@@ -117,7 +119,7 @@ const JobFilterComponent = () => {
   };
 
   
-
+  
 
   return (
     <div className="mx-auto p-4 bg-white">
@@ -245,6 +247,7 @@ const JobFilterComponent = () => {
                   <JobTableRow
                     key={job._id}
                     job={job}
+                    acceptJobByWatchDog={acceptJobByWatchDog}
                     activeRow={activeRow}
                     togglePopup={togglePopup}
                     router={router}
@@ -288,7 +291,6 @@ const JobFilterComponent = () => {
 export default JobFilterComponent
 
 
-
 const JobTableHeader = () => {
   return (
     <thead>
@@ -305,7 +307,17 @@ const JobTableHeader = () => {
 };
 
 
-const JobTableRow = ({ job, activeRow, togglePopup, router }) => {
+const JobTableRow = ({ job, activeRow, togglePopup, router,acceptJobByWatchDog }) => {
+
+  const handleAcceptJobByWatchDog = (id) => {
+    acceptJobByWatchDog(id)
+      .then((res) => 
+        console.log(res)
+        
+    )
+      .catch((err) => 
+        console.error(err)); // Optional: add error handling
+  };
   return (
     <tr className="border-b hover:bg-gray-50 transition-colors">
       <td className="p-2">
@@ -366,7 +378,9 @@ const JobTableRow = ({ job, activeRow, togglePopup, router }) => {
                 <BsEye size={16} className="text-gray-600" />
                 <span className="text-sm text-gray-600">View Details</span>
               </div>
-              <div className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors">
+              <div 
+              onClick={ () => handleAcceptJobByWatchDog(job?._id)}
+              className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors">
                 <CiEdit size={16} className="text-gray-600" />
                 <span className="text-sm text-gray-600">Accept Job</span>
               </div>
