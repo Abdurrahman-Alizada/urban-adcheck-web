@@ -78,7 +78,7 @@ const NotificationComponent = () => {
 
                 {/* Conditionally Render Modal */}
                 {activeRow === notification._id && (
-                  <div className="absolute right-14 z-10  bg-white shadow-md rounded-lg p-2">
+                  <div className="absolute right-14 z-10 bg-white shadow-md rounded-lg p-2">
                     <div className="relative">
                       <button
                         className="block text-sm text-gray-700 hover:text-blue-500"
