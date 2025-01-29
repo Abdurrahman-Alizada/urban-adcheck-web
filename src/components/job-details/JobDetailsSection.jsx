@@ -421,19 +421,19 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
               <p className="flex justify-between">
                 <span className="text-gray-600">Amount:</span>
                 <span className="font-semibold">
-                  {paymentDetails?.currency} {paymentDetails?.amount}
+                  $CAD {paymentDetails?.amount}
                 </span>
               </p>
               <p className="flex justify-between">
                 <span className="text-gray-600">Service Fee:</span>
                 <span className="font-semibold">
-                  {paymentDetails?.currency} {paymentDetails?.serviceFee}
+                  $CAD {paymentDetails?.serviceFee}
                 </span>
               </p>
               <p className="flex justify-between">
                 <span className="text-gray-600">Total:</span>
                 <span className="font-semibold">
-                  {paymentDetails?.currency} {paymentDetails?.totalAmount}
+                $CAD {paymentDetails?.totalAmount}
                 </span>
               </p>
             </div>

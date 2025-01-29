@@ -69,9 +69,13 @@ function Header() {
       console.log("respons us", res)
       localStorage.removeItem("userInfo")
       // navigate to login/
-      router.push("/account/login")
       
-    })
+    // Navigate to login page and reload
+    router.push("/account/login");
+    setTimeout(() => {
+      window.location.reload();
+    }, 500); // Small delay to ensure navigation happens first
+  })
   }
 
   const handleNotification = () => {
@@ -136,7 +140,7 @@ function Header() {
                               <div className="absolute -right-12 mt-2 w-32 z-10 bg-white border rounded shadow-lg">
                                 <ul className='flex flex-col gap-3 px-1 py-2'>
                                       <li className="flex items-center gap-4 text-gray-400">
-                                          <Link href={"/dashboard/watchdog/account-settings"}  className="flex items-center gap-2 hover:text-primary">
+                                          <Link href={"/dashboard/client/account-setting"}  className="flex items-center gap-2 hover:text-primary">
                                             <GoGear size={22}/>
                                             <span className="text-[15.03px]">Account Settings</span>
                                           </Link> 
@@ -236,7 +240,7 @@ function Header() {
               <div className="flex items-center gap-2">                 
                 <div className='flex'>
                   <div className='flex items-center gap-3'>
-                  <FaBell size={25} color='green'/>
+                  <FaBell size={25} color='green'  onClick={handleNotification}/>
                   <div
                     className='relative inline-block'
                     onClick={toggleDropdown}
