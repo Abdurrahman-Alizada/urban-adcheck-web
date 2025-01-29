@@ -1,438 +1,402 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import { BsArrowLeft } from 'react-icons/bs';
-import { BiSquareRounded } from "react-icons/bi";
-import Image from 'next/image';
-import { IoMdCheckboxOutline } from "react-icons/io";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { RxCross1 } from "react-icons/rx";
-import { FaArrowRightLong } from "react-icons/fa6";
-import { FaArrowLeftLong } from "react-icons/fa6";
-import { RxCross2 } from "react-icons/rx";
+"use client";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { BsThreeDots, BsEye, BsCheckCircle, BsSearch } from "react-icons/bs";
+import { CiEdit } from "react-icons/ci";
+import { MdOutlineCancel, MdFilterList } from "react-icons/md";
+import Select from "react-select";
+import MarkAsExpired from "@/components/dashboard/adminJobs/markAsExpired";
+import DeleteJob from "@/components/dashboard/adminJobs/deleteJob";
+import MarkAsApproved from "@/components/dashboard/adminJobs/markAsApproved";
+import moment from "moment";
+import Image from "next/image";
+import { useAcceptJobByWatchDogMutation, useJobListQuery } from "@/redux/reducers/jobs/jobThunk";
 
-function MyJob() {
+const JobFilterComponent = () => {
+  const [acceptJobByWatchDog]=useAcceptJobByWatchDogMutation();
 
-    const [openFilter, setOpenFilter] = useState(false);
-    const [jobs, setJobs] = useState([]);
-    const [filteredJobs, setFilteredJobs] = useState([]);
-    const [selectedFilters, setSelectedFilters] = useState([]);
+  const [activeRow, setActiveRow] = useState(null);
+  const [showExpirePopup, setShowExpirePopup] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const router = useRouter();
 
-    // Pagination state
-    const [currentPage, setCurrentPage] = useState(1);
-    const rowsPerPage = 6;
-    
-    //Delete Model for InProgress jobs
-    const [showDeleteModal,setShowDeleteModal]=useState(false);
-   
-    const deleteInProgressJob=()=>{
-        setShowDeleteModal(true);
-    }
+  const [filters, setFilters] = useState({
+    jobsType: [],
+    jobTitle: "",
+    minAmount: "",
+    maxAmount: "",
+    fromDate: "",
+    toDate: "",
+    sortBy: "createdAt",
+    sortOrder: "descending",
+  });
 
-    const closeDeleteInProgressJobModal=()=>{
-        setShowDeleteModal(false)
-    }
-    
-    //filters inner cards content
-    const cardsData = [
-        {
-            filter: 'all',
-            title: 'All Jobs',
-            jobs: '43',
-            image: '/posted-job-1.png',
-            alt: 'posted-jobs',
-        },
-        {
-            filter: 'posted',
-            title: 'Posted Jobs',
-            jobs: '43',
-            image: '/posted-job-1.png',
-            alt: 'posted-jobs',
-        },
-        {
-            filter: 'in-progress',
-            title: 'In Progress',
-            jobs: '43',
-            image: '/in-progress-1.png',
-            alt: 'in-progress-jobs',
-        },
-        {
-            filter: 'pending',
-            title: 'Pending Jobs',
-            jobs: '443',
-            image: '/pending-job-1.png',
-            alt: 'pending-jobs',
-        },
-        {
-            filter: 'completed',
-            title: 'Completed Jobs',
-            jobs: '23',
-            image: '/Completed-job-1.png',
-            alt: 'completed-jobs',
-        },
-    ];
+  const jobTypeOptions = [
+    { value: "featured", label: "Featured Jobs" },
+    { value: "approved", label: "Approved by Admin" },
+    { value: "not-approved", label: "Not Approved" },
+    { value: "completed", label: "Completed" },
+    { value: "cancelled", label: "Cancelled" },
+    { value: "expired", label: "Expired" },
+  ];
 
-    useEffect(() => {
-        const fetchJobs = async () => {
-            const jobData = [
-                { id: 1, name: 'Building Horse', location: 'A Block st41, H20', charge: 100, status: 'posted', image: '/img-jobs.png',alt:"job image 1" },
-                { id: 2, name: 'Painting Wall', location: 'C Block st23, H10', charge: 200, status: 'in-progress', image: '/img-jobs.png',alt:"job image 2" },
-                { id: 3, name: 'Fixing Roof', location: 'D Block st9, H5', charge: 150, status: 'pending', image: '/img-jobs.png' , alt:"job image 3" },
-                { id: 4, name: 'Plumbing Work', location: 'E Block st12, H15', charge: 180, status: 'completed', image: '/img-jobs.png',alt:"job image 4" },
-                { id: 5, name: 'Plumbing Work', location: 'E Block st12, H15', charge: 180, status: 'completed', image: '/img-jobs.png',alt:"job image 5" },
-                { id: 6, name: 'Plumbing Work', location: 'E Block st12, H15', charge: 180, status: 'completed', image: '/img-jobs.png',alt:"job image 7" },
-                { id: 7, name: 'Plumbing Work', location: 'E Block st12, H15', charge: 180, status: 'completed', image: '/img-jobs.png',alt:"job image 6" },
-                { id: 8, name: 'Painting Wall', location: 'C Block st23, H10', charge: 200, status: 'in-progress', image: '/img-jobs.png',alt:"job image 8" },
-                { id: 9, name: 'Painting Wall', location: 'C Block st23, H10', charge: 200, status: 'in-progress', image: '/img-jobs.png', alt:"job image 9" },
-                { id: 10, name: 'Fixing Roof', location: 'D Block st9, H5', charge: 1000, status: 'pending', image: '/img-jobs.png', alt:"job image 10" },
-                { id: 11, name: 'Fixing Roof', location: 'D Block st9, H5', charge: 1120, status: 'pending', image: '/img-jobs.png',alt:"job image 11" },
-                { id: 12, name: 'Fixing Roof', location: 'D Block st9, H5', charge: 1230, status: 'pending', image: '/img-jobs.png', alt:"job image 12" },
-            
-            ];
-            setJobs(jobData);
-            setFilteredJobs(jobData);
-        };
-        fetchJobs();
-    }, []);
+  const sortOptions = [
+    { value: "createdAt-descending", label: "Newest First" },
+    { value: "createdAt-ascending", label: "Oldest First" },
+    { value: "jobTitle-ascending", label: "Job Title (A-Z)" },
+    { value: "jobTitle-descending", label: "Job Title (Z-A)" },
+    { value: "amount-ascending", label: "Amount (Low to High)" },
+    { value: "amount-descending", label: "Amount (High to Low)" },
+  ];
 
-    const toggleFilter = (filter) => {
-        let updatedFilters;
-        if (filter === 'all') {
-            updatedFilters = selectedFilters.includes('all') ? [] : ['all'];
-        } else {
-            updatedFilters = selectedFilters.includes(filter)
-                ? selectedFilters.filter((item) => item !== filter)
-                : [...selectedFilters.filter((f) => f !== 'all'), filter];
-        }
-        setSelectedFilters(updatedFilters);
+  const { data: jobDetails = {}, isLoading, error } = useJobListQuery(filters);
+  console.log("jobDetails",jobDetails,error)
+  const jobs = jobDetails?.data?.jobs || [];
+  console.log("jobss",jobs);
+  const totalJobs = jobDetails?.data?.jobsCount || 0;
 
-        if (updatedFilters.length === 0 || updatedFilters.includes('all')) {
-            setFilteredJobs(jobs);
-        } else {
-            setFilteredJobs(jobs.filter((job) => updatedFilters.includes(job.status)));
-        }
+
+
+  const getStatusColor = (status) => {
+    const statusColors = {
+      Featured: "bg-purple-100 text-purple-800",
+      Approved: "bg-green-100 text-green-800",
+      "Not Approved": "bg-yellow-100 text-yellow-800",
+      Completed: "bg-blue-100 text-blue-800",
+      Cancelled: "bg-red-100 text-red-800",
+      Expired: "bg-gray-100 text-gray-800"
     };
+    return statusColors[status] || "bg-gray-100 text-gray-800";
+  };
 
-    const removeFilter = (filter) => {
-        toggleFilter(filter);
-    };
+  const handleSortChange = (selected) => {
+    const [sortBy, sortOrder] = selected.value.split("-");
+    setFilters((prev) => ({
+      ...prev,
+      sortBy,
+      sortOrder
+    }))
+  }
 
-    const renderJobRows = (jobList) => {
-        return jobList.map((job, index) => (
-            <tr key={job.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th
-                    scope="row"
-                    className="flex gap-2 items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                    <span className="font-bold">{index + 1}</span>
-                    <Image
-                        src={job.image}
-                        width={55}
-                        height={55}
-                        alt={job.alt}
-                        className="rounded-md"
-                    />
-                    <h4 className="text-[14px]">{job.name}</h4>
-                </th>
-                <td className="px-5 py-4 text-[14px] leading-tight">{job.location}</td>
-                <td className="px-4 py-4">
-                    <span className="bg-[#CEFEFB] px-2 py-1 text-[#068179] text-[14px] rounded-[20px]">
-                        ${job.charge}
-                    </span>
-                </td>
-                <td className="px-4 py-4 flex justify-between items-center">
-                    {job.status === 'in-progress' ? (
-                        <>
-                            <button
-                                type="button"
-                                className="text-[13px] cursor-pointer lg:text-[15px] shadow-md px-2 xl:px-5 py-1 font-medium bg-transparent text-primary border-[1px] border-primary rounded-[10px]"
-                                onClick={deleteInProgressJob}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                className="text-[13px] cursor-pointer lg:text-[15px] shadow-md px-2 xl:px-5 py-1 font-medium bg-primary text-white rounded-[10px]"
-                            >
-                                Submit
-                            </button>
-                        </>
-                    ) : job.status === 'pending' ? (
-                        <button
-                            type="submit"
-                            className="text-[13px] shadow-md lg:text-[15px] px-3 lg:px-6 py-1 font-medium bg-[#EEBB06] text-white rounded-[10px]"
-                        >
-                            Pending
-                        </button>
-                    ) : job.status === 'completed' ? (
-                        <button
-                            type="button"
-                            className="text-[13px] shadow-lg lg:text-[15px] px-3 lg:px-8 py-1 font-medium bg-[#08D880] text-white rounded-[10px]"
-                        >
-                            Done
-                        </button>
-                    ) : (
-                        <>
-                           <div className='flex gap-5'>
-                               <IoMdCheckboxOutline size={20}/>
-                               <RiDeleteBin6Line size={20}/>
-                            </div>
+  const handleJobTypeChange = (e) => {
+    const values = e.map((option) => option.value);
+    setFilters((prev) => ({
+      ...prev,
+      jobsType: values,
+    }))
+  }
 
-                            <button
-                            className="text-[13px] lg:text-[15px] shadow-md px-1 xl:px-3 py-1 font-medium bg-primary text-white rounded-[10px]"
-                            >
-                            See details
-                        </button>
-                        </>
-                       
-                    )}
-                </td>
-            </tr>
-        ));
-    };
-
-    // Pagination Logic
-    const indexOfLastJob = currentPage * rowsPerPage;
-    const indexOfFirstJob = indexOfLastJob - rowsPerPage;
-    const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
-
-    // Handle Page Change
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-    // Handle Next Page
-    const nextPage = () => setCurrentPage(currentPage + 1);
-
-    // Handle Previous Page
-    const prevPage = () => setCurrentPage(currentPage - 1);
-
-    // Total Pages
-    const totalPages = Math.ceil(filteredJobs.length / rowsPerPage);
-    
-    const renderPaginationNumbers = () => {
-        const pages = [];
-        const totalPages = Math.ceil(filteredJobs.length / rowsPerPage);
-    
-        // Always show the first 3 pages
-        for (let i = 1; i <= Math.min(3, totalPages); i++) {
-            pages.push(i);
-        }
-    
-        // Show dots if the current page is far from the first 3
-        if (currentPage > 4) {
-            pages.push('...');
-        }
-    
-        // Show current page and one page before and after
-        if (currentPage > 3 && currentPage < totalPages - 2) {
-            pages.push(currentPage - 1, currentPage, currentPage + 1);
-        }
-    
-        // Show dots if the current page is far from the last 3
-        if (currentPage < totalPages - 3) {
-            pages.push('...');
-        }
-    
-        // Always show the last 3 pages
-        for (let i = Math.max(totalPages - 2, 4); i <= totalPages; i++) {
-            pages.push(i);
-        }
-    
-        return pages;
-    };
-    
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
 
 
-    return (
-        <div className="w-full mt-4 mb-10">
-            {/* Section Header */}
-            <div className="flex gap-4 items-center">
-                <BsArrowLeft size={22} />
-                <h2 className="text-gray-700 text-[20px] lg:text-[24px] font-extrabold font-Archivoo">
-                    My Jobs
-                </h2>
-            </div>
-            {/* Jobs List */}
-            <div className="b-[1px] rounded-[5px] shadow-custom-shadow">
-                    {/* Job List Header */}
-                    <div className="px-5 py-3 flex items-center gap-4 relative">
-                        {/* Filter Button */}
-                        <button
-                            className="flex items-center gap-2 bg-[#bffeb0] text-black px-3 py-1 rounded-full"
-                            onClick={() => setOpenFilter(!openFilter)}
-                        >
-                            <Image src={'/filter.png'} alt='filter icon' width={35} height={35} onClick={() => setOpenFilter(!openFilter)} className='cursor-pointer'/>
-                            <span>Filter Jobs</span>
-                        </button>
+  const clearFilters=()=>{
+    setFilters({
+      jobsType: [],
+      jobTitle: "",
+      minAmount: "",
+      maxAmount: "",
+      fromDate: "",
+      toDate: "",
+      sortBy: "createdAt",
+      sortOrder: "descending",
+    });
+  }
 
-                        {/* Jobs Count */}
-                        <span className="bg-[#F9F5FF] p-1 text-[#6941C6] rounded-[20px]">
-                            {filteredJobs.length}
-                        </span>
+  const togglePopup = (rowId) => {
+    setActiveRow((prevRow) => (prevRow === rowId ? null : rowId));
+  };
 
-                        {/* Active Filters */}
-                        {selectedFilters.map((filter, index) => (
-                            <button
-                                key={index}
-                                onClick={() => removeFilter(filter)}
-                                className="bg-gray-200 text-gray-600 px-3 py-1 rounded-full flex items-center gap-1"
-                            >
-                                {filter.charAt(0).toUpperCase() + filter.slice(1)}
-                                <RxCross1 size={14} />
-                            </button>
-                        ))}
-                    </div>
+  
+  
 
-                    {/* Filter Modal */}
-                    {openFilter && (
-                        <div className="w-[45%] absolute  left-[250px] z-10">
-                            <div className="w-full bg-white shadow-custom-shadow rounded-md flex flex-col p-3">
-                                <div className="flex justify-between items-center mt-5">
-                                    <h2 className="text-gray-700 text-[20px] lg:text-[24px] font-extrabold font-Archivoo">
-                                        Filter Jobs
-                                    </h2>
-                                    <RxCross1
-                                        size={40}
-                                        color="#068179"
-                                        className="bg-[#EBECF5] cursor-pointer rounded-full p-2"
-                                        onClick={() => setOpenFilter(false)}
-                                    />
-                                </div>
-                                <div className='w-full px-6 py-4'>
-                                    {cardsData.map((card, index) => (
-                                        <div
-                                            key={index}
-                                            className="flex justify-between items-center py-4 border-b-[1px]"
-                                        >
-                                            <div className="flex items-center gap-2">
-                                                <Image
-                                                    src={card.image}
-                                                    width={48}
-                                                    height={48}
-                                                    alt={card.alt}
-                                                    className="object-contain"
-                                                />
-                                                <div className='flex flex-col'>
-                                                    <span className="text-[15px] font-semibold">{card.title}</span>
-                                                    <span className="text-gray-500 text-[16px]">{card.jobs}</span>
-                                                </div>
-                                            </div>
-                                            <input
-                                                type="checkbox"
-                                                id={`filter-${index}`}
-                                                name={`filter-${card.title}`}
-                                                className="w-4 h-4 text-[#068179] border-gray-300 rounded"
-                                                checked={selectedFilters.includes(card.filter)}
-                                                onChange={() => toggleFilter(card.filter)}
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                    {/* Job List Table */}
-                    <div className="relative overflow-x-auto">
-                        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <thead className="text-xs text-grayColor font-normal capitalize bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" className="px-6 py-3 font-normal flex items-center gap-1">
-                                <BiSquareRounded size={20} className='bg-white'/>
-                                Name
-                                </th>
-                                <th scope="col" className="font-normal px-6 py-3">Location</th>
-                                <th scope="col" className="font-normal px-6 py-3">Charge ($)</th>
-                                <th scope="col" className="font-normal px-6 py-3">Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>{renderJobRows(currentJobs)}</tbody>
-                        </table>
+  return (
+    <div className="mx-auto p-4 bg-white">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Jobs Managment</h1>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className="flex items-center gap-2 px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+          >
+            <MdFilterList size={20} />
+            <span>Filters</span>
+          </button>
+          <Select
+            className="w-48"
+            options={sortOptions}
+            value={sortOptions.find(
+              (option) => option.value === `${filters.sortBy}-${filters.sortOrder}`
+            )}
+            onChange={handleSortChange}
+            placeholder="Sort by"
+          />
 
-                    {/* Delete Job Modal */}
-                    {showDeleteModal && (
-                        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
-                        <div className="w-[70%] md:w-[60%] lg:w-[50%] bg-white shadow-custom-shadow p-4 rounded-md">
-                            <div className="flex flex-col items-center">
-                            <RxCross2
-                                color="red"
-                                size={25}
-                                className="cursor-pointer"
-                                onClick={closeDeleteInProgressJobModal}
-                            />
-                            <span className="font-semibold font-nunitosans text-center">
-                                Are you sure you want to cancel a job?
-                            </span>
-                            </div>
-                            <div className="flex flex-col gap-2 p-4">
-                            <label
-                                htmlFor="jobCancellationReason"
-                                className="text-[15px] font-semibold font-nunitosans"
-                            >
-                                Give Reason
-                            </label>
-                            <textarea
-                                id="jobCancellationReason"
-                                placeholder="Type here"
-                                className="bg-gray-100 text-[16px] resize-none rounded-md p-2"
-                                rows="4"
-                            ></textarea>
-                            </div>
-                            <div className="flex flex-col md:flex-row justify-center gap-2">
-                            <button
-                                className="bg-transparent border-[1px] border-red-500 text-red-500 px-2 md:px-6 py-1 rounded-md disabled:opacity-50"
-                                onClick={closeDeleteInProgressJobModal}
-                            >
-                                Cancel
-                            </button>
-                            <button className="bg-green-400 border-[1px] text-white px-2 md:px-6 py-1 rounded-md disabled:opacity-50">
-                                Submit
-                            </button>
-                            </div>
-                        </div>
-                        </div>
-                    )}
-            </div>
-
-
-                    {/* Pagination Controls */}
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-4 p-4">
-                       {/* Previous Button */}
-                        <button
-                            onClick={prevPage}
-                            disabled={currentPage === 1}
-                            className="flex gap-2 items-center bg-transparent border-[1px] border-gray-300 text-gray-500 px-2 md:px-8 py-1 rounded-md disabled:opacity-50"
-                        >
-                            <FaArrowLeftLong size={22}/>
-                            Previous
-                        </button>
-
-                        {/* Page Numbers */}
-                        <div>
-                         {renderPaginationNumbers().map((page, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => page !== '...' && paginate(page)}
-                                    className={`px-3 py-1 rounded-md ${
-                                        currentPage === page ? 'bg-[#F9F5FF] text-[#7F56D9]' : 'bg-transparent'
-                                    }`}
-                                    disabled={page === '...'}
-                                >
-                                    {page}
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* Next Button */}
-                        <button
-                            onClick={nextPage}
-                            disabled={currentPage === totalPages}
-                            className="flex gap-2 items-center bg-transparent border-[1px] border-gray-300 text-gray-500 px-2 md:px-8 py-1 rounded-md disabled:opacity-50"
-                        >
-                            Next
-                            <FaArrowRightLong size={22}/>
-                        </button>
-                    </div>
-            </div>
         </div>
-    );
+      </div>
+
+      {
+        showFilters &&
+
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* job type filter */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Job Types</label>
+              <Select
+                isMulti
+                name="jobTypes"
+                options={jobTypeOptions}
+                className="basic-multi-select"
+                classNamePrefix="select"
+                value={jobTypeOptions.filter((option) =>
+                  filters.jobsType.includes(option.value)
+                )}
+                onChange={handleJobTypeChange}
+                placeholder="Select job types"
+              />
+            </div>
+            {/* date range filter */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Date Range</label>
+              <div className="grid grid-cols-2 gap-2">
+                <input
+                  type="date"
+                  name="fromDate"
+                  value={filters.fromDate}
+                  onChange={handleFilterChange}
+                  className="w-full p-2 border rounded bg-white"
+                />
+                <input
+                  type="date"
+                  name="toDate"
+                  value={filters.toDate}
+                  onChange={handleFilterChange}
+                  className="w-full p-2 border rounded bg-white"
+                />
+              </div>
+            </div>
+            {/* price range filter */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Amount Range</label>
+              <div className="grid grid-cols-2 gap-2">
+                <input
+                  type="number"
+                  name="minAmount"
+                  placeholder="Min"
+                  value={filters.minAmount}
+                  onChange={handleFilterChange}
+                  className="w-full p-2 border rounded bg-white"
+                />
+                <input
+                  type="number"
+                  name="maxAmount"
+                  placeholder="Max"
+                  value={filters.maxAmount}
+                  onChange={handleFilterChange}
+                  className="w-full p-2 border rounded bg-white"
+                />
+              </div>
+            </div>
+          </div>
+            {/* title search filter */}
+          <div className="flex items-center justify-between mt-4">
+              <div className="relative flex-1 ">
+                <input
+                  type="text"
+                  name="jobTitle"
+                  placeholder="Search by job title..."
+                  value={filters.jobTitle}
+                  onChange={handleFilterChange}
+                  className="w-full pl-10 py-2 border rounded bg-white"
+                />
+                <BsSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+              </div>
+              <button
+                onClick={clearFilters}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+              >
+                Clear Filters
+              </button>
+          </div>
+          
+        </div>
+
+      }
+
+      <div className="mt-4">
+        <h2 className="text-gray-600 mb-4">Total ({totalJobs || "0"}) jobs found</h2>
+
+        {jobs.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[800px]">
+              <JobTableHeader />
+              <tbody className="z-50">
+                {jobs.map((job) => (
+                  <JobTableRow
+                    key={job._id}
+                    job={job}
+                    acceptJobByWatchDog={acceptJobByWatchDog}
+                    activeRow={activeRow}
+                    togglePopup={togglePopup}
+                    router={router}
+                    getStatusColor={getStatusColor}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-gray-500">No jobs found. Try adjusting your filters.</p>
+          </div>
+        )}
+      </div>
+     
+            {/* Mark as Expired Modal */}
+            {showExpirePopup && (
+              <MarkAsExpired
+                selectedJob={selectedJob}
+                setShowExpirePopup={setShowExpirePopup}
+              />
+      
+            )}
+      
+            {/* Delete Job Modal */}
+            {showDeletePopup && (
+              <DeleteJob
+                selectedJob={selectedJob}
+                setShowDeletePopup={setShowDeletePopup}
+              />
+      
+            )}
+      
+
+    </div>
+
+  );
 }
 
-export default MyJob;
+export default JobFilterComponent
+
+
+const JobTableHeader = () => {
+  return (
+    <thead>
+      <tr className="border-b">
+        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Image</th>
+        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Job Title</th>
+        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Location</th>
+        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Status</th>
+        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Amount</th>
+        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500"></th>
+      </tr>
+    </thead>
+  );
+};
+
+
+const JobTableRow = ({ job, activeRow, togglePopup, router,acceptJobByWatchDog }) => {
+
+  const handleAcceptJobByWatchDog = (id) => {
+    acceptJobByWatchDog(id)
+      .then((res) => 
+        console.log(res)
+        
+    )
+      .catch((err) => 
+        console.error(err)); // Optional: add error handling
+  };
+  return (
+    <tr className="border-b hover:bg-gray-50 transition-colors">
+      <td className="p-2">
+        <Image
+          src={job.jobCoverImage ? job.jobCoverImage :"/billboard-square.png"}
+          alt={`${job.jobTitle} image`}
+          width={80}
+          height={80}
+          className="rounded-md object-cover"
+        />
+      </td>
+      <td className="px-6 py-4">
+        <div>
+          <h3 className="font-medium text-gray-900">{job.jobTitle}</h3>
+          <p className="text-sm text-gray-500">
+            Posted {moment(job.createdAt).fromNow()}
+          </p>
+        </div>
+      </td>
+      <td className="px-6 py-4">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-600">{`${job.address.city}, ${job.address.country}`}</span>
+        </div>
+      </td>
+      <td className="px-6 py-4">
+        <div className="flex flex-wrap gap-2">
+          {Object.entries(job.status)
+            .filter(([key, value]) => value === true)
+            .map(([key], idx) => (
+              <span
+                key={idx}
+                className={`px-2 py-1 text-xs rounded-full ${getStatusColor(key.replace("is", ""))}`}
+              >
+                {key.replace("is", "")}
+              </span>
+            ))}
+        </div>
+      </td>
+      <td className="px-6 py-4">
+        <div className="font-medium text-gray-900">{`${job.paymentDetails.amount} ${job.paymentDetails.currency}`}</div>
+      </td>
+      <td className="px-6 py-4">
+        <div className="flex justify-end relative">
+          <button
+            onClick={() => togglePopup(job._id)}
+            className="text-gray-700 bg-[#F5F7FA] hover:bg-[#00AAFF] hover:text-white rounded-md p-2 transition-colors"
+          >
+            <BsThreeDots size={20} />
+          </button>
+          
+        </div>
+        {activeRow === job._id && (
+            <div className="absolute right-10 mt-1 w-[200px] bg-white shadow-lg rounded-md z-50 border">
+              <div 
+                onClick={() => router.push(`/dashboard/watchdog/my-jobs/${job._id}`)}
+                className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors"
+              >
+                <BsEye size={16} className="text-gray-600" />
+                <span className="text-sm text-gray-600">View Details</span>
+              </div>
+              <div 
+              onClick={ () => handleAcceptJobByWatchDog(job?._id)}
+              className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors">
+                <CiEdit size={16} className="text-gray-600" />
+                <span className="text-sm text-gray-600">Accept Job</span>
+              </div>
+              
+            </div>
+          )}
+      </td>
+    </tr>
+  );
+};
+
+const getStatusColor = (status) => {
+  const statusColors = {
+    Featured: "bg-purple-100 text-purple-800",
+    Approved: "bg-green-100 text-green-800",
+    "Not Approved": "bg-yellow-100 text-yellow-800",
+    Completed: "bg-blue-100 text-blue-800",
+    Cancelled: "bg-red-100 text-red-800",
+    Expired: "bg-gray-100 text-gray-800"
+  };
+  return statusColors[status] || "bg-gray-100 text-gray-800";
+};
+

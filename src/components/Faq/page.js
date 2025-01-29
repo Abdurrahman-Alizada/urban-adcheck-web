@@ -1,7 +1,6 @@
 "use client"
 import React, { useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus,faMinus } from '@fortawesome/free-solid-svg-icons'
+import { FaPlus, FaMinus } from 'react-icons/fa';
 
 function FAQ() {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -53,7 +52,7 @@ function FAQ() {
                   >
                     {item.title}
                     <span>
-                      {activeIndex === index ? <FontAwesomeIcon icon={faMinus}/> : <FontAwesomeIcon icon={faPlus}/>}
+                      {activeIndex === index ? <FaMinus/> : <FaPlus/>}
                     </span>
                   </button>
                   <div

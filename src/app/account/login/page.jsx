@@ -4,17 +4,18 @@ import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Image from 'next/image';
-import { useLoginUserMutation } from '@/redux/reducers/user/userThunk';
+import { useGetCurrentLoginUserQuery, useLoginUserMutation } from '@/redux/reducers/user/userThunk';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/redux/reducers/user/userSlice';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-
+import Cookies from 'js-cookie';
 
 function Login() {
   const router = useRouter();
   const dispatch = useDispatch();
   const [loginUser, { isLoading }] = useLoginUserMutation();
+  const {data:currentLoginUser}=useGetCurrentLoginUserQuery();
 
   // Formik setup
   const formik = useFormik({
@@ -39,6 +40,9 @@ function Login() {
         dispatch(setUser(response));
         console.log('Login successful:', response);
         localStorage.setItem('userInfo',JSON.stringify(response));
+        // Store user info in cookies
+       Cookies.set('userInfo', JSON.stringify(response), { expires: 1 }); // 1 day expiry
+
         // Redirect to dashboard
         router.push(`/dashboard/${response?.role}/overview`);
       } catch (error) {
@@ -127,23 +131,28 @@ function Login() {
               {/* Login Button */}
               <div className="flex justify-center">
               {
-              isLoading ? <div className="spinner"> </div> : 
+              isLoading ? 
+              <button
+                  className="bg-primary w-full h-[60px] rounded-[10px] flex justify-center items-center"
+                >
+               <div className="spinner text-white"> </div>
+              </button> 
+              
+              : 
                 <button
                   type="submit"
                   className="bg-primary text-white w-full h-[52px] rounded-[10px]"
                   disabled={isLoading}
                 >
-                Login
+                 Login
                 </button>
               }  
               </div>
 
             </form>
-             <div className='flex justify-center mt-2 text-primary'>
-             <Link href="/account/forgot-password">
-               Forgot Password
-            </Link>
-             </div>
+            <div className='flex justify-center mt-2 text-primary'>
+               <span onClick={()=>router.push('/account/forgot-password')}>Forgot Password</span>
+              </div>
           </div>
         </section>
       </div>

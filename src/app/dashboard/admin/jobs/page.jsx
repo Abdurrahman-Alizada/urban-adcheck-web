@@ -77,6 +77,7 @@ const JobFilterComponent = () => {
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
+    console.log(name,value)
     setFilters((prev) => ({
       ...prev,
       [name]: value,
@@ -385,9 +386,10 @@ const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }
           >
             <BsThreeDots size={20} />
           </button>
-          
-          {activeRow === job._id && (
-            <div className="absolute top-full right-0 mt-1 w-[200px] bg-white shadow-lg rounded-md z-50 border">
+        
+        </div>
+        {activeRow === job._id && (
+            <div className="absolute  right-10 mt-1 w-[200px] bg-white shadow-lg rounded-md z-50 border">
               <div 
                 onClick={() => router.push(`/dashboard/admin/jobs/${job._id}`)}
                 className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors"
@@ -417,7 +419,6 @@ const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }
               </div>
             </div>
           )}
-        </div>
       </td>
     </tr>
   );

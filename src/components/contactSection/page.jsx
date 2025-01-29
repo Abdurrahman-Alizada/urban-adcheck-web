@@ -6,10 +6,15 @@ const ContactSection = ({
   handleChange,
   handleBlur,
   errors,
-  touched
+  touched,
+  jobPostModal,
+  isLoading,
+  setJobPostModal,
+  jobPostResponse
 }) => {
+  
   return (
-    <section className="flex flex-col gap-6">
+    <section className="relative flex flex-col gap-6">
       {/* Personal Information */}
       <div className="mb-6">
         <h3 className="text-lg font-medium mb-4">Personal Information</h3>
@@ -91,7 +96,59 @@ const ContactSection = ({
         </div>
       </div>
 
-      
+      {
+  jobPostModal && !isLoading && (
+    <div className="absolute inset-0 z-50 flex flex-col items-center gap-3 mt-3 bg-white shadow-lg p-6 rounded-lg">
+      {/* Display message based on jobPostResponse */}
+      <p>
+        {jobPostResponse?.error
+          ? jobPostResponse.error.data.message || jobPostResponse.error.message
+          : jobPostResponse?.message}          
+      </p>
+
+      {/* If payment details exist, show additional information */}
+      {jobPostResponse?.paymentDetails && (
+        <div className="text-sm text-gray-600 mt-3">
+          <p>
+            <strong>Payment Type:</strong> {jobPostResponse.paymentDetails.paymentType}
+          </p>
+          <p>
+            <strong>Amount:</strong> {jobPostResponse.paymentDetails.amount}{' '}
+            {jobPostResponse.paymentDetails.currency}
+          </p>
+          <p>
+            <strong>Service Fee:</strong> {jobPostResponse.paymentDetails.serviceFee}{' '}
+            {jobPostResponse.paymentDetails.currency}
+          </p>
+          <p>
+            <strong>Total:</strong> {jobPostResponse.paymentDetails.totalAmount}{' '}
+            {jobPostResponse.paymentDetails.currency}
+          </p>
+        </div>
+      )}
+
+      {/* Modal Actions */}
+      <div className="flex justify-end gap-3 mt-3">
+        <button
+          className="flex items-center text-[18px] px-6 py-2 border-[1px] border-gray-300 rounded-[5px] bg-transparent text-black"
+          onClick={() => setJobPostModal(false)}
+        >
+          Close
+        </button>
+        {jobPostResponse?.paymentDetails && (
+          <button
+            className="flex items-center gap-4 text-[18px] px-8 py-2 rounded-[5px] bg-primary text-white"
+            onClick={() => handleSubscribe()}
+          >
+            Subscribe Package
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
+
+
     </section>
   );
 };

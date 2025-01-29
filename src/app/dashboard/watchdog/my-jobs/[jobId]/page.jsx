@@ -19,9 +19,7 @@ function ViewDetails() {
 
   const { data: messages, refetch,isLoading:loading,error } = useGetRoomByJobIdQuery(params?.jobId);
   
-  console.log("messages", messages,error)
   const { data: user } = useGetCurrentLoginUserQuery();
-  console.log("user", user)
   const [updateMessageRoutes] = useUpdateMessageRoutesMutation();
   const [deliveryModal, setDeliveryModal] = useState(false);
   const [deliveryRevision, setDeliveryRevision] = useState(false)

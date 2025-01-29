@@ -1,6 +1,6 @@
 "use client";
-import { useJobListQuery } from "@/redux/reducers/jobs/jobThunk";
-import React, { useState, useMemo } from "react";
+import { useJobbystatusQuery } from "@/redux/reducers/jobs/jobThunk";
+import React, { useState, useMemo, useEffect } from "react";
 import { BsThreeDots, BsEye, BsCheckCircle, BsSearch } from "react-icons/bs";
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineCancel, MdFilterList } from "react-icons/md";
@@ -20,9 +20,10 @@ const JobFilterComponent = () => {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const router = useRouter();
+  const [selectedJobsByStauts, setSelectedJobsByStatus] = useState([]);
 
   const [filters, setFilters] = useState({
-    jobsType: [],
+    jobsStatus: [],
     jobTitle: "",
     minAmount: "",
     maxAmount: "",
@@ -32,13 +33,12 @@ const JobFilterComponent = () => {
     sortOrder: "descending",
   });
 
-  const jobTypeOptions = [
-    { value: "featured", label: "Featured Jobs" },
-    { value: "approved", label: "Approved by Admin" },
-    { value: "not-approved", label: "Not Approved" },
+  const jobsStatusOption = [
+    { value: "available", label: "Available" },
+    { value: "inProgress", label: "inProgress" },
     { value: "completed", label: "Completed" },
     { value: "cancelled", label: "Cancelled" },
-    { value: "expired", label: "Expired" },
+    { value: "hidden", label: "Hidden" },
   ];
 
   const sortOptions = [
@@ -50,34 +50,33 @@ const JobFilterComponent = () => {
     { value: "amount-descending", label: "Amount (High to Low)" },
   ];
 
-  const { data: jobsData = {}, isLoading, error } = useJobListQuery(filters);
-  const jobs = jobsData.data?.jobs || [];
-  const totalJobs = jobsData.data?.jobsCount || 0;
+  const { data: jobsData = {}, isLoading, error } = useJobbystatusQuery();
 
-  const getStatusColor = (status) => {
-    const statusColors = {
-      Featured: "bg-purple-100 text-purple-800",
-      Approved: "bg-green-100 text-green-800",
-      "Not Approved": "bg-yellow-100 text-yellow-800",
-      Completed: "bg-blue-100 text-blue-800",
-      Cancelled: "bg-red-100 text-red-800",
-      Expired: "bg-gray-100 text-gray-800"
-    };
-    return statusColors[status] || "bg-gray-100 text-gray-800";
-  };
-
-
-  const handleJobTypeChange = (e) => {
-    const values = e.map((option) => option.value);
-    setFilters((prev) => ({
+  const handleJobStatusQuery = (selectedOption) => {
+    if (!selectedOption) return;
+    
+    const statusKey = selectedOption.value;
+    const jobsByStatus = jobsData?.jobsByStatus || {};
+    
+    // Set the selected jobs based on the status
+    setSelectedJobsByStatus(jobsByStatus[statusKey] || []);
+    // Update filters
+    setFilters(prev => ({
       ...prev,
-      jobsType: values,
+      jobsStatus: [selectedOption],
     }));
   };
 
+  // Set default status to "available" on initial load
+  useEffect(() => {
+    if (jobsData?.jobsByStatus) {
+      const defaultStatus = { value: "available", label: "Available" };
+      handleJobStatusQuery(defaultStatus);
+    }
+  }, [jobsData]);
+
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    console.log(name,value)
     setFilters((prev) => ({
       ...prev,
       [name]: value,
@@ -95,7 +94,7 @@ const JobFilterComponent = () => {
 
   const clearFilters = () => {
     setFilters({
-      jobsType: [],
+      jobsStatus: [],
       jobTitle: "",
       minAmount: "",
       maxAmount: "",
@@ -104,6 +103,8 @@ const JobFilterComponent = () => {
       sortBy: "createdAt",
       sortOrder: "descending",
     });
+    // Reset to default "available" status
+    handleJobStatusQuery({ value: "available", label: "Available" });
   };
 
   const togglePopup = (rowId) => {
@@ -139,7 +140,7 @@ const JobFilterComponent = () => {
   return (
     <div className="mx-auto p-4 bg-white">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Jobs Managment</h1>
+        <h1 className="text-2xl font-bold">Jobs Management</h1>
         <div className="flex items-center gap-3">
           <button
             onClick={() => setShowFilters(!showFilters)}
@@ -164,18 +165,15 @@ const JobFilterComponent = () => {
         <div className="bg-gray-50 p-4 rounded-lg mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Job Types</label>
+              <label className="text-sm font-medium text-gray-700">Job Status</label>
               <Select
-                isMulti
-                name="jobTypes"
-                options={jobTypeOptions}
-                className="basic-multi-select"
+                name="jobStatus"
+                options={jobsStatusOption}
+                className="basic-select"
                 classNamePrefix="select"
-                value={jobTypeOptions.filter((option) =>
-                  filters.jobsType.includes(option.value)
-                )}
-                onChange={handleJobTypeChange}
-                placeholder="Select job types"
+                value={filters.jobsStatus[0]}
+                onChange={handleJobStatusQuery}
+                placeholder="Select job status"
               />
             </div>
 
@@ -223,7 +221,7 @@ const JobFilterComponent = () => {
           </div>
 
           <div className="flex items-center justify-between mt-4">
-            <div className="relative flex-1 ">
+            <div className="relative flex-1">
               <input
                 type="text"
                 name="jobTitle"
@@ -245,14 +243,16 @@ const JobFilterComponent = () => {
       )}
 
       <div className="mt-4">
-        <h2 className="text-gray-600 mb-4">Total ({totalJobs || "0"}) jobs found</h2>
+        <h2 className="text-gray-600 mb-4">
+          Total ({selectedJobsByStauts?.length || "0"}) jobs found
+        </h2>
 
-        {jobs.length > 0 ? (
+        {selectedJobsByStauts?.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[800px]">
               <JobTableHeader />
               <tbody className="z-50">
-                {jobs.map((job) => (
+                {selectedJobsByStauts.map((job) => (
                   <JobTableRow
                     key={job._id}
                     job={job}
@@ -273,39 +273,31 @@ const JobFilterComponent = () => {
         )}
       </div>
 
-      {/* Mark as Approved Modal */}
       {showMarkAsApprovePopup && (
         <MarkAsApproved
           selectedJob={selectedJob}
           setShowMarkAsApprovedPopup={setShowMarkAsApprovedPopup}
         />
-
       )}
 
-      {/* Mark as Expired Modal */}
       {showExpirePopup && (
         <MarkAsExpired
           selectedJob={selectedJob}
           setShowExpirePopup={setShowExpirePopup}
         />
-
       )}
 
-      {/* Delete Job Modal */}
       {showDeletePopup && (
         <DeleteJob
           selectedJob={selectedJob}
           setShowDeletePopup={setShowDeletePopup}
         />
-
       )}
-
     </div>
   );
 };
 
 export default JobFilterComponent;
-
 
 const JobTableHeader = () => {
   return (
@@ -322,7 +314,6 @@ const JobTableHeader = () => {
   );
 };
 
-
 const getStatusColor = (status) => {
   const statusColors = {
     Featured: "bg-purple-100 text-purple-800",
@@ -334,7 +325,6 @@ const getStatusColor = (status) => {
   };
   return statusColors[status] || "bg-gray-100 text-gray-800";
 };
-
 
 const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }) => {
   return (
@@ -386,12 +376,11 @@ const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }
           >
             <BsThreeDots size={20} />
           </button>
-        
-        </div>
-        {activeRow === job._id && (
-            <div className="absolute  right-10 mt-1 w-[200px] bg-white shadow-lg rounded-md z-50 border">
+          
+          {activeRow === job._id && (
+            <div className="absolute top-full right-0 mt-1 w-[200px] bg-white shadow-lg rounded-md z-50 border">
               <div 
-                onClick={() => router.push(`/dashboard/client/my-jobs/${job._id}`)}
+                onClick={() => router.push(`/dashboard/admin/jobs/${job._id}`)}
                 className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors"
               >
                 <BsEye size={16} className="text-gray-600" />
@@ -419,6 +408,7 @@ const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }
               </div>
             </div>
           )}
+        </div>
       </td>
     </tr>
   );

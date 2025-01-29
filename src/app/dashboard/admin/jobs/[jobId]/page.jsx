@@ -353,6 +353,7 @@ function AdminJobDetails() {
         <AdminJobDetailsSkeleton />
       ) : (
         <div>
+           {/* Back to jobs */}
           <div className="flex justify-between items-center">
             <button
               onClick={() => router.back()}
@@ -399,6 +400,7 @@ function AdminJobDetails() {
                 <h1 className="text-2xl font-bold text-gray-800 mb-2">
                   {jobTitle}
                 </h1>
+                {/* tags */}
                 <div className="flex flex-wrap gap-2 mb-4">
                   {tags?.map((tag, index) => (
                     <span
@@ -418,6 +420,7 @@ function AdminJobDetails() {
 
             {/* Right Column - Quick Info */}
             <div className="space-y-6">
+              {/* payment details */}
               <section className="bg-white p-6 rounded-lg shadow-sm">
                 <h2 className="text-xl font-bold text-gray-800 mb-4">
                   Payment Details
@@ -444,6 +447,7 @@ function AdminJobDetails() {
                 </div>
               </section>
 
+              {/* Client Information */}
               <section className="bg-white p-6 rounded-lg shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-bold text-gray-800">
@@ -455,8 +459,7 @@ function AdminJobDetails() {
                   >
                     <MessageCircle size={22} />
                   </button> */}
-                </div>
-
+                </div> 
                 <div className="space-y-2">
                   <p className="flex justify-between">
                     <span className="text-gray-600">Name:</span>
@@ -472,7 +475,7 @@ function AdminJobDetails() {
                   </p>
                 </div>
               </section>
-
+              {/* Watchdog Information */}
               {acceptedBy?.watchdog && (
                 <section className="bg-white p-6 rounded-lg shadow-sm">
                   <h2 className="text-xl font-bold text-gray-800 mb-4">
@@ -497,7 +500,7 @@ function AdminJobDetails() {
                   </div>
                 </section>
               )}
-
+              {/* Job Location */}
               <section className="bg-white p-6 rounded-lg shadow-sm">
                 <h2 className="text-xl font-bold text-gray-800 mb-4">
                   Job Location
