@@ -8,7 +8,8 @@ const NotificationComponent = () => {
   const [activeRow, setActiveRow] = useState(null);
   const { data: notification, isLoading } = useGetAllNotificationQuery();
   const { data: user } = useGetCurrentLoginUserQuery();
-  const [updateNotification] = useUpdateNotificationMutation();
+  const [updateNotification ,{isLoading:Loading}] = useUpdateNotificationMutation();
+
 
   const togglePopup = (rowId) => {
     setActiveRow((prevRow) => (prevRow === rowId ? null : rowId));
@@ -62,13 +63,17 @@ const NotificationComponent = () => {
           : notification?.data?.notification?.map((notification) => (
               <li
                 key={notification._id}
-                className="relative hover:rounded-md hover:shadow-custom-hover grid grid-cols-[2fr_1fr_1fr_1fr] gap-4 items-center px-6 py-4 min-w-[600px]"
+                className={`relative hover:rounded-md hover:shadow-custom-hover grid grid-cols-[2fr_1fr_1fr_1fr] gap-4 items-center px-6 py-4 min-w-[600px] ${notification.status === "UNREAD" ? "font-bold" : "font-normal"}`}
               >
                 <span className="text-[13px]">{notification.message}</span>
                 <span className="text-[13px]">
                   {moment(notification.timestamp).format("HH:mm A")}
                 </span>
-                <span className="text-[13px]">{notification.status}</span>
+                <span
+                  className={`text-[13px]  ${notification.status === "UNREAD" ? " text-red-800 " : " text-green-800"}`}
+                >
+                  {Loading && activeRow === notification._id ? "Loading..." : notification.status}  
+                </span>
                 <span
                   className="cursor-pointer text-[13px]"
                   onClick={() => togglePopup(notification._id)}
@@ -78,7 +83,7 @@ const NotificationComponent = () => {
 
                 {/* Conditionally Render Modal */}
                 {activeRow === notification._id && (
-                  <div className="absolute right-14 z-10  bg-white shadow-md rounded-lg p-2">
+                  <div className="absolute right-14 z-10 bg-white shadow-md rounded-lg p-2">
                     <div className="relative">
                       <button
                         className="block text-sm text-gray-700 hover:text-blue-500"
