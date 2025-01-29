@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { setUser } from '@/redux/reducers/user/userSlice';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-
+import Cookies from 'js-cookie';
 
 function Login() {
   const router = useRouter();
@@ -40,6 +40,9 @@ function Login() {
         dispatch(setUser(response));
         console.log('Login successful:', response);
         localStorage.setItem('userInfo',JSON.stringify(response));
+        // Store user info in cookies
+       Cookies.set('userInfo', JSON.stringify(response), { expires: 1 }); // 1 day expiry
+
         // Redirect to dashboard
         router.push(`/dashboard/${response?.role}/overview`);
       } catch (error) {
