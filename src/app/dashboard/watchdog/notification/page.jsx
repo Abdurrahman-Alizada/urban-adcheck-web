@@ -73,36 +73,8 @@ const NotificationComponent = () => {
                   className="cursor-pointer text-[13px]"
                   onClick={() => togglePopup(notification._id)}
                 >
-
-                  <p className="bg-gray-400/30 px-6 py-3 shimmer"></p>
-                  <p className="bg-gray-400/30 px-14 py-3 shimmer"></p>
-                  <p className="bg-gray-400/30 px-6 py-3 shimmer"></p>
-                  <p className="bg-gray-400/30 px-3 py-3 shimmer"></p>
-                </li>
-              ))
-            )
-            :
-            (
-
-              <>
-                {notification?.data?.notification?.map((notification, index) => (
-                  <li
-                    key={index}
-                    className="relative hover:rounded-md hover:shadow-custom-hover grid grid-cols-[2fr_1fr_1fr_1fr] gap-4 items-center px-6 py-4 min-w-[600px]"
-                  >
-                    <span className={`text-[13px]`}>{notification?.message}</span>
-                    <span className={`text-[13px]`}>
-                      {moment(notification?.timestamp).format("HH:mm A")}
-                    </span>
-                    <span>{notification?.status}</span>
-                    <span onClick={handleActionModal} className="cursor-pointer">...</span>
-
-                    {/* Conditionally render the status when markStatusModel is true */}
-                    {markStatusModel && activeRow === notification?._id && <span className="absolute z-10 bg-white w-[30px] h-[10px] right-10">Mark as {notification?.status}</span>}
-                  </li>
-                ))}
-              </>
-
+                  ...
+                </span>
 
                 {/* Conditionally Render Modal */}
                 {activeRow === notification._id && (
