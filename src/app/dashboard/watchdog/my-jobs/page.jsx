@@ -12,8 +12,6 @@ import moment from "moment";
 import Image from "next/image";
 import { useAcceptJobByWatchDogMutation, useJobListQuery } from "@/redux/reducers/jobs/jobThunk";
 
-
-
 const JobFilterComponent = () => {
   const [acceptJobByWatchDog]=useAcceptJobByWatchDogMutation();
 
@@ -24,7 +22,6 @@ const JobFilterComponent = () => {
   const [showFilters, setShowFilters] = useState(false);
   const router = useRouter();
 
-  
   const [filters, setFilters] = useState({
     jobsType: [],
     jobTitle: "",
@@ -35,7 +32,6 @@ const JobFilterComponent = () => {
     sortBy: "createdAt",
     sortOrder: "descending",
   });
-
 
   const jobTypeOptions = [
     { value: "featured", label: "Featured Jobs" },

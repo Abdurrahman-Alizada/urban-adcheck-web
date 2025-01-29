@@ -84,7 +84,7 @@ const NotificationComponent = () => {
                       {moment(notification?.timestamp).format("HH:mm A")}
                     </span>
                     <span>{notification?.status}</span>
-                    <span onClick={ handleActionModal} className="cursor-pointer">...</span>
+                    <span onClick={handleActionModal} className="cursor-pointer">...</span>
 
                     {/* Conditionally render the status when markStatusModel is true */}
                     {markStatusModel && activeRow === notification?._id && <span className="absolute z-10 bg-white w-[30px] h-[10px] right-10">Mark as {notification?.status}</span>}

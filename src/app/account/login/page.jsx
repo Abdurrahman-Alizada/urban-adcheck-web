@@ -4,7 +4,7 @@ import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Image from 'next/image';
-import { useLoginUserMutation } from '@/redux/reducers/user/userThunk';
+import { useGetCurrentLoginUserQuery, useLoginUserMutation } from '@/redux/reducers/user/userThunk';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/redux/reducers/user/userSlice';
 import { useRouter } from 'next/navigation';
@@ -15,6 +15,7 @@ function Login() {
   const router = useRouter();
   const dispatch = useDispatch();
   const [loginUser, { isLoading }] = useLoginUserMutation();
+  const {data:currentLoginUser}=useGetCurrentLoginUserQuery();
 
   // Formik setup
   const formik = useFormik({

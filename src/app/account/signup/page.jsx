@@ -298,7 +298,7 @@ function Signup() {
                 className="bg-primary text-white w-[249px] h-[59px] rounded-[10px] text-[18px]"
                  disabled={isLoading}
               >
-              `Create Account as ${selectedRole}`
+              {`Create Account as ${selectedRole}`}
               </button>
             }  
             </div>

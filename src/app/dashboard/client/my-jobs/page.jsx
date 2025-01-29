@@ -1,21 +1,18 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useJobListQuery } from "@/redux/reducers/jobs/jobThunk";
+import React, { useState, useMemo } from "react";
 import { BsThreeDots, BsEye, BsCheckCircle, BsSearch } from "react-icons/bs";
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineCancel, MdFilterList } from "react-icons/md";
+import { useRouter } from "next/navigation";
 import Select from "react-select";
 import MarkAsExpired from "@/components/dashboard/adminJobs/markAsExpired";
 import DeleteJob from "@/components/dashboard/adminJobs/deleteJob";
 import MarkAsApproved from "@/components/dashboard/adminJobs/markAsApproved";
 import moment from "moment";
 import Image from "next/image";
-import { useJobListQuery } from "@/redux/reducers/jobs/jobThunk";
-
-
 
 const JobFilterComponent = () => {
-
   const [activeRow, setActiveRow] = useState(null);
   const [showExpirePopup, setShowExpirePopup] = useState(false);
   const [showMarkAsApprovePopup, setShowMarkAsApprovedPopup] = useState(false);
@@ -35,7 +32,6 @@ const JobFilterComponent = () => {
     sortOrder: "descending",
   });
 
-
   const jobTypeOptions = [
     { value: "featured", label: "Featured Jobs" },
     { value: "approved", label: "Approved by Admin" },
@@ -54,13 +50,9 @@ const JobFilterComponent = () => {
     { value: "amount-descending", label: "Amount (High to Low)" },
   ];
 
-  const { data: jobDetails = {}, isLoading, isError } = useJobListQuery(filters);
-  console.log(jobDetails)
-  const jobs = jobDetails?.data?.jobs || [];
-  console.log("jobss",jobs);
-  const totalJobs = jobDetails?.data?.jobsCount || 0;
-
-
+  const { data: jobsData = {}, isLoading, error } = useJobListQuery(filters);
+  const jobs = jobsData.data?.jobs || [];
+  const totalJobs = jobsData.data?.jobsCount || 0;
 
   const getStatusColor = (status) => {
     const statusColors = {
@@ -74,33 +66,34 @@ const JobFilterComponent = () => {
     return statusColors[status] || "bg-gray-100 text-gray-800";
   };
 
-  const handleSortChange = (selected) => {
-    const [sortBy, sortOrder] = selected.value.split("-");
-    setFilters((prev) => ({
-      ...prev,
-      sortBy,
-      sortOrder
-    }))
-  }
 
   const handleJobTypeChange = (e) => {
     const values = e.map((option) => option.value);
     setFilters((prev) => ({
       ...prev,
       jobsType: values,
-    }))
-  }
+    }));
+  };
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
+    console.log(name,value)
     setFilters((prev) => ({
       ...prev,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
+  const handleSortChange = (selected) => {
+    const [sortBy, sortOrder] = selected.value.split("-");
+    setFilters((prev) => ({
+      ...prev,
+      sortBy,
+      sortOrder,
+    }));
+  };
 
-  const clearFilters=()=>{
+  const clearFilters = () => {
     setFilters({
       jobsType: [],
       jobTitle: "",
@@ -111,7 +104,7 @@ const JobFilterComponent = () => {
       sortBy: "createdAt",
       sortOrder: "descending",
     });
-  }
+  };
 
   const togglePopup = (rowId) => {
     setActiveRow((prevRow) => (prevRow === rowId ? null : rowId));
@@ -122,6 +115,26 @@ const JobFilterComponent = () => {
     setShowMarkAsApprovedPopup(true);
   };
 
+  if (isLoading) {
+    return (
+      <div className="p-6">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="mb-4 p-6 bg-gray-100 rounded-lg animate-pulse">
+            <div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto p-4 text-red-600">
+        Error: {error.message}
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto p-4 bg-white">
@@ -139,21 +152,17 @@ const JobFilterComponent = () => {
             className="w-48"
             options={sortOptions}
             value={sortOptions.find(
-              (option) => option.value === `${filters.sortBy}-${filters.sortOrder}`
+              option => option.value === `${filters.sortBy}-${filters.sortOrder}`
             )}
             onChange={handleSortChange}
             placeholder="Sort by"
           />
-
         </div>
       </div>
 
-      {
-        showFilters &&
-
+      {showFilters && (
         <div className="bg-gray-50 p-4 rounded-lg mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* job type filter */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Job Types</label>
               <Select
@@ -169,7 +178,7 @@ const JobFilterComponent = () => {
                 placeholder="Select job types"
               />
             </div>
-            {/* date range filter */}
+
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Date Range</label>
               <div className="grid grid-cols-2 gap-2">
@@ -189,7 +198,7 @@ const JobFilterComponent = () => {
                 />
               </div>
             </div>
-            {/* price range filter */}
+
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Amount Range</label>
               <div className="grid grid-cols-2 gap-2">
@@ -212,30 +221,28 @@ const JobFilterComponent = () => {
               </div>
             </div>
           </div>
-            {/* title search filter */}
-          <div className="flex items-center justify-between mt-4">
-              <div className="relative flex-1 ">
-                <input
-                  type="text"
-                  name="jobTitle"
-                  placeholder="Search by job title..."
-                  value={filters.jobTitle}
-                  onChange={handleFilterChange}
-                  className="w-full pl-10 py-2 border rounded bg-white"
-                />
-                <BsSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-              </div>
-              <button
-                onClick={clearFilters}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
-              >
-                Clear Filters
-              </button>
-          </div>
-          
-        </div>
 
-      }
+          <div className="flex items-center justify-between mt-4">
+            <div className="relative flex-1 ">
+              <input
+                type="text"
+                name="jobTitle"
+                placeholder="Search by job title..."
+                value={filters.jobTitle}
+                onChange={handleFilterChange}
+                className="w-full pl-10 py-2 border rounded bg-white"
+              />
+              <BsSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+            </div>
+            <button
+              onClick={clearFilters}
+              className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              Clear Filters
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="mt-4">
         <h2 className="text-gray-600 mb-4">Total ({totalJobs || "0"}) jobs found</h2>
@@ -265,42 +272,39 @@ const JobFilterComponent = () => {
           </div>
         )}
       </div>
-     
-       {/* Mark as Approved Modal */}
-            {showMarkAsApprovePopup && (
-              <MarkAsApproved
-                selectedJob={selectedJob}
-                setShowMarkAsApprovedPopup={setShowMarkAsApprovedPopup}
-              />
-      
-            )}
-      
-            {/* Mark as Expired Modal */}
-            {showExpirePopup && (
-              <MarkAsExpired
-                selectedJob={selectedJob}
-                setShowExpirePopup={setShowExpirePopup}
-              />
-      
-            )}
-      
-            {/* Delete Job Modal */}
-            {showDeletePopup && (
-              <DeleteJob
-                selectedJob={selectedJob}
-                setShowDeletePopup={setShowDeletePopup}
-              />
-      
-            )}
-      
+
+      {/* Mark as Approved Modal */}
+      {showMarkAsApprovePopup && (
+        <MarkAsApproved
+          selectedJob={selectedJob}
+          setShowMarkAsApprovedPopup={setShowMarkAsApprovedPopup}
+        />
+
+      )}
+
+      {/* Mark as Expired Modal */}
+      {showExpirePopup && (
+        <MarkAsExpired
+          selectedJob={selectedJob}
+          setShowExpirePopup={setShowExpirePopup}
+        />
+
+      )}
+
+      {/* Delete Job Modal */}
+      {showDeletePopup && (
+        <DeleteJob
+          selectedJob={selectedJob}
+          setShowDeletePopup={setShowDeletePopup}
+        />
+
+      )}
 
     </div>
-
   );
-}
+};
 
-export default JobFilterComponent
-
+export default JobFilterComponent;
 
 
 const JobTableHeader = () => {
@@ -382,9 +386,10 @@ const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }
           >
             <BsThreeDots size={20} />
           </button>
-          
-          {activeRow === job._id && (
-            <div className="absolute top-full right-0 mt-1 w-[200px] bg-white shadow-lg rounded-md z-50 border">
+        
+        </div>
+        {activeRow === job._id && (
+            <div className="absolute  right-10 mt-1 w-[200px] bg-white shadow-lg rounded-md z-50 border">
               <div 
                 onClick={() => router.push(`/dashboard/client/my-jobs/${job._id}`)}
                 className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors"
@@ -414,11 +419,7 @@ const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }
               </div>
             </div>
           )}
-        </div>
       </td>
     </tr>
   );
 };
-
-
-
