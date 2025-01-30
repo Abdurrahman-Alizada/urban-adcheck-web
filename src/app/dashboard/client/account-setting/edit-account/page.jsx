@@ -104,6 +104,7 @@ function EditAccount() {
                       type="text"
                       name="firstName"
                       id="firstName"
+                      value={data?.loginUser?.firstName}
                       className="text-[16px] text-gray-800 font-nunitosans border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
                     />
                     <ErrorMessage name="firstName" component="div" className="text-red-500 text-sm" />
@@ -116,6 +117,7 @@ function EditAccount() {
                       type="text"
                       name="lastName"
                       id="lastName"
+                      value={data?.loginUser?.lastName}
                       className="text-[16px] text-gray-800 font-nunitosans border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
                     />
                     <ErrorMessage name="lastName" component="div" className="text-red-500 text-sm" />
@@ -130,6 +132,7 @@ function EditAccount() {
                       type="text"
                       name="userName"
                       id="userName"
+                      value={data?.loginUser?.userName}
                       className="text-[16px] text-gray-800 font-nunitosans border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
                     />
                     <ErrorMessage name="userName" component="div" className="text-red-500 text-sm" />
@@ -157,6 +160,7 @@ function EditAccount() {
                       type="text"
                       name="location.state"
                       id="location.state"
+                      value={data?.loginUser?.location?.state}
                       className="text-[16px] text-gray-800 font-nunitosans border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
                     />
                     <ErrorMessage name="location.state" component="div" className="text-red-500 text-sm" />
@@ -169,6 +173,7 @@ function EditAccount() {
                       type="text"
                       name="location.city"
                       id="location.city"
+                      value={data?.loginUser?.location?.city}
                       className="text-[16px] text-gray-800 font-nunitosans border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
                     />
                     <ErrorMessage name="location.city" component="div" className="text-red-500 text-sm" />
@@ -181,6 +186,7 @@ function EditAccount() {
                       type="text"
                       name="location.zipCode"
                       id="location.zipCode"
+                      value={data?.loginUser?.location?.zipCode}
                       className="text-[16px] text-gray-800 font-nunitosans border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
                     />
                     <ErrorMessage name="location.zipCode" component="div" className="text-red-500 text-sm" />

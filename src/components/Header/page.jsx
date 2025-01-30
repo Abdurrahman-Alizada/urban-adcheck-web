@@ -16,8 +16,6 @@ import Notification from '../notification/page';
 import Cookies from 'js-cookie';
 
 
-
-
 function Header() {
   const [MenuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState({});
