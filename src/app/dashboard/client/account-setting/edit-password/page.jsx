@@ -94,7 +94,7 @@ function ManagePassword() {
                 type="password"
                 name="currentPassword"
                 id="currentPassword"
-                values={data?.loginUser?.currentPassword}
+                // values={loginUser?.currentPassword}
                 className="text-[16px] text-gray-800 border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
                 autoComplete="current-password"
               />
@@ -116,7 +116,7 @@ function ManagePassword() {
                 type="password"
                 name="newPassword"
                 id="newPassword"
-                values={data?.loginUser?.newPassword}
+                // values={loginUser?.newPassword}
                 className="text-[16px] text-gray-800 border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
                 autoComplete="new-password"
               />
@@ -138,7 +138,7 @@ function ManagePassword() {
                 type="password"
                 name="confirmPassword"
                 id="confirmPassword"
-                values={data?.loginUser?.confirmPassword}
+                // values={loginUser?.confirmPassword}
                 className="text-[16px] text-gray-800 border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
                 autoComplete="new-password"
               />

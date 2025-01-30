@@ -11,6 +11,7 @@ import ProfleContentLoader from '@/components/contentLoader/profileContentLoader
 function EditAccount() {
   const [loading, setLoading] = useState(true);
   const { data: loginUser, isLoading } = useGetCurrentLoginUserQuery();
+  // console.log("login user",loginUser)
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
 
   const validationSchema = Yup.object({
@@ -48,8 +49,22 @@ function EditAccount() {
   }, []);
 
   const handleSubmit = async (values, { setSubmitting }) => {
+
+    const body={
+      userName: values.userName,
+      fullName: {
+        firstName: values.firstName,
+        lastName: values.lastName
+      },
+      phoneNumber: values.phoneNumber,
+      location: {
+        state: "",
+        city: "",
+        zipCode: ""
+      }
+    }
     try {
-      const updatedUser = await updateUser(values).unwrap();
+      const updatedUser = await updateUser(body).unwrap();
       console.log('User updated successfully:', updatedUser);
       alert('Profile updated successfully!');
     } catch (err) {
@@ -104,7 +119,7 @@ function EditAccount() {
                       type="text"
                       name="firstName"
                       id="firstName"
-                      value={data?.loginUser?.firstName}
+                      placeholder={loginUser?.fullName?.firstName}
                       className="text-[16px] text-gray-800 font-nunitosans border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
                     />
                     <ErrorMessage name="firstName" component="div" className="text-red-500 text-sm" />
@@ -117,7 +132,7 @@ function EditAccount() {
                       type="text"
                       name="lastName"
                       id="lastName"
-                      value={data?.loginUser?.lastName}
+                      placeholder={loginUser?.fullName?.lastName}
                       className="text-[16px] text-gray-800 font-nunitosans border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
                     />
                     <ErrorMessage name="lastName" component="div" className="text-red-500 text-sm" />
@@ -132,7 +147,7 @@ function EditAccount() {
                       type="text"
                       name="userName"
                       id="userName"
-                      value={data?.loginUser?.userName}
+                      placeholder={loginUser?.userName}
                       className="text-[16px] text-gray-800 font-nunitosans border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
                     />
                     <ErrorMessage name="userName" component="div" className="text-red-500 text-sm" />
@@ -142,16 +157,16 @@ function EditAccount() {
                       Primary Phone
                     </label>
                     <PhoneInput
-                      placeholder="Phone"
                       defaultCountry="US"
-                      value={values.phoneNumber}
+                      placeholder={loginUser?.phoneNumber}
                       onChange={(value) => setFieldValue('phoneNumber', value)}
                       className="custom-phone-input text-[16px] text-gray-800 font-nunitosans bg-transparent focus:border-primary outline-primary border-[1px] px-3 py-3 rounded-[5px]"
                     />
                     <ErrorMessage name="phoneNumber" component="div" className="text-red-500 text-sm" />
                   </div>
                 </div>
-                <div className="flex flex-col md:flex-row gap-4 mb-4">
+                {/* location */}
+                {/* <div className="flex flex-col md:flex-row gap-4 mb-4">
                   <div className="w-[100%] md:w-[33%] flex flex-col gap-2">
                     <label htmlFor="location.state" className="text-[16px] text-gray-800 font-nunitosans">
                       State
@@ -160,7 +175,7 @@ function EditAccount() {
                       type="text"
                       name="location.state"
                       id="location.state"
-                      value={data?.loginUser?.location?.state}
+                      value={loginUser?.location?.state}
                       className="text-[16px] text-gray-800 font-nunitosans border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
                     />
                     <ErrorMessage name="location.state" component="div" className="text-red-500 text-sm" />
@@ -173,7 +188,7 @@ function EditAccount() {
                       type="text"
                       name="location.city"
                       id="location.city"
-                      value={data?.loginUser?.location?.city}
+                      value={loginUser?.data?.location?.city}
                       className="text-[16px] text-gray-800 font-nunitosans border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
                     />
                     <ErrorMessage name="location.city" component="div" className="text-red-500 text-sm" />
@@ -186,16 +201,15 @@ function EditAccount() {
                       type="text"
                       name="location.zipCode"
                       id="location.zipCode"
-                      value={data?.loginUser?.location?.zipCode}
+                      value={loginUser?.data?.location?.zipCode}
                       className="text-[16px] text-gray-800 font-nunitosans border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
                     />
                     <ErrorMessage name="location.zipCode" component="div" className="text-red-500 text-sm" />
                   </div>
-                </div>
+                </div> */}
                 <div className="mt-4">
                   <button
                     type="submit"
-                    disabled={isUpdating}
                     className={`text-[15px] px-6 py-2 font-semibold rounded-[5px] ${
                       isUpdating ? 'bg-gray-400' : 'bg-primary text-white'
                     }`}
