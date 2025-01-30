@@ -13,7 +13,7 @@ import { MdOutlineChat } from "react-icons/md";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { FaBell } from "react-icons/fa6";
 import Notification from '../notification/page';
-import Cookies from 'js-cookie';
+
 
 
 function Header() {
@@ -69,8 +69,7 @@ function Header() {
       localStorage.removeItem("userInfo")
       // navigate to login/
 
-      Cookies.remove("userInfo"); // 1 day expiry
-
+      
       // Navigate to login page and reload
       router.push("/account/login");
       setTimeout(() => {
