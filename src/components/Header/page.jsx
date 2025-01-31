@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link'
 import Image from 'next/image';
+import logo from "../../assets/logo.png"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faCircleXmark, faL } from '@fortawesome/free-solid-svg-icons';
 import { useGetCurrentLoginUserQuery, useSignOutUserMutation } from '@/redux/reducers/user/userThunk';
@@ -95,7 +96,7 @@ function Header() {
           <div>
             <Link href="/">
               <Image
-                src="/logo.png"
+                src={logo}
                 width={205}
                 height={80}
                 alt="Company Logo"
