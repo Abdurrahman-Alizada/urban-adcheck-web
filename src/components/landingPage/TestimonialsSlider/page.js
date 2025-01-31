@@ -79,7 +79,7 @@ const Testimonials = () => (
       {testimonials.map((testimonial, index) => (
         <SwiperSlide
           key={index}
-          className="cursor-pointer m-4 mt-8 p-3 rounded-lg  shadow-md bg-white"
+          className="cursor-pointer m-4 mt-8 p-3 min-h-[230px] rounded-lg shadow-md bg-white"
         >
           <div>
             <h2 className="text-[#1B1C57] font-semibold mb-5 text-[16px] lg:text-[18px] font-lexendexa leading-5 lg:leading-8">
