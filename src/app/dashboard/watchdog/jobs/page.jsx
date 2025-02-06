@@ -377,8 +377,10 @@ const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }
             <BsThreeDots size={20} />
           </button>
           
-          {activeRow === job._id && (
-            <div className="absolute top-full right-0 mt-1 w-[200px] bg-white shadow-lg rounded-md z-50 border">
+         
+        </div>
+        {activeRow === job._id && (
+            <div className="absolute right-3 mt-1 w-[200px] bg-white shadow-lg rounded-md z-50 border">
               <div 
                 onClick={() => router.push(`/dashboard/admin/jobs/${job._id}`)}
                 className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors"
@@ -386,10 +388,7 @@ const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }
                 <BsEye size={16} className="text-gray-600" />
                 <span className="text-sm text-gray-600">View Details</span>
               </div>
-              <div className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors">
-                <CiEdit size={16} className="text-gray-600" />
-                <span className="text-sm text-gray-600">Edit Job</span>
-              </div>
+        
               <div 
                 onClick={() => handleApprovePopup(job)}
                 className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors"
@@ -397,7 +396,7 @@ const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }
                 {job.status?.isApproved ? (
                   <>
                     <MdOutlineCancel size={16} className="text-gray-600" />
-                    <span className="text-sm text-gray-600">Disapprove Job</span>
+                    <span className="text-sm text-gray-600">Accept Job</span>
                   </>
                 ) : (
                   <>
@@ -408,7 +407,6 @@ const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }
               </div>
             </div>
           )}
-        </div>
       </td>
     </tr>
   );
