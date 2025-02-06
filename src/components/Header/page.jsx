@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link'
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -21,15 +21,36 @@ function Header() {
   const [user, setUser] = useState({});
   const [showDropdown, setShowDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-
-
+  
+  const dropdownRef = useRef(null);
+  const notificationRef = useRef(null);
   const [signOutUser, { }] = useSignOutUserMutation();
   const { data: currentLoginUser } = useGetCurrentLoginUserQuery();
-  console.log(currentLoginUser);
   const router = useRouter();
 
   const userRole = currentLoginUser?.role;
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      // Handle dropdown click outside
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+      
+      // Handle notification click outside
+      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+        setShowNotifications(false);
+      }
+    }
+
+    // Add event listener
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    // Cleanup
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // useEffect(()=>{
   //   const userData=JSON.parse(localStorage.getItem('userInfo'));
@@ -119,121 +140,125 @@ function Header() {
 
           {/* Dynamic part of the code */}
           <div className='flex items-center'>
+            
+            {/* Updates needed for watchdog role */}
             {
-              currentLoginUser?.role.isClient ?
-                <div className="flex items-center gap-2">
-                  <div className='flex gap-4'>
-                    <div className='relative flex items-center gap-3'>
-                      <FaBell size={25} color='green' className='cursor-pointer' onClick={handleNotification} />
-                      <div
-                        className='relative inline-block'
-                        onClick={toggleDropdown}
-                      >
-                        <Image
-                          src="/profile-image.png"
-                          width={40}
-                          height={40}
-                          alt="Profile Image"
-                          className="cursor-pointer object-contain"
-                        />
-                        {showDropdown && (
-                          <div className="absolute -right-12 mt-2 w-32 z-10 bg-white border rounded shadow-lg">
-                            <ul className='flex flex-col gap-3 px-1 py-2'>
-                              <li className="flex items-center gap-4 text-gray-400">
-                                <Link href={"/dashboard/client/account-setting"} className="flex items-center gap-2 hover:text-primary">
-                                  <GoGear size={22} />
-                                  <span className="text-[15.03px]">Account Settings</span>
-                                </Link>
-                              </li>
-                              <li className="flex items-center gap-4 text-gray-400">
-                                <div onClick={SignoutUser} className="cursor-pointer flex items-center gap-2 hover:text-primary">
-                                  <PiSignOut size={22} />
-                                  <span className="text-[15.03px]">Sign Out</span>
-                                </div>
-                              </li>
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-                      {
-                        showNotifications && (
-                          <Notification setShowNotifications={setShowNotifications} />
-                        )
-
-                      }
-
-                    </div>
-                    <div>
-                      <button
-                        onClick={handlePostJobClick}
-                        className="hidden md:inline-block px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-secondary text-white hover:bg-primary">
-                        Post a Job
-                      </button>
-                    </div>
+currentLoginUser?.role.isWatchDog ? (
+  <div className="flex items-center gap-2">
+    <div className="flex gap-4">
+      <div className="relative flex items-center gap-3">
+        {/* Wrap notification bell in ref */}
+        <div ref={notificationRef}>
+          <FaBell
+            size={25}
+            color="green"
+            className="cursor-pointer"
+            onClick={handleNotification}
+          />
+          {showNotifications && (
+            <Notification setShowNotifications={setShowNotifications} />
+          )}
+        </div>
+        
+        {/* Wrap profile dropdown in ref */}
+        <div ref={dropdownRef} className="relative inline-block">
+          <Image
+            src="/profile-image.png"
+            width={40}
+            height={40}
+            alt="Profile Image"
+            className="cursor-pointer object-contain"
+            onClick={toggleDropdown}
+          />
+          {showDropdown && (
+            <div className="absolute -right-10 mt-2 w-32 z-10 bg-white border rounded shadow-lg" ref={dropdownRef}>
+              <ul className="flex flex-col gap-3 px-1 py-2" >
+                <li className="flex items-center gap-4 text-gray-400" >
+                  <Link
+                    href={"/dashboard/watchdog/account-settings"}
+                    className="flex items-center gap-2 hover:text-primary"
+                  >
+                    <GoGear size={22} />
+                    <span className="text-[15.03px]">Account Settings</span>
+                  </Link>
+                </li>
+                <li className="flex items-center gap-4 text-gray-400">
+                  <div
+                    onClick={SignoutUser}
+                    className="cursor-pointer flex items-center gap-2 hover:text-primary"
+                  >
+                    <PiSignOut size={22} />
+                    <span className="text-[15.03px]">Sign Out</span>
                   </div>
-                </div>
-                :
-                currentLoginUser?.role.isWatchDog ? (
-                  <div className="flex items-center gap-2">
-                    <div className="flex gap-4">
-                      <div className="relative flex items-center gap-3">
-                        <FaBell
-                          size={25}
-                          color="green"
-                          className="cursor-pointer"
-                          onClick={handleNotification}
-                        />
-                        <div
-                          className="relative inline-block"
-                          onClick={toggleDropdown}
-                        >
-                          <Image
-                            src="/profile-image.png"
-                            width={40}
-                            height={40}
-                            alt="Profile Image"
-                            className="cursor-pointer object-contain"
-                          />
-                          {showDropdown && (
-                            <div className="absolute -right-12 mt-2 w-32 z-10 bg-white border rounded shadow-lg">
-                              <ul className="flex flex-col gap-3 px-1 py-2">
-                                <li className="flex items-center gap-4 text-gray-400">
-                                  <Link
-                                    href={"/dashboard/watchdog/account-settings"}
-                                    className="flex items-center gap-2 hover:text-primary"
-                                  >
-                                    <GoGear size={22} />
-                                    <span className="text-[15.03px]">Account Settings</span>
-                                  </Link>
-                                </li>
-                                <li className="flex items-center gap-4 text-gray-400">
-                                  <div
-                                    onClick={SignoutUser}
-                                    className="cursor-pointer flex items-center gap-2 hover:text-primary"
-                                  >
-                                    <PiSignOut size={22} />
-                                    <span className="text-[15.03px]">Sign Out</span>
-                                  </div>
-                                </li>
-                              </ul>
-                            </div>
-                          )}
-                        </div>
-                        {showNotifications && (
-                          <Notification setShowNotifications={setShowNotifications} />
-                        )}
-                      </div>
-                      <div>
-                        <button
-                          onClick={handlePostJobClick}
-                          className="hidden md:inline-block px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-secondary text-white hover:bg-primary"
-                        >
-                          Dashboard
-                        </button>
-                      </div>
-                    </div>
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+      <div>
+        <button
+          onClick={handlePostJobClick}
+          className="hidden md:inline-block px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-secondary text-white hover:bg-primary"
+        >
+          Dashboard
+        </button>
+      </div>
+    </div>
+  </div>
+) : currentLoginUser?.role.isClient ? (
+  <div className="flex items-center gap-2">
+    <div className='flex'>
+      <div className='flex items-center gap-3'>
+        {/* Wrap notification bell in ref */}
+        <div ref={notificationRef}>
+          <FaBell 
+            size={25} 
+            color='green' 
+            className="cursor-pointer"
+            onClick={handleNotification} 
+          />
+          {showNotifications && (
+            <Notification setShowNotifications={setShowNotifications} />
+          )}
+        </div>
+        
+        {/* Wrap profile dropdown in ref */}
+        <div
+          ref={dropdownRef}
+          className='relative inline-block'
+        >
+          <Image
+            src="/profile-image.png"
+            width={40}
+            height={40}
+            alt="Profile Image"
+            className="cursor-pointer object-contain"
+            onClick={toggleDropdown}
+          />
+          {showDropdown && (
+            <div className="absolute right-1 mt-2 w-[200px] z-10 bg-white border rounded shadow-lg">
+              <ul className='flex flex-col gap-3 px-1 py-2'>
+                <li className="flex items-center gap-4 text-gray-400">
+                  <Link href={"/dashboard/client/account-setting"} className="flex items-center gap-2 hover:text-primary">
+                    <GoGear size={22} />
+                    <span className="text-[15.03px]">Account Settings</span>
+                  </Link>
+                </li>
+                <li className="flex items-center gap-4 text-gray-400">
+                  <div onClick={SignoutUser} className="cursor-pointer flex items-center gap-2 hover:text-primary">
+                    <PiSignOut size={22} />
+                    <span className="text-[15.03px]">Sign Out</span>
                   </div>
-                )
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+)
 
                   :
                   currentLoginUser?.role.isAdmin ?
@@ -253,7 +278,7 @@ function Header() {
                               className="cursor-pointer object-contain"
                             />
                             {showDropdown && (
-                              <div className="absolute -right-14 mt-2 w-32 z-10 bg-white border rounded shadow-lg">
+                              <div className="absolute -right-14 mt-2 w-46 z-10 bg-white border rounded shadow-lg">
                                 <ul className='flex flex-col gap-3 px-1 py-2'>
                                   <li className="flex items-center gap-4 text-gray-400">
                                     <Link href={"/dashboard/admin/account-setting"} className="flex items-center gap-2 hover:text-primary">
