@@ -13,12 +13,7 @@ import { FaCircleDollarToSlot } from "react-icons/fa6";
            <p className="text-black text-center max-w-[400px] font-nunitosans font-normal text-[17px]">
             Payment Failed Becuase your Card is NOT working.
           </p>   
-          <button
-              type="submit"
-              className="bg-primary text-white py-2 px-4 rounded-md font-bold hover:bg-secondary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark"
-            >
-             Pay Again
-            </button>      
+             
         </div>
     </div>
   );

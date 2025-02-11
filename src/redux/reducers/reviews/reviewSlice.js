@@ -4,10 +4,10 @@ const { createSlice } = require("@reduxjs/toolkit");
 
 
 const initialState = {
-    reviews: null, 
+    reviews: null,
 };
 
-const reviewSlice=createSlice({
+const reviewSlice = createSlice({
     name: 'review',
     initialState,
     reducers: {
@@ -16,3 +16,5 @@ const reviewSlice=createSlice({
         },
     },
 })
+
+export default reviewSlice.reducer;

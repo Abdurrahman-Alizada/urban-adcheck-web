@@ -6,14 +6,14 @@ import ProgressBar from "../../../../components/progressBar/page";
 import JobsInfoSection from "@/components/jobs-info/page";
 import AdvanceInfoSection from "../../../../components/advanceInfoSection/page";
 import ContactSection from "../../../../components/contactSection/page";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { MdArrowForward } from "react-icons/md";
 import { useCreateJobMutation } from "@/redux/reducers/jobs/jobThunk";
+import JobSuccessModal from "@/components/Modal/JobSuccessModal";
 
 const PostJob = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [jobPostModal,setJobPostModal]=useState(false);
-  const [jobPostResponse,setJobPostResponse]=useState(null);
+  const [jobPostModal, setJobPostModal] = useState(false);
+  const [jobPostResponse, setJobPostResponse] = useState(null);
 
   const [jobsInfo, setJobsInfo] = useState({
     adName: "",
@@ -23,7 +23,6 @@ const PostJob = () => {
     model: "",
     conditions: "good",
     authenticity: "",
-    tags: "",
     jobsPrices: "",
   });
   const [contactData, setContactData] = useState({
@@ -41,7 +40,6 @@ const PostJob = () => {
     uploadedFiles: [],
   });
 
-  
   const handleJobsInfoData = (data) => {
     setJobsInfo(data);
   };
@@ -57,16 +55,13 @@ const PostJob = () => {
   const [jobVideo, setJobVideo] = useState(null);
   const [jobGallery, setJobGallery] = useState([]);
 
-  // Step 1 Schema
+  // [Validation schemas remain the same]
   const step1Schema = Yup.object().shape({
     jobTitle: Yup.string().required("Job title is required"),
     category: Yup.string().required("Category is required"),
     displayType: Yup.string().required("Display type is required"),
-    // condition: Yup.string().required("Condition is required"),
     paymentType: Yup.string().required("Payment type is required"),
-    // "paymentDetails.amount": Yup.number().required("Amount is required"),
     dueTime: Yup.date().required("Due time is required"),
-    // tags: Yup.string().required("Tags are required"),
     address: Yup.object().shape({
       street: Yup.string().required("Street address is required"),
       city: Yup.string().required("City is required"),
@@ -78,9 +73,7 @@ const PostJob = () => {
     }),
   });
 
-  // Step 2 Schema
   const step2Schema = Yup.object().shape({
-    tags: Yup.array().min(1, "Please add at least one tag."),
     description: Yup.string().required("Description is required"),
     notes: Yup.string(),
     jobGallery: Yup.array(),
@@ -88,7 +81,6 @@ const PostJob = () => {
     jobVideo: Yup.mixed(),
   });
 
-  // Step 3 Schema
   const step3Schema = Yup.object().shape({
     personalInfo: Yup.object().shape({
       fullName: Yup.string().required("Full name is required"),
@@ -99,46 +91,35 @@ const PostJob = () => {
     phoneNumber: Yup.object().shape({
       primary: Yup.string().required("Phone number is required"),
     }),
-    // location: Yup.string().required("location is required"),
   });
-  // Combined Validation Schemas
+
   const validationSchemas = [step1Schema, step2Schema, step3Schema];
-  // Initial Values
   const initialValues = {
     jobTitle: "",
     category: "",
     displayType: "",
     condition: "good",
     paymentType: "Per-Job",
-    address:{
-    coordinates:[
-      -79.22,
-      -43.43,
-    ],
-    street:"",
-    city:"",
-    state:"",
-    country:"",
-    postalCode:"",
-    mapLocation:"",
+    address: {
+      coordinates: [-79.22, -43.43],
+      street: "",
+      city: "",
+      state: "",
+      country: "",
+      postalCode: "",
+      mapLocation: "",
     },
     paymentDetails: {
       amount: "",
       currency: "CAD",
       status: "pending",
-      perJobPayment: {
-        priceType: "fixed",
-        price: 0,
-      },
     },
     dueTime: "2024-12-27T07:11",
-    tags: [],      
     status: {
       isApproved: false,
       isPublished: false,
       isFeatured: false,
       isActive: true,
-      // isAcceptedByWatchdog: true,
       isCancelled: false,
     },
     description: "",
@@ -152,13 +133,10 @@ const PostJob = () => {
     phoneNumber: {
       primary: "2343243232",
       secondary: "2343223432",
-    }
-    
+    },
   };
 
-  // Handle "Next" Button Click
   const handleNext = async (validateForm, setFieldTouched) => {
-    // Step-wise field keys
     const schemaFieldKeys = [
       [
         "adName",
@@ -168,7 +146,6 @@ const PostJob = () => {
         "model",
         "conditions",
         "authenticity",
-        "tags",
         "jobsPrices",
         "negotiables",
       ],
@@ -176,20 +153,13 @@ const PostJob = () => {
       ["contactName", "email", "phoneNumber", "address"],
     ];
 
-    const currentFields = schemaFieldKeys[currentStep - 1]; // Get fields for current step
-
-    // Mark all fields in current step as touched
+    const currentFields = schemaFieldKeys[currentStep - 1];
     currentFields.forEach((field) => setFieldTouched(field, true, true));
-
-    // Validate the form and get the errors
     const validationErrors = await validateForm();
-
-    // Only proceed to the next step if no errors exist for current step
     const stepErrors = Object.keys(validationErrors).filter((key) =>
       currentFields.includes(key)
     );
 
-    // If no errors for the current step, proceed to the next step
     if (stepErrors.length === 0) {
       setCurrentStep((prevStep) => prevStep + 1);
     } else {
@@ -199,26 +169,13 @@ const PostJob = () => {
 
   const handleFormSubmission = (values) => {
     const formData = new FormData();
-  
-    // Ensure tags is an array before processing
-    const sanitizedValues = {
-      ...values,
-      tags: Array.isArray(values.tags)
-        ? values.tags
-        : typeof values.tags === "string"
-        ? values.tags.split(",").map((tag) => tag.trim()) // Convert comma-separated string to array
-        : [],
-    };
-  
-    console.log(sanitizedValues.tags); // Debug: Confirm tags are properly formatted
-  
-    // Helper function to handle nested keys with bracket notation
+    const sanitizedValues = { ...values };
+
     const appendNestedKeys = (obj, parentKey = "") => {
       Object.entries(obj).forEach(([key, value]) => {
         const fieldKey = parentKey ? `${parentKey}[${key}]` : key;
-  
+
         if (Array.isArray(value)) {
-          // Handle arrays
           value.forEach((item) => {
             formData.append(`${fieldKey}[]`, item);
           });
@@ -227,209 +184,254 @@ const PostJob = () => {
           typeof value === "object" &&
           !(value instanceof File)
         ) {
-          // Handle nested objects
           appendNestedKeys(value, fieldKey);
         } else {
-          // Handle primitive values
           formData.append(fieldKey, value);
         }
       });
     };
-  
-    // Add all fields except file uploads
+
     appendNestedKeys(sanitizedValues);
-  
-    // Handle file fields (if any)
+
     if (jobGallery && jobGallery.length > 0) {
       Array.from(jobGallery).forEach((file) => {
         formData.append("jobGallery", file);
       });
     }
-  
+
     if (jobCoverImage) {
       formData.append("jobCoverImage", jobCoverImage);
     }
-  
+
     if (jobVideo) {
       formData.append("jobVideo", jobVideo);
     }
-  
-    // Return the final FormData object
+
     return formData;
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchemas[currentStep - 1]} // Apply validation for the current step only
-      validateOnChange={false}
-      validateOnBlur={false}
-      onSubmit={async (values) => {
-        try {
-          const formData = handleFormSubmission(values);
-          console.log("valuse", values);
-          // Debug: Log FormData entries
-          for (let pair of formData.entries()) {
-            console.log("Form Data Entry:", pair[0], pair[1]);
-          }
-
-          const response = await createJob(formData);
-           setJobPostResponse(response);
-          console.log("Job created successfully:", response);
-         
-        } catch (error) {
-          console.error("Error submitting form:", error);
-        }
-      }}
-    >
-      {({
-        values,
-        errors,
-        touched,
-        validateForm,
-        setFieldTouched,
-        handleChange,
-        handleSubmit,
-        handleBlur,
-        setFieldValue,
-      }) => (
-        <form onSubmit={handleSubmit} className="w-full">
-          {/* Progress Bar */}
-          <ProgressBar
-            currentStep={currentStep}
-            totalSteps={validationSchemas.length}
-          />
-
-          {/* Step Content */}
-          {currentStep === 1 && (
-            <JobsInfoSection
-              values={values}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              // jobsInfo={jobsInfo}
-              onJobsInfoChnage={handleJobsInfoData}
-              errors={errors}
-              touched={touched}
-              onNext={() => console.log("onNext")}
-            />
-          )}
-
-          {currentStep === 2 && (
-            <AdvanceInfoSection
-              values={values}
-              errors={errors}
-              touched={touched}
-              // advanceInfoData={advanceInfoData}
-              onAdvanceInfoDataChange={handleAdvanceInfoData}
-              handleChange={handleChange}
-              setFieldValue={setFieldValue}
-              cover={jobCoverImage}
-              setCover={setJobCoverImageCover}
-              video={jobVideo}
-              setVideo={setJobVideo}
-              gallery={jobGallery}
-              setGallery={setJobGallery}
-              handleBlur={handleBlur}
-              onNext={() => console.log("onNext")}
-            />
-          )}
-
-          {currentStep === 3 && (
-            <ContactSection
-              values={values}
-              jobPostModal={jobPostModal}
-              setJobPostModal={setJobPostModal}
-              isLoading={isLoading}
-              jobPostResponse={jobPostResponse}
-              errors={errors}
-              touched={touched}
-              // contactData={contactData}
-              onContactDataChange={handleContactData}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              onNext={() => console.log("onNext")}
-            />
-          )}
-
-          {/* Navigation Buttons */}
-          <div className="relative flex justify-end items-center gap-6">
-            {currentStep === 1 && (
-              <>
-                <button
-                  type="submit"
-                  className="w-[280px] bg-secondary border-grayColor border-[1px] text-white px-8 py-2 rounded-md "
-                  // onClick={() => console.log("View Posting Rules clicked")}
-                >
-                  Save Changes
-                </button>
-                <button
-                  className="px-4 py-2 bg-primary text-white rounded"
-                  onClick={() => handleNext(validateForm, setFieldTouched)}
-                >
-                  Next Step
-                </button>
-              </>
-            )}
-
-            {currentStep === 2 && (
-              <>
-                <div className="flex justify-end gap-3 mt-3">
-                  <button
-                    type="submit"
-                    className="w-[280px] bg-secondary border-grayColor border-[1px] text-white px-8 py-2 rounded-md "
-                  >
-                    Save Changes
-                  </button>
-                  <button
-                    type="button"
-                    className="flex items-center text-[18px] px-6 py-2 border-[1px] border-grayColor rounded-[5px] bg-transparent text-Black"
-                    onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
-                  >
-                    Previous
-                  </button>
-                  <button
-                    type="button"
-                    className="flex items-center gap-4 text-[18px] px-8 py-2 rounded-[5px] bg-primary text-white"
-                    onClick={() => handleNext(validateForm, setFieldTouched)}
-                  >
-                    Next Steps
-                    <FontAwesomeIcon icon={faArrowRight} size="15" />
-                  </button>
-                </div>
-              </>
-            )}
-            {currentStep === 3 && (
-              <>
-                <div className="flex justify-end gap-3 mt-3">
-                  <button
-                    type="submit"
-                    className="flex items-center text-[18px] px-6 py-2 border-[1px] border-grayColor rounded-[5px] bg-transparent text-Black"
-                    onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
-                  >
-                    Previous
-                  </button>
-                  <button
-                    type="submit"
-                    className="flex items-center gap-4 text-[18px] px-8 py-2 rounded-[5px] bg-primary text-white"
-                    disabled={isLoading} // Disable button during loading
-                    onClick={()=>setJobPostModal(true)}
-                  >
-                    {isLoading ? (
-                      <div className="spinner border-4 border-t-4 border-white rounded-full w-5 h-5 mr-2"></div>
-                    ) : (
-                      "Post Jobs"
-                    )}
-                    
-                    <FontAwesomeIcon icon={faArrowRight} size="15" />
-                  </button>
-                </div>
-              </>
-            )}
-            
+    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto">
+        <div className="bg-white rounded-lg shadow-lg p-6">
+          <div className="mb-8">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              Post a New Job
+            </h1>
+            <p className="text-gray-600">
+              Fill out the form below to create your job posting
+            </p>
           </div>
-        </form>
-      )}
-    </Formik>
+
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchemas[currentStep - 1]}
+            validateOnChange={false}
+            validateOnBlur={false}
+            onSubmit={async (values) => {
+              try {
+                const formData = handleFormSubmission(values);
+                const response = await createJob(formData);
+                setJobPostResponse(response?.data);
+                if (response?.jobId) {
+                  setJobPostResponse(response);
+                  setJobPostModal(true);
+                }
+              } catch (error) {
+                console.error("Error submitting form:", error);
+              }
+            }}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              validateForm,
+              setFieldTouched,
+              handleChange,
+              handleSubmit,
+              handleBlur,
+              setFieldValue,
+            }) => (
+              <form onSubmit={handleSubmit} className="w-full">
+                <div className="mb-8">
+                  <ProgressBar
+                    currentStep={currentStep}
+                    totalSteps={validationSchemas.length}
+                  />
+                </div>
+
+                <div className="bg-white rounded-lg">
+                  {currentStep === 1 && (
+                    <JobsInfoSection
+                      values={values}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      onJobsInfoChnage={handleJobsInfoData}
+                      errors={errors}
+                      touched={touched}
+                      onNext={() => console.log("onNext")}
+                    />
+                  )}
+
+                  {currentStep === 2 && (
+                    <AdvanceInfoSection
+                      values={values}
+                      errors={errors}
+                      touched={touched}
+                      onAdvanceInfoDataChange={handleAdvanceInfoData}
+                      handleChange={handleChange}
+                      setFieldValue={setFieldValue}
+                      cover={jobCoverImage}
+                      setCover={setJobCoverImageCover}
+                      video={jobVideo}
+                      setVideo={setJobVideo}
+                      gallery={jobGallery}
+                      setGallery={setJobGallery}
+                      handleBlur={handleBlur}
+                      onNext={() => console.log("onNext")}
+                    />
+                  )}
+
+                  {currentStep === 3 && (
+                    <ContactSection
+                      values={values}
+                      jobPostModal={jobPostModal}
+                      setJobPostModal={setJobPostModal}
+                      isLoading={isLoading}
+                      jobPostResponse={jobPostResponse}
+                      errors={errors}
+                      touched={touched}
+                      onContactDataChange={handleContactData}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      onNext={() => console.log("onNext")}
+                    />
+                  )}
+                </div>
+
+                <div className="flex flex-col sm:flex-row justify-end items-center gap-4 mt-8 pt-4 border-t">
+                  {currentStep === 1 && (
+                    <>
+                      <button
+                        type="submit"
+                        className="w-full sm:w-auto px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        Save Changes
+                      </button>
+                      <button
+                        type="button"
+                        className="w-full sm:w-auto px-6 py-2 bg-primary text-white rounded-md hover:bg-secondary transition-colors flex items-center justify-center"
+                        onClick={() =>
+                          handleNext(validateForm, setFieldTouched)
+                        }
+                      >
+                        Next Step <MdArrowForward className="ml-2" />
+                      </button>
+                    </>
+                  )}
+
+                  {currentStep === 2 && (
+                    <>
+                      <button
+                        type="submit"
+                        className="w-full sm:w-auto px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        Save Changes
+                      </button>
+                      <button
+                        type="button"
+                        className="w-full sm:w-auto px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                        onClick={() =>
+                          setCurrentStep((prevStep) => prevStep - 1)
+                        }
+                      >
+                        Previous
+                      </button>
+                      <button
+                        type="button"
+                        className="w-full sm:w-auto px-6 py-2 bg-primary text-white rounded-md hover:bg-secondary transition-colors flex items-center justify-center"
+                        onClick={() =>
+                          handleNext(validateForm, setFieldTouched)
+                        }
+                      >
+                        Next Steps <MdArrowForward className="ml-2" />
+                      </button>
+                    </>
+                  )}
+
+                  {currentStep === 3 && (
+                    <>
+                      <button
+                        type="button"
+                        className="w-full sm:w-auto px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                        onClick={() =>
+                          setCurrentStep((prevStep) => prevStep - 1)
+                        }
+                      >
+                        Previous
+                      </button>
+                      <button
+                        type="submit"
+                        className="w-full sm:w-auto px-6 py-2 bg-primary text-white rounded-md hover:bg-secondary transition-colors flex items-center justify-center"
+                        disabled={isLoading}
+                        onClick={() => setJobPostModal(true)}
+                      >
+                        {isLoading ? (
+                          <div className="flex items-center">
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                            Loading...
+                          </div>
+                        ) : (
+                          <span className="flex items-center">
+                            Post Jobs <MdArrowForward className="ml-2" />
+                          </span>
+                        )}
+                      </button>
+                    </>
+                  )}
+                </div>
+              </form>
+            )}
+          </Formik>
+        </div>
+
+        <JobSuccessModal isOpen={jobPostModal} onClose={setJobPostModal}>
+          <h2 className="text-xl font-semibold text-center">Job Created</h2>
+          <p className="mt-2 text-gray-600">{jobPostResponse?.message}</p>
+
+          <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+            <h3 className="text-lg font-medium">Payment Details</h3>
+            <p>
+              <span className="font-semibold">Amount:</span>{" "}
+              {jobPostResponse?.paymentDetails?.amount}{" "}
+              {jobPostResponse?.paymentDetails?.currency}
+            </p>
+            <p>
+              <span className="font-semibold">Service Fee:</span>{" "}
+              {jobPostResponse?.paymentDetails?.serviceFee}{" "}
+              {jobPostResponse?.paymentDetails?.currency}
+            </p>
+            <p className="font-semibold">
+              Total: {jobPostResponse?.paymentDetails?.totalAmount}{" "}
+              {jobPostResponse?.paymentDetails?.currency}
+            </p>
+            <p className="text-red-500 text-sm mt-1">
+              Status: {jobPostResponse?.paymentDetails?.status}
+            </p>
+          </div>
+
+          <a
+            href={jobPostResponse?.sessionURL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block text-center mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-secondary transition-colors w-full"
+          >
+            Complete Payment
+          </a>
+        </JobSuccessModal>
+      </div>
+    </div>
   );
 };
 

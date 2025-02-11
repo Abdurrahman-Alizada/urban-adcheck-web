@@ -1,11 +1,14 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import { Field, ErrorMessage } from "formik";
 import { MdFileUpload, MdCancel } from "react-icons/md";
 import Image from "next/image";
 
-const AdvanceInfoSection = ({values,handleChange,setFieldValue,cover,tags,setCover,video,setVideo,gallery,
+const AdvanceInfoSection = ({
+  setCover,
+  setVideo,
+  gallery,
   setGallery,
   errors,
   touched,
@@ -15,17 +18,6 @@ const AdvanceInfoSection = ({values,handleChange,setFieldValue,cover,tags,setCov
     cover: "",
     video: "",
   });
-
-  // Add tag to the list
-const addTag = () => {
-  if (values.tags.trim() && !values.tags.includes(values.tags.trim())) {
-    setFieldValue("tags", [...values.tags, values.tags.trim()]);
-  }
-};
-  // Remove tag from the list
-  const removeTag = (tagToRemove) => {
-    setFieldValue("tags", values.tags.filter((tag) => tag !== tagToRemove));
-  };
 
   // Handle file change for gallery, cover, and video uploads
   const handleFileChange = (event, field) => {
@@ -69,54 +61,7 @@ const addTag = () => {
 
   return (
     <section className="flex flex-col gap-6">
-      {/* Tags Input */}
-      <div className="flex flex-col gap-2">
-        <label htmlFor="tags" className="text-[16px] font-medium">
-          Enter Job Tags
-        </label>
-        <div className="flex items-center gap-2 mt-2">
-        <Field
-            type="text"
-            id="tags"
-            name="tags"
-            placeholder="Job tags"
-            className={`w-full p-3 rounded-md border ${
-              errors.tags && touched.tags ? "border-red-500" : "border-gray-300"
-            }`}
-            onChange={(e) => setFieldValue("tags", e.target.value)}
-          />
-          <button
-            type="button"
-            onClick={addTag}
-            className="bg-primary text-white px-4 py-2 rounded-md"
-          >
-            Add
-          </button>
-        </div>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {Array.isArray(values.tags) &&
-              values.tags.map((tag, index) => (
-            <div
-              key={index}
-              className="flex items-center gap-2 bg-gray-200 px-3 py-1 rounded-full"
-            >
-              <span>{tag}</span>
-              <button
-                type="button"
-                onClick={() => removeTag(tag)}
-                className="text-red-500 hover:text-red-700"
-              >
-                <MdCancel />
-              </button>
-            </div>
-          ))}
-        </div>
-        <ErrorMessage
-          name="tags"
-          component="div"
-          className="text-red-500 text-sm"
-        />
-      </div>
+    
 
       {/* Description */}
       <div className="flex flex-col gap-2">

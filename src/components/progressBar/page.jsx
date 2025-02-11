@@ -1,102 +1,133 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
-  faClipboardList,  // Step 1 icon
-  faFileAlt,         // Step 2 icon
-  faMapMarkerAlt,    // Step 3 icon
-  faCheck            // Completed step icon
-} from '@fortawesome/free-solid-svg-icons';
+  MdAssignment,      
+  MdDescription,     
+  MdContactMail,     
+  MdCheck           
+} from 'react-icons/md';
 
 const ProgressBar = ({ currentStep }) => {
-  // Define the steps with title, subtitle, and icons
   const steps = [
     { 
       number: 1, 
-      title: 'Step 01', 
-      subtitle: 'Jobs Information',
-      icon: faClipboardList,
-      completedIcon: faCheck 
+      title: 'Basic Info', 
+      subtitle: 'Job Details',
+      icon: MdAssignment,
+      completedIcon: MdCheck 
     },
     { 
       number: 2, 
-      title: 'Step 02',
-      subtitle: 'Description, Features, Images', 
-      icon: faFileAlt,
-      completedIcon: faCheck 
+      title: 'Content',
+      subtitle: 'Description & Media', 
+      icon: MdDescription,
+      completedIcon: MdCheck 
     },
     { 
       number: 3, 
-      title: 'Step 03', 
-      subtitle: 'Post Jobs',
-      icon: faMapMarkerAlt,
-      completedIcon: faCheck 
+      title: 'Contact', 
+      subtitle: 'Final Details',
+      icon: MdContactMail,
+      completedIcon: MdCheck 
     }
   ];
 
   return (
-    <div className="relative flex items-center justify-between mb-6">
-      {/* Render all steps */}
-      {steps.map((step, index) => (
-        <div 
-          key={step.number} 
-          className={`flex items-center gap-3 w-1/3`}
-        >
-          {/* Step Circle */}
-          <div 
-            className={`w-12 h-12 rounded-full flex items-center justify-center
-              ${currentStep === step.number 
-                ? 'bg-primary text-white'  // Current Step (active)
-                : currentStep > step.number 
-                  ? 'bg-green-500 text-white'  // Completed Step
-                  : 'bg-gray-200 text-gray-500'  // Future Step
-              }
-            `}
-            aria-current={currentStep === step.number ? 'step' : undefined}
-          >
-            <FontAwesomeIcon 
-              icon={currentStep > step.number ? step.completedIcon : step.icon} 
-              className="text-xl" 
-            />
-          </div>
+    <div className="w-full max-w-4xl mx-auto px-4 py-6">
+      <div className="relative">
+        {/* Desktop View */}
+        <div className="hidden sm:flex items-center justify-between w-full">
+          {steps.map((step, index) => (
+            <div key={step.number} className="relative flex items-center flex-1">
+              {/* Step Circle */}
+              <div 
+                className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold shadow-md transition-all duration-300
+                  ${currentStep === step.number 
+                    ? 'bg-blue-600 scale-110' 
+                    : currentStep > step.number 
+                      ? 'bg-green-500' 
+                      : 'bg-gray-300 text-gray-500'
+                  }`}
+              >
+                {React.createElement(
+                  currentStep > step.number ? step.completedIcon : step.icon,
+                  { className: "text-2xl" }
+                )}
+              </div>
 
-          {/* Step Text */}
-          <div className="flex flex-col">
-            <span 
-              className={`text-sm font-medium
-                ${currentStep === step.number 
-                  ? 'text-primary'  // Current Step
-                  : currentStep > step.number 
-                    ? 'text-green-500'  // Completed Step
-                    : 'text-gray-500'  // Future Step
-                }
-              `}
-            >
-              {step.title}
-            </span>
-            <span className="text-grayColor text-[14.03px]">
-              {step.subtitle}
-            </span>
-          </div>
+              {/* Step Text */}
+              <div className="ml-4">
+                <p className={`text-sm font-semibold ${
+                  currentStep === step.number 
+                    ? 'text-blue-600' 
+                    : currentStep > step.number 
+                      ? 'text-green-500' 
+                      : 'text-gray-500'
+                }`}>
+                  {step.title}
+                </p>
+                <p className="text-xs text-gray-400">{step.subtitle}</p>
+              </div>
 
-          {/* Connector Line */}
-          {index < steps.length - 1 && (
-            <div 
-              className={`flex-grow h-[2px] 
-                ${currentStep > step.number ? 'bg-green-500' : 'bg-gray-200'}
-              `}
-            />
-          )}
+              {/* Connector Line */}
+              {index < steps.length - 1 && (
+                <div className="flex-1 mx-4">
+                  <div className="h-1 bg-gray-300 relative">
+                    <div 
+                      className="absolute inset-0 bg-blue-600 transition-all duration-300"
+                      style={{
+                        width: currentStep > step.number ? '100%' : '0%',
+                        backgroundColor: currentStep > step.number ? '#22c55e' : '#2563eb'
+                      }}
+                    ></div>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
-      ))}
 
-      {/* Progress Bar Line */}
-      <div className="absolute top-1/2 left-0 right-0 h-[2px] bg-gray-200 z-[-1]">
-        <div 
-          className="h-full bg-primary transition-all duration-300" 
-          style={{ 
-            width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` 
-          }}
-        />
+        {/* Mobile View */}
+        <div className="sm:hidden flex flex-col space-y-6">
+          {steps.map((step, index) => (
+            <div key={step.number} className="flex items-start relative">
+              {/* Vertical Line */}
+              {index !== steps.length - 1 && (
+                <div className="absolute left-6 top-12 h-full w-1 bg-gray-300"></div>
+              )}
+
+              {/* Step Circle */}
+              <div 
+                className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold shadow-md z-10
+                  ${currentStep === step.number 
+                    ? 'bg-blue-600 scale-110' 
+                    : currentStep > step.number 
+                      ? 'bg-green-500' 
+                      : 'bg-gray-300 text-gray-500'
+                  }`}
+              >
+                {React.createElement(
+                  currentStep > step.number ? step.completedIcon : step.icon,
+                  { className: "text-xl" }
+                )}
+              </div>
+
+              {/* Step Text */}
+              <div className="ml-4">
+                <p className={`text-base font-semibold ${
+                  currentStep === step.number 
+                    ? 'text-blue-600' 
+                    : currentStep > step.number 
+                      ? 'text-green-500' 
+                      : 'text-gray-500'
+                }`}>
+                  {step.title}
+                </p>
+                <p className="text-sm text-gray-400">{step.subtitle}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
       </div>
     </div>
   );

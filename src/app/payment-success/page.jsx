@@ -12,12 +12,7 @@ import { RiSecurePaymentLine } from "react-icons/ri";
            <p className="text-black text-center max-w-[400px] font-nunitosans font-normal text-[17px]">
             Payment Processeed , Thanks For choosing our Platform.
           </p>   
-          <button
-              type="submit"
-              className="bg-primary text-white py-2 px-4 rounded-md font-bold hover:bg-secondary-dark outline-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark"
-            >
-             Pay Again
-            </button>      
+            
         </div>
     </div>
   );

@@ -25,12 +25,7 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
     paymentDetails,
     address,
     phoneNumber,
-    tags,
-    category,
     personalInfo,
-    expireAt,
-    jobGallery,
-    jobVideo,
     acceptedBy,
     watchdogReports,
     status,
@@ -394,17 +389,7 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
             <h1 className="text-2xl font-bold text-gray-800 mb-2">
               {jobTitle}
             </h1>
-            {/* tags */}
-            <div className="flex flex-wrap gap-2 mb-4">
-              {tags?.map((tag, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
+          
             <p className="text-gray-600">{description}</p>
           </section>
 
