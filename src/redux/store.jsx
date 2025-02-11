@@ -9,21 +9,22 @@ import { notificationApi } from "./reducers/notification/notificationThunk";
 import { userApi } from "../redux/reducers/user/userThunk";
 import { jobApi } from "./reducers/jobs/jobThunk";
 import { packageApi } from "./reducers/package/packageThunk";
-import {messagesApi} from "./reducers/messages/messagesThunk"
-
+import { messagesApi } from "./reducers/messages/messagesThunk";
+import { transactionsApi } from "./reducers/transactions/transactionThunk";
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
-    job:jobReducer,
-    package:packageReducer,
-    chat:chatReducer,
-    notification:notificationReducer,
+    job: jobReducer,
+    package: packageReducer,
+    chat: chatReducer,
+    notification: notificationReducer,
     [userApi.reducerPath]: userApi.reducer,
     [jobApi.reducerPath]: jobApi.reducer,
     [packageApi.reducerPath]: packageApi.reducer,
-    [messagesApi.reducerPath]:messagesApi.reducer,
-    [notificationApi.reducerPath]:notificationApi.reducer
+    [messagesApi.reducerPath]: messagesApi.reducer,
+    [notificationApi.reducerPath]: notificationApi.reducer,
+    [transactionsApi.reducerPath]: transactionsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat([
@@ -31,7 +32,8 @@ export const store = configureStore({
       jobApi.middleware,
       packageApi.middleware,
       messagesApi.middleware,
-      notificationApi.middleware
+      notificationApi.middleware,
+      transactionsApi.middleware,
     ]),
 });
 setupListeners(store.dispatch);

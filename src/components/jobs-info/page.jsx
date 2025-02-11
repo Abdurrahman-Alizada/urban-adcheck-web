@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 import { Field, ErrorMessage } from 'formik';
 
@@ -117,31 +118,14 @@ const JobsInfoSection = ({
                 as="select"
                 id="paymentDetails.currency"
                 name="paymentDetails.currency"
-                className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.paymentDetails?.perJobPayment?.priceType && touched.paymentDetails?.perJobPayment?.priceType ? 'border-red-500' : 'border-gray-300'}`}
+                className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] border-gray-300`}
               >
-                <option value="">Select Price Type</option>
-                <option value="fixed">$CAD</option>
+                <option value="">Select Currency</option>
+                <option value="CAD">$CAD</option>
               </Field>
               <ErrorMessage name="paymentDetails.currency" component="div" className="text-red-500 text-sm" />
             </div>
-             {/* price type */}
-          {/* {values.paymentType === 'Per-Job' && (
-            <div className="w-1/3 flex flex-col gap-2">
-              <label htmlFor="paymentDetails.perJobPayment.priceType" className="text-[16px]">Price Type</label>
-              <Field
-                as="select"
-                id="paymentDetails.perJobPayment.priceType"
-                name="paymentDetails.perJobPayment.priceType"
-                className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] ${errors.paymentDetails?.perJobPayment?.priceType && touched.paymentDetails?.perJobPayment?.priceType ? 'border-red-500' : 'border-gray-300'}`}
-              >
-                <option value="">Select Price Type</option>
-                <option value="fixed">Fixed</option>
-                <option value="hourly">Hourly</option>
-                <option value="negotiable">Negotiable</option>
-              </Field>
-              <ErrorMessage name="paymentDetails.perJobPayment.priceType" component="div" className="text-red-500 text-sm" />
-            </div>
-          )} */}
+       
         </div>
       </div>
 

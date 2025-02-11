@@ -67,15 +67,6 @@ const JobDetailsLoader = () => {
         <Skeleton count={3} height={18} className="mt-2" />
       </div>
 
-      {/* Tags */}
-      <div className="mt-4">
-        <Skeleton height={24} width={200} />
-        <div className="flex flex-wrap gap-2 mt-2">
-          {[...Array(5)].map((_, index) => (
-            <Skeleton key={index} height={24} width={60} />
-          ))}
-        </div>
-      </div>
     </div>
   );
 };
