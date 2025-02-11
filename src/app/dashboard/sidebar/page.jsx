@@ -35,6 +35,8 @@ function Sidebar() {
     { name: 'Dashboard', icon: <IoGridOutline size={22} />, url: '/dashboard/admin/overview' },
     { name: 'Jobs', icon: <MdOutlineManageAccounts size={22} />, url: '/dashboard/admin/jobs' },
     { name: 'Users', icon: <FaRegUser size={22} />, url: '/dashboard/admin/users' },
+    { name: 'Financials', icon: <HiOutlineCurrencyDollar size={22} />, url: '/dashboard/admin/financial-overview' },
+
   ];
 
   const getRoleName = () => {
