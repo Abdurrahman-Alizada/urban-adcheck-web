@@ -36,7 +36,7 @@ export default function FeedbackForm({jobDetails}) {
         metadata:{
           platform: "web",
           version: "1.2",
-          language: "en",
+          language: "en", 
           region: "US"
         },
         jobId:jobDetails?.data?._id,
@@ -65,7 +65,7 @@ export default function FeedbackForm({jobDetails}) {
               <textarea
                 id="feedback"
                 name="feedback"
-                className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-secondary"
                 rows="4"
                 placeholder="Write your Review here..."
                 {...formik.getFieldProps("feedback")}
@@ -102,7 +102,7 @@ export default function FeedbackForm({jobDetails}) {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              className="w-full bg-primary text-white py-2 px-4 rounded-md shadow-sm hover:bg-secondary focus:ring-2  focus:outline-none"
               disabled={isLoading}
             >
               {isLoading ? "Submitting..." : "Submit"}
@@ -111,7 +111,7 @@ export default function FeedbackForm({jobDetails}) {
         </>
       ) : (
         <div className="text-center">
-          <h2 className="text-green-600 text-lg font-medium">Feedback Submitted!</h2>
+          <h2 className="text-primary text-lg font-medium">Feedback Submitted!</h2>
           <p className="text-gray-700 mt-2">Thank you for your feedback.</p>
         </div>
       )}
