@@ -1,14 +1,18 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useResetPasswordMutation } from '@/redux/reducers/user/userThunk';
-import { data } from 'react-router-dom';
 
 function ManagePassword() {
   const [resetPassword, { isLoading: isUpdating }] = useResetPasswordMutation();
   const [showSuccess, setShowSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => setIsLoading(false), 1000); 
+  }, []);
 
   const validationSchema = Yup.object({
     currentPassword: Yup.string()
@@ -38,11 +42,7 @@ function ManagePassword() {
       setErrorMessage('');
       setShowSuccess(false);
       
-      const response = await resetPassword({
-        currentPassword: values.currentPassword,
-        newPassword: values.newPassword,
-        confirmPassword: values.confirmPassword,
-      }).unwrap();
+      const response = await resetPassword(values).unwrap();
       
       setShowSuccess(true);
       resetForm();
@@ -56,6 +56,21 @@ function ManagePassword() {
       setSubmitting(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="w-full p-4 mt-6 animate-pulse">
+        <div className="h-6 bg-gray-300 rounded w-48 mb-4"></div>
+        <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
+        <div className="h-12 bg-gray-300 rounded w-full mb-4"></div>
+        <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
+        <div className="h-12 bg-gray-300 rounded w-full mb-4"></div>
+        <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
+        <div className="h-12 bg-gray-300 rounded w-full mb-4"></div>
+        <div className="h-10 bg-gray-300 rounded w-32"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full p-4 mt-6">
@@ -83,82 +98,31 @@ function ManagePassword() {
         {({ isSubmitting }) => (
           <Form className="mt-4 space-y-4">
             <div className="flex flex-col gap-2">
-              <label
-                htmlFor="currentPassword"
-                
-                className="text-[16px] text-gray-800 font-semibold"
-              >
+              <label htmlFor="currentPassword" className="text-[16px] text-gray-800 font-semibold">
                 Current Password
               </label>
-              <Field
-                type="password"
-                name="currentPassword"
-                id="currentPassword"
-                // values={loginUser?.currentPassword}
-                className="text-[16px] text-gray-800 border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
-                autoComplete="current-password"
-              />
-              <ErrorMessage
-                name="currentPassword"
-                component="div"
-                className="text-red-500 text-sm"
-              />
+              <Field type="password" name="currentPassword" id="currentPassword" className="text-[16px] text-gray-800 border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary" autoComplete="current-password" />
+              <ErrorMessage name="currentPassword" component="div" className="text-red-500 text-sm" />
             </div>
 
             <div className="flex flex-col gap-2">
-              <label
-                htmlFor="newPassword"
-                className="text-[16px] text-gray-800 font-semibold"
-              >
+              <label htmlFor="newPassword" className="text-[16px] text-gray-800 font-semibold">
                 New Password
               </label>
-              <Field
-                type="password"
-                name="newPassword"
-                id="newPassword"
-                // values={loginUser?.newPassword}
-                className="text-[16px] text-gray-800 border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
-                autoComplete="new-password"
-              />
-              <ErrorMessage
-                name="newPassword"
-                component="div"
-                className="text-red-500 text-sm"
-              />
+              <Field type="password" name="newPassword" id="newPassword" className="text-[16px] text-gray-800 border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary" autoComplete="new-password" />
+              <ErrorMessage name="newPassword" component="div" className="text-red-500 text-sm" />
             </div>
 
             <div className="flex flex-col gap-2">
-              <label
-                htmlFor="confirmPassword"
-                className="text-[16px] text-gray-800 font-semibold"
-              >
+              <label htmlFor="confirmPassword" className="text-[16px] text-gray-800 font-semibold">
                 Confirm Password
               </label>
-              <Field
-                type="password"
-                name="confirmPassword"
-                id="confirmPassword"
-                // values={loginUser?.confirmPassword}
-                className="text-[16px] text-gray-800 border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
-                autoComplete="new-password"
-              />
-              <ErrorMessage
-                name="confirmPassword"
-                component="div"
-                className="text-red-500 text-sm"
-              />
+              <Field type="password" name="confirmPassword" id="confirmPassword" className="text-[16px] text-gray-800 border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary" autoComplete="new-password" />
+              <ErrorMessage name="confirmPassword" component="div" className="text-red-500 text-sm" />
             </div>
 
             <div>
-              <button
-                type="submit"
-                disabled={isSubmitting || isUpdating}
-                className={`text-[15px] px-6 py-2 font-semibold rounded-[5px] ${
-                  isSubmitting || isUpdating
-                    ? 'bg-gray-400 text-white'
-                    : 'bg-primary text-white hover:bg-primary/90 transition-colors'
-                }`}
-              >
+              <button type="submit" disabled={isSubmitting || isUpdating} className={`text-[15px] px-6 py-2 font-semibold rounded-[5px] ${isSubmitting || isUpdating ? 'bg-gray-400 text-white' : 'bg-primary text-white hover:bg-primary/90 transition-colors'}`}>
                 {isSubmitting || isUpdating ? 'Updating...' : 'Update Password'}
               </button>
             </div>
