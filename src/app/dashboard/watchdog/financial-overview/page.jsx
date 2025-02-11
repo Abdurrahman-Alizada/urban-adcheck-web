@@ -13,6 +13,8 @@ function FinancialOverview() {
     const [jobs, setJobs] = useState([]);
     const [filteredJobs, setFilteredJobs] = useState([]);
     const [selectedFilters, setSelectedFilters] = useState([]);
+    const [loading, setLoading] = useState(true)
+    
 
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
@@ -58,6 +60,8 @@ function FinancialOverview() {
 
     useEffect(() => {
         const fetchJobs = async () => {
+            setLoading(true);
+            setTimeout(()=>{
             const jobData = [
                 { id: 1, invoice: 'Invoice#98', amount: '1,987,093', Date: '1/12/2025', status:"Succes"  },
                 { id: 2, invoice: 'Invoice#97', amount: '1,987,093', Date: '1/12/2025', status:"Succes"  },
@@ -75,6 +79,8 @@ function FinancialOverview() {
             ];
             setJobs(jobData);
             setFilteredJobs(jobData);
+            setLoading(false);
+        }, 3000);
         };
         fetchJobs();
     }, []);
@@ -289,7 +295,31 @@ function FinancialOverview() {
                                     <th scope="col" className="font-normal px-6 py-3"></th>
                                 </tr>
                             </thead>
-                            <tbody>{renderJobRows(currentJobs)}</tbody>
+                            <tbody> {loading ? (
+                            // Skeleton UI
+                            [...Array(3)].map((_, index) => (
+                                <tr key={index} className="animate-pulse bg-gray-200 border-b dark:bg-gray-700 dark:border-gray-600">
+                                    <td className="px-6 py-4">
+                                        <div className="h-4 bg-gray-300 rounded w-24"></div>
+                                    </td>
+                                    <td className="px-5 py-4">
+                                        <div className="h-4 bg-gray-300 rounded w-16"></div>
+                                    </td>
+                                    <td className="px-4 py-4">
+                                        <div className="h-4 bg-gray-300 rounded w-20"></div>
+                                    </td>
+                                    <td className="px-4 py-4">
+                                        <div className="h-4 bg-gray-300 rounded w-16"></div>
+                                    </td>
+                                    <td className="px-4 py-4">
+                                        <div className="h-4 bg-gray-300 rounded w-10"></div>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            renderJobRows(currentJobs)
+                        )}
+                        </tbody>
                             </table>
                     </div>
 
