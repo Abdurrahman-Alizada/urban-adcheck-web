@@ -1,14 +1,15 @@
-export default ({ isOpen, onClose, children }) => {
+import React from "react";
+
+const Modal = ({ isOpen, onClose, children }) => {
     if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                <div className=" items-center flex justify-end">
-
+                <div className="flex justify-end">
                     <button
-                        className=" text-gray-500 hover:text-gray-700"
-                        onClick={()=>onClose(!isOpen)}
+                        className="text-gray-500 hover:text-gray-700"
+                        onClick={onClose}
                     >
                         ✕
                     </button>
@@ -18,3 +19,5 @@ export default ({ isOpen, onClose, children }) => {
         </div>
     );
 };
+
+export default Modal;
