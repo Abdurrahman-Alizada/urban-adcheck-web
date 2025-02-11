@@ -9,14 +9,15 @@ import { useDispatch } from 'react-redux';
 import { setUser } from '@/redux/reducers/user/userSlice';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Cookies from 'js-cookie';
+import { ToastContainer,toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [loginUser, { isLoading }] = useLoginUserMutation();
+  const [loginUser, { isLoading , error,isSuccess}] = useLoginUserMutation();
   const {data:currentLoginUser}=useGetCurrentLoginUserQuery();
-
+  console.log("loginuser",error);
   // Formik setup
   const formik = useFormik({
     initialValues: {
@@ -38,16 +39,20 @@ function Login() {
         }).unwrap();
         // Save user info and token in Redux store
         dispatch(setUser(response));
-        console.log('Login successful:', response);
+        // console.log('Login successful:', response);
         localStorage.setItem('userInfo',JSON.stringify(response));
-        // Store user info in cookies
-       Cookies.set('userInfo', JSON.stringify(response), { expires: 1 }); // 1 day expiry
-
         // Redirect to dashboard
+         toast.success('Login Successfull ', {
+          position: 'top-right',
+          autoClose: 2000,
+        });
         router.push(`/dashboard/${response?.role}/overview`);
       } catch (error) {
         console.error('Login failed:', error);
-        alert('Something went wrong');
+        toast.error('Login failed. Please check your credentials.', {
+          position: 'top-right',
+          autoClose: 3000,
+        });
       }
     },
   });
@@ -139,6 +144,7 @@ function Login() {
               </button> 
               
               : 
+
                 <button
                   type="submit"
                   className="bg-primary text-white w-full h-[52px] rounded-[10px]"
@@ -148,14 +154,18 @@ function Login() {
                 </button>
               }  
               </div>
+              {
+                error && <div className="text-red-500 text-center">Incorrect Email or Password</div>
+              }
 
             </form>
-            <div className='flex justify-center mt-2 text-primary'>
+            <div className='flex justify-center mt-2 text-primary cursor-pointer'>
                <span onClick={()=>router.push('/account/forgot-password')}>Forgot Password</span>
-              </div>
+            </div>
           </div>
         </section>
       </div>
+      <ToastContainer/>
     </div>
   );
 }

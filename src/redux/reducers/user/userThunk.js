@@ -67,7 +67,7 @@ export const userApi = createApi({
       })
     }),
     UpdateUser: build.mutation({
-      query: User => ({
+      query: (User) => ({
         url: `/user/self`,
         method: 'PUT',
         body: User,

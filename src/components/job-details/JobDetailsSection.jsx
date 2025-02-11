@@ -17,7 +17,8 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
   const [acceptOrRejectWatchdog] = useAcceptOrRejectWatchdogMutation();
 
   const { data: currentLoginUser, isLoading, error } = useGetCurrentLoginUserQuery();
-
+       console.log(jobDetails, "jobDetails");
+       console.log(currentLoginUser, "currentLoginUser");
   const {
     jobTitle,
     description,
@@ -275,7 +276,7 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
             }
             {
               report.status === "accepted" && (
-                <FeedbackForm />
+                <FeedbackForm jobDetails={jobDetails}/>
               )
             }
           </div>
@@ -472,12 +473,12 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
                   >
                     Chat Now
                   </button>
-                  <button
+                  {/* <button
                     onClick={handleViewDelievery}
                     className="h-8 md:h-12 px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-primary text-white hover:bg-primary"
                   >
                     View Delivery
-                  </button>
+                  </button> */}
                 </div>
               </section>
             ) : (

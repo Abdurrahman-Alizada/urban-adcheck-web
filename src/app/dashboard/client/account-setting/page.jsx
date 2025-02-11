@@ -24,8 +24,8 @@ StatusBadge.displayName = 'StatusBadge';
 
 // Profile Header Component
 const ProfileHeader = memo(({ user, onEditProfile, onEditPassword }) => (
-  <div className="bg-white p-6 rounded-xl shadow-sm">
-    <div className="flex items-start gap-6">
+  <div className="bg-white p-2 md:p-6 rounded-xl shadow-sm">
+    <div className="flex flex-wrap items-start gap-6">
       <div className="relative w-24 h-24">
         <Image
           src="/Avatar-2.png"
@@ -35,7 +35,7 @@ const ProfileHeader = memo(({ user, onEditProfile, onEditPassword }) => (
         />
         <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-green-500 border-2 border-white" />
       </div>
-      <div className="flex-1">
+      <div className="md:flex-1 flex flex-col justify-between">
         <div className="flex justify-between items-start">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">
@@ -45,7 +45,7 @@ const ProfileHeader = memo(({ user, onEditProfile, onEditPassword }) => (
               Member since {new Date(user.createdAt).toLocaleDateString()}
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="md:flex md:flex-wrap gap-2 hidden ">
             <button
               onClick={onEditProfile}
               className="px-4 py-2 rounded-md text-sm font-medium text-white bg-primary hover:bg-secondary transition-colors duration-200"
@@ -60,10 +60,24 @@ const ProfileHeader = memo(({ user, onEditProfile, onEditPassword }) => (
             </button>
           </div>
         </div>
-        <div className="mt-4 flex items-center gap-4">
+        <div className="mt-4 flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2 text-gray-600">
             <TbMail size={18} />
             <span>{user.email}</span>
+          </div>
+          <div className="flex flex-wrap gap-2  md:hidden">
+            <button
+              onClick={onEditProfile}
+              className="px-4 py-2 rounded-md text-sm font-medium text-white bg-primary hover:bg-secondary transition-colors duration-200"
+            >
+              Edit Profile
+            </button>
+            <button
+              onClick={onEditPassword}
+              className="px-4 py-2 rounded-md text-sm font-medium text-white bg-primary hover:bg-secondary transition-colors duration-200"
+            >
+              Edit Password
+            </button>
           </div>
         </div>
       </div>
@@ -79,7 +93,7 @@ const SubscriptionDetails = memo(({ packageDetails }) => {
   const { currentPlan } = packageDetails;
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm">
+    <div className="bg-white p-2 md:p-6 rounded-xl shadow-sm">
       <h3 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
         <TbPackage className="text-blue-500" />
         Subscription Details
@@ -151,7 +165,7 @@ const AccountSettings = () => {
   }
 
   return (
-    <div className="min-h-screen p-6">
+    <div className="min-h-screen p-2 md:p-6">
       <div className="max-w-5xl mx-auto">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Account Settings</h1>
