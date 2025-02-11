@@ -14,7 +14,6 @@ import { transactionsApi } from "./reducers/transactions/transactionThunk";
 import {messagesApi} from "./reducers/messages/messagesThunk"
 import { reviewApi } from "./reducers/reviews/reviewThunk";
 
-
 export const store = configureStore({
   reducer: {
     user: userReducer,
