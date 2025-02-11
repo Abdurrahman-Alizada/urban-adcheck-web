@@ -8,7 +8,12 @@ const nextConfig = {
         // Optionally, you can restrict the matching path and/or port:
         // pathname: '/your-path/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'urban-adcheck-web.vercel.app',
+      },
     ],
+    
   },
 };
 

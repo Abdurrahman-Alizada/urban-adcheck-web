@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useResetPasswordMutation } from '@/redux/reducers/user/userThunk';
+import { data } from 'react-router-dom';
 
 function ManagePassword() {
   const [resetPassword, { isLoading: isUpdating }] = useResetPasswordMutation();
@@ -84,6 +85,7 @@ function ManagePassword() {
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="currentPassword"
+                
                 className="text-[16px] text-gray-800 font-semibold"
               >
                 Current Password
@@ -92,6 +94,7 @@ function ManagePassword() {
                 type="password"
                 name="currentPassword"
                 id="currentPassword"
+                // values={loginUser?.currentPassword}
                 className="text-[16px] text-gray-800 border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
                 autoComplete="current-password"
               />
@@ -113,6 +116,7 @@ function ManagePassword() {
                 type="password"
                 name="newPassword"
                 id="newPassword"
+                // values={loginUser?.newPassword}
                 className="text-[16px] text-gray-800 border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
                 autoComplete="new-password"
               />
@@ -134,6 +138,7 @@ function ManagePassword() {
                 type="password"
                 name="confirmPassword"
                 id="confirmPassword"
+                // values={loginUser?.confirmPassword}
                 className="text-[16px] text-gray-800 border-[1px] px-3 py-3 rounded-[5px] outline-primary focus:border-primary"
                 autoComplete="new-password"
               />
