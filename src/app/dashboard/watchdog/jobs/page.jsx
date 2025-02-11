@@ -380,7 +380,7 @@ const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }
         {activeRow === job._id && (
             <div className="absolute right-3 mt-1 w-[200px] bg-white shadow-lg rounded-md z-50 border">
               <div 
-                onClick={() => router.push(`/dashboard/admin/jobs/${job._id}`)}
+                onClick={() => router.push(`/dashboard/watchdog/my-jobs/${job._id}`)}
                 className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors"
               >
                 <BsEye size={16} className="text-gray-600" />
