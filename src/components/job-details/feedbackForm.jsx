@@ -4,10 +4,10 @@ import * as Yup from "yup";
 import { useState } from "react";
 import { useCreateReviewMutation } from "@/redux/reducers/reviews/reviewThunk";
 
-export default function FeedbackForm({jobDetails,currentLoginUser}) {
+export default function FeedbackForm({jobDetails}) {
   const [submitted, setSubmitted] = useState(false);
   const [createReview, { isLoading }] = useCreateReviewMutation();
-
+  console.log("jobDetails",jobDetails)
   // Formik Setup
   const formik = useFormik({
     initialValues: {
@@ -25,10 +25,21 @@ export default function FeedbackForm({jobDetails,currentLoginUser}) {
     onSubmit: async (values) => {
 
       const data={
-        ratingNumber: values.rating,
-        review: values.feedback,
-        clientId:currentLoginUser._id,
-        job:jobDetails.data._id,
+        numberOfStars: values.rating,
+        reviewText: values.feedback,
+        categories:{
+          communication: 5,
+          quality: 5,
+          timeliness: 4
+        },
+        attachments: [],
+        metadata:{
+          platform: "web",
+          version: "1.2",
+          language: "en",
+          region: "US"
+        },
+        jobId:jobDetails?.data?._id,
       }
       try {
         const res=await createReview(data).unwrap();

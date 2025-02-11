@@ -281,7 +281,7 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
             }
             {
               report.status === "accepted" && (
-                <FeedbackForm jobDetails={jobDetails} currentLoginUser={currentLoginUser}/>
+                <FeedbackForm jobDetails={jobDetails}/>
               )
             }
           </div>

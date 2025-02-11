@@ -13,6 +13,8 @@ import { MdOutlineChat } from "react-icons/md";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { FaBell } from "react-icons/fa6";
 import Notification from '../notification/page';
+import { ToastContainer,toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -90,7 +92,10 @@ function Header() {
       localStorage.removeItem("userInfo")
       // navigate to login/
 
-      
+      toast.success('Logout successful', {
+        position: 'bottom-right',
+        autoClose: 2000,
+      });
       // Navigate to login page and reload
       router.push("/account/login");
       setTimeout(() => {
@@ -109,7 +114,7 @@ function Header() {
   };
 
   return (
-    <>
+    
       <div className=''>
         <header className="w-full z-50 top-0 px-4 lg:px-6 xl:px-10 shadow-custom-shadow flex gap-5 justify-between items-center bg-white">
           {/* Logo Section */}
@@ -171,7 +176,7 @@ currentLoginUser?.role.isWatchDog ? (
             onClick={toggleDropdown}
           />
           {showDropdown && (
-            <div className="absolute -right-10 mt-2 w-32 z-10 bg-white border rounded shadow-lg" ref={dropdownRef}>
+            <div className="absolute right-1 mt-2  w-[200px] z-10 bg-white border rounded shadow-lg" ref={dropdownRef}>
               <ul className="flex flex-col gap-3 px-1 py-2" >
                 <li className="flex items-center gap-4 text-gray-400" >
                   <Link
@@ -187,22 +192,26 @@ currentLoginUser?.role.isWatchDog ? (
                     onClick={SignoutUser}
                     className="cursor-pointer flex items-center gap-2 hover:text-primary"
                   >
+
                     <PiSignOut size={22} />
                     <span className="text-[15.03px]">Sign Out</span>
                   </div>
+                  
                 </li>
+                
               </ul>
             </div>
           )}
+            
         </div>
       </div>
       <div>
-        <button
+        {/* <button
           onClick={handlePostJobClick}
           className="hidden md:inline-block px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-secondary text-white hover:bg-primary"
         >
           Dashboard
-        </button>
+        </button> */}
       </div>
     </div>
   </div>
@@ -237,7 +246,7 @@ currentLoginUser?.role.isWatchDog ? (
             onClick={toggleDropdown}
           />
           {showDropdown && (
-            <div className="absolute right-1 mt-2 w-[200px] z-10 bg-white border rounded shadow-lg">
+            <div className="absolute right-1 mt-2  w-[200px] z-10 bg-white border rounded shadow-lg">
               <ul className='flex flex-col gap-3 px-1 py-2'>
                 <li className="flex items-center gap-4 text-gray-400">
                   <Link href={"/dashboard/client/account-setting"} className="flex items-center gap-2 hover:text-primary">
@@ -278,7 +287,7 @@ currentLoginUser?.role.isWatchDog ? (
                               className="cursor-pointer object-contain"
                             />
                             {showDropdown && (
-                              <div className="absolute -right-14 mt-2 w-46 z-10 bg-white border rounded shadow-lg">
+                              <div className="absolute right-1 mt-2  w-[200px] z-10 bg-white border rounded shadow-lg">
                                 <ul className='flex flex-col gap-3 px-1 py-2'>
                                   <li className="flex items-center gap-4 text-gray-400">
                                     <Link href={"/dashboard/admin/account-setting"} className="flex items-center gap-2 hover:text-primary">
@@ -344,9 +353,10 @@ currentLoginUser?.role.isWatchDog ? (
               </nav>
             </div>
           )}
+          
         </header>
+        <ToastContainer className="z-9999"/>  
       </div>
-    </>
 
   );
 }

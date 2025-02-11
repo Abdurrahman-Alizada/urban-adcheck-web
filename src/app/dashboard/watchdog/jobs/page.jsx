@@ -376,8 +376,6 @@ const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }
           >
             <BsThreeDots size={20} />
           </button>
-          
-         
         </div>
         {activeRow === job._id && (
             <div className="absolute right-3 mt-1 w-[200px] bg-white shadow-lg rounded-md z-50 border">

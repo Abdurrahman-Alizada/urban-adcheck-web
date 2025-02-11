@@ -8,6 +8,7 @@ import { useSignupUserMutation } from "@/redux/reducers/user/userThunk";
 import { useRouter } from "next/navigation"; // Import useRouter for navigation
 import Link from "next/link"; // Use Link for navigation
 
+
 function Signup() {
   const [selectedRole, setSelectedRole] = useState("Client"); // State to manage selected role
   const [showPassword, setShowPassword] = useState();
@@ -306,9 +307,9 @@ function Signup() {
             <div className="flex justify-center">
               <span className="font-nunitosans text-[14px]">
                 Already have an account?{" "}
-                <a href="#" className="text-primary underline font-semibold">
+                <Link href="/account/login" className="text-primary underline font-semibold">
                   Login
-                </a>
+                </Link>
               </span>
             </div>
           </form>

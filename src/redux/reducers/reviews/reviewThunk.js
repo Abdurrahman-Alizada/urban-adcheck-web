@@ -30,13 +30,14 @@ export const reviewApi = createApi({
       }),
       invalidatesTags: ['reviews'],
     }),
-    getReviewByJobID: build.query({
-        query: (data) => `/user/review/${data.jobId}`,
+    getReviewOfJob: build.query({
+        query: (data) => `/user/job/review/${data.jobId}`,
         providesTags: ["reviews"]
       }),
   }),
 });
 
 export const {
-  useCreateReviewMutation
+  useCreateReviewMutation,
+  useGetReviewOfJobQuery,
 } = reviewApi;
