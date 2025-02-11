@@ -138,9 +138,9 @@ const JobFilterComponent = () => {
 
   return (
     <div className="mx-auto p-4 bg-white">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-wrap justify-between items-center mt-6 mb-6">
         <h1 className="text-2xl font-bold">Jobs Managment</h1>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1">
           <button
             onClick={() => setShowFilters(!showFilters)}
             className="flex items-center gap-2 px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"

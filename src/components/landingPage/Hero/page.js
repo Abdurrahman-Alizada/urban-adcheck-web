@@ -1,7 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
-
+import Link from 'next/link';
 function Hero() {
+
   return (
     <section
     className="w-full lg:min-h-screen relative flex flex-col md:flex-row justify-between px-3 md:px-5 lg:px-[80px] py-4 md:py-6 lg:pt-[150px] lg:pb-0"
@@ -42,15 +43,9 @@ function Hero() {
           Hidupkan suasana ruanganmu dengan berbagai produk dan koleksi pilihan furniture tebaik!
           Temukan furniture idamanmu sekarang
         </p>
-        <button className="flex items-center text-[18px] px-12 py-2 rounded-[10px] bg-secondary text-white hover:bg-blue-600">
-          <Image
-            src="/plus.svg"
-            width={35}
-            height={35}
-            alt="Plus Icon"
-            className="object-contain mr-2"
-          />
-          Post an Ad
+        <button 
+        className="flex items-center text-[18px] px-12 py-4  rounded-[10px] bg-secondary text-white">
+          <Link href="/account/signup">Get Started</Link>
         </button>
       </div>
     </div>
