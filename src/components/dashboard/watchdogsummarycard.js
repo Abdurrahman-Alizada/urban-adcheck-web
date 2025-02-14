@@ -25,7 +25,6 @@ const router=useRouter();
         return (
           <div
           onClick={() => router.push(`/dashboard/watchdog/jobs?title=${encodeURIComponent(card.title)}`)}
-
             key={index}
             style={{ backgroundColor: card.bgColor }}
             className="flex justify-between items-center rounded-lg px-4 py-6 cursor-pointer"
