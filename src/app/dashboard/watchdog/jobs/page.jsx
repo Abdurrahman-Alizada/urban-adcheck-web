@@ -4,7 +4,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { BsThreeDots, BsEye, BsCheckCircle, BsSearch } from "react-icons/bs";
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineCancel, MdFilterList } from "react-icons/md";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Select from "react-select";
 import MarkAsExpired from "@/components/dashboard/adminJobs/markAsExpired";
 import DeleteJob from "@/components/dashboard/adminJobs/deleteJob";
@@ -21,6 +21,15 @@ const JobFilterComponent = () => {
   const [showFilters, setShowFilters] = useState(false);
   const router = useRouter();
   const [selectedJobsByStauts, setSelectedJobsByStatus] = useState([]);
+  
+  //extracting title from url
+  const searchParams = useSearchParams();
+  const titleFromURL = searchParams.get("title") || "";
+  // const [title, setTitle] = useState(titleFromURL);
+
+  console.log("titleFromURL", titleFromURL);
+  // console.log("title", title);
+  
 
   const [filters, setFilters] = useState({
     jobsStatus: [],
@@ -68,12 +77,31 @@ const JobFilterComponent = () => {
   };
 
   // Set default status to "available" on initial load
-  useEffect(() => {
-    if (jobsData?.jobsByStatus) {
-      const defaultStatus = { value: "available", label: "Available" };
-      handleJobStatusQuery(defaultStatus);
-    }
-  }, [jobsData]);
+ // Add this near the top of your component where other constants are defined
+const titleToStatusMap = {
+  "In Progress Jobs": { value: "inProgress", label: "inProgress" },
+  "Completed Jobs": { value: "completed", label: "Completed" },
+  "Cancelled Jobs": { value: "cancelled", label: "Cancelled" },
+  "Hidden Jobs": { value: "hidden", label: "Hidden" },
+  "Available Jobs": { value: "available", label: "Available" }
+};
+
+// Then update your useEffect to use this mapping
+useEffect(() => {
+  if (jobsData?.jobsByStatus) {
+    // Get the matching status from the map
+    const statusToUse = titleToStatusMap[titleFromURL] || { value: "available", label: "Available" };
+    
+    // Update filters with the correct status
+    setFilters(prev => ({
+      ...prev,
+      jobsStatus: [statusToUse],
+    }));
+    
+    // Call the query handler with the status
+    handleJobStatusQuery(statusToUse);
+  }
+}, [jobsData, titleFromURL]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
