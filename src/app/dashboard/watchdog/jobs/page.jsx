@@ -1,16 +1,14 @@
 "use client";
 import { useJobbystatusQuery } from "@/redux/reducers/jobs/jobThunk";
 import React, { useState, useMemo, useEffect } from "react";
-import { BsThreeDots, BsEye, BsCheckCircle, BsSearch } from "react-icons/bs";
-import { CiEdit } from "react-icons/ci";
-import { MdOutlineCancel, MdFilterList } from "react-icons/md";
+import { BsSearch } from "react-icons/bs";
+import { MdFilterList } from "react-icons/md";
 import { useRouter, useSearchParams } from "next/navigation";
 import Select from "react-select";
 import MarkAsExpired from "@/components/dashboard/adminJobs/markAsExpired";
 import DeleteJob from "@/components/dashboard/adminJobs/deleteJob";
 import MarkAsApproved from "@/components/dashboard/adminJobs/markAsApproved";
-import moment from "moment";
-import Image from "next/image";
+import JobTableRow from "@/components/dashboard/watchDogJobs/tablerow";
 
 const JobFilterComponent = () => {
   const [activeRow, setActiveRow] = useState(null);
@@ -20,16 +18,19 @@ const JobFilterComponent = () => {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const router = useRouter();
-  const [selectedJobsByStauts, setSelectedJobsByStatus] = useState([]);
+  const [selectedJobsByStatus, setSelectedJobsByStatus] = useState([]);
   
   //extracting title from url
-  const searchParams = useSearchParams();
-  const titleFromURL = searchParams.get("title") || "";
-  // const [title, setTitle] = useState(titleFromURL);
+  // const searchParams = useSearchParams();
+  // const titleFromURL = searchParams.get("title") || "";
 
-  console.log("titleFromURL", titleFromURL);
-  // console.log("title", title);
-  
+
+  const [titleFromURL, setTitleFromURL] = useState("");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setTitleFromURL(params.get("title") || "");
+  }, [router]);
 
   const [filters, setFilters] = useState({
     jobsStatus: [],
@@ -76,32 +77,95 @@ const JobFilterComponent = () => {
     }));
   };
 
-  // Set default status to "available" on initial load
- // Add this near the top of your component where other constants are defined
-const titleToStatusMap = {
-  "In Progress Jobs": { value: "inProgress", label: "inProgress" },
-  "Completed Jobs": { value: "completed", label: "Completed" },
-  "Cancelled Jobs": { value: "cancelled", label: "Cancelled" },
-  "Hidden Jobs": { value: "hidden", label: "Hidden" },
-  "Available Jobs": { value: "available", label: "Available" }
-};
+  const titleToStatusMap = {
+    "In Progress Jobs": { value: "inProgress", label: "inProgress" },
+    "Completed Jobs": { value: "completed", label: "Completed" },
+    "Cancelled Jobs": { value: "cancelled", label: "Cancelled" },
+    "Hidden Jobs": { value: "hidden", label: "Hidden" },
+    "Available Jobs": { value: "available", label: "Available" }
+  };
 
-// Then update your useEffect to use this mapping
-useEffect(() => {
-  if (jobsData?.jobsByStatus) {
-    // Get the matching status from the map
-    const statusToUse = titleToStatusMap[titleFromURL] || { value: "available", label: "Available" };
-    
-    // Update filters with the correct status
-    setFilters(prev => ({
-      ...prev,
-      jobsStatus: [statusToUse],
-    }));
-    
-    // Call the query handler with the status
-    handleJobStatusQuery(statusToUse);
-  }
-}, [jobsData, titleFromURL]);
+  useEffect(() => {
+    if (jobsData?.jobsByStatus) {
+      // Get the matching status from the map
+      const statusToUse = titleToStatusMap[titleFromURL] || { value: "available", label: "Available" };
+      // Update filters with the correct status
+      setFilters(prev => ({
+        ...prev,
+        jobsStatus: [statusToUse],
+      }));
+      // Call the query handler with the status
+      handleJobStatusQuery(statusToUse);
+    }
+  }, [jobsData, titleFromURL]);
+
+  // Apply all filters
+  const filteredJobs = useMemo(() => {
+    return selectedJobsByStatus.filter(job => {
+      // Title filter
+      if (filters.jobTitle && !job.jobTitle.toLowerCase().includes(filters.jobTitle.toLowerCase())) {
+        return false;
+      }
+      
+      // Amount range filter - use parseFloat to handle numeric comparison
+      if (filters.minAmount && (!job.amount || parseFloat(job.amount) < parseFloat(filters.minAmount))) {
+        return false;
+      }
+      if (filters.maxAmount && (!job.amount || parseFloat(job.amount) > parseFloat(filters.maxAmount))) {
+        return false;
+      }
+      
+      // Date range filter
+      if (filters.fromDate && job.createdAt) {
+        const jobDate = new Date(job.createdAt);
+        const fromDate = new Date(filters.fromDate);
+        if (jobDate < fromDate) {
+          return false;
+        }
+      }
+      
+      if (filters.toDate && job.createdAt) {
+        const jobDate = new Date(job.createdAt);
+        const toDate = new Date(filters.toDate);
+        // Set to end of day
+        toDate.setHours(23, 59, 59, 999);
+        if (jobDate > toDate) {
+          return false;
+        }
+      }
+      
+      return true;
+    });
+  }, [selectedJobsByStatus, filters]);
+
+  // Apply sorting
+  const sortedJobs = useMemo(() => {
+    return [...filteredJobs].sort((a, b) => {
+      const { sortBy, sortOrder } = filters;
+      
+      if (sortBy === 'createdAt') {
+        const dateA = new Date(a.createdAt || 0);
+        const dateB = new Date(b.createdAt || 0);
+        return sortOrder === 'ascending' ? dateA - dateB : dateB - dateA;
+      }
+      
+      if (sortBy === 'jobTitle') {
+        const titleA = a.jobTitle || '';
+        const titleB = b.jobTitle || '';
+        return sortOrder === 'ascending' 
+          ? titleA.localeCompare(titleB)
+          : titleB.localeCompare(titleA);
+      }
+      
+      if (sortBy === 'amount') {
+        const amountA = parseFloat(a.amount || 0);
+        const amountB = parseFloat(b.amount || 0);
+        return sortOrder === 'ascending' ? amountA - amountB : amountB - amountA;
+      }
+      
+      return 0;
+    });
+  }, [filteredJobs, filters.sortBy, filters.sortOrder]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -112,6 +176,7 @@ useEffect(() => {
   };
 
   const handleSortChange = (selected) => {
+    if (!selected) return;
     const [sortBy, sortOrder] = selected.value.split("-");
     setFilters((prev) => ({
       ...prev,
@@ -119,10 +184,10 @@ useEffect(() => {
       sortOrder,
     }));
   };
-
+   
   const clearFilters = () => {
     setFilters({
-      jobsStatus: [],
+      jobsStatus: filters.jobsStatus, // Keep the current status selection
       jobTitle: "",
       minAmount: "",
       maxAmount: "",
@@ -131,8 +196,6 @@ useEffect(() => {
       sortBy: "createdAt",
       sortOrder: "descending",
     });
-    // Reset to default "available" status
-    handleJobStatusQuery({ value: "available", label: "Available" });
   };
 
   const togglePopup = (rowId) => {
@@ -272,15 +335,15 @@ useEffect(() => {
 
       <div className="mt-4">
         <h2 className="text-gray-600 mb-4">
-          Total ({selectedJobsByStauts?.length || "0"}) jobs found
+        Total ({sortedJobs.length}) jobs found
         </h2>
 
-        {selectedJobsByStauts?.length > 0 ? (
+        {sortedJobs.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[800px]">
               <JobTableHeader />
               <tbody className="z-50">
-                {selectedJobsByStauts.map((job) => (
+                {sortedJobs.map((job) => (
                   <JobTableRow
                     key={job._id}
                     job={job}
@@ -352,88 +415,4 @@ const getStatusColor = (status) => {
     Expired: "bg-gray-100 text-gray-800"
   };
   return statusColors[status] || "bg-gray-100 text-gray-800";
-};
-
-const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }) => {
-  return (
-    <tr className="border-b hover:bg-gray-50 transition-colors">
-      <td className="p-2">
-        <Image
-          src={job.jobCoverImage ? job.jobCoverImage :"/billboard-square.png"}
-          alt={`${job.jobTitle} image`}
-          width={80}
-          height={80}
-          className="rounded-md object-cover"
-        />
-      </td>
-      <td className="px-6 py-4">
-        <div>
-          <h3 className="font-medium text-gray-900">{job.jobTitle}</h3>
-          <p className="text-sm text-gray-500">
-            Posted {moment(job.createdAt).fromNow()}
-          </p>
-        </div>
-      </td>
-      <td className="px-6 py-4">
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600">{`${job.address.city}, ${job.address.country}`}</span>
-        </div>
-      </td>
-      <td className="px-6 py-4">
-        <div className="flex flex-wrap gap-2">
-          {Object.entries(job.status)
-            .filter(([key, value]) => value === true)
-            .map(([key], idx) => (
-              <span
-                key={idx}
-                className={`px-2 py-1 text-xs rounded-full ${getStatusColor(key.replace("is", ""))}`}
-              >
-                {key.replace("is", "")}
-              </span>
-            ))}
-        </div>
-      </td>
-      <td className="px-6 py-4">
-        <div className="font-medium text-gray-900">{`${job.paymentDetails.amount} ${job.paymentDetails.currency}`}</div>
-      </td>
-      <td className="px-6 py-4">
-        <div className="flex justify-end relative">
-          <button
-            onClick={() => togglePopup(job._id)}
-            className="text-gray-700 bg-[#F5F7FA] hover:bg-[#00AAFF] hover:text-white rounded-md p-2 transition-colors"
-          >
-            <BsThreeDots size={20} />
-          </button>
-        </div>
-        {activeRow === job._id && (
-            <div className="absolute right-3 mt-1 w-[200px] bg-white shadow-lg rounded-md z-50 border">
-              <div 
-                onClick={() => router.push(`/dashboard/watchdog/my-jobs/${job._id}`)}
-                className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors"
-              >
-                <BsEye size={16} className="text-gray-600" />
-                <span className="text-sm text-gray-600">View Details</span>
-              </div>
-        
-              <div 
-                onClick={() => handleApprovePopup(job)}
-                className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors"
-              >
-                {job.status?.isApproved ? (
-                  <>
-                    <MdOutlineCancel size={16} className="text-gray-600" />
-                    <span className="text-sm text-gray-600">Accept Job</span>
-                  </>
-                ) : (
-                  <>
-                    <BsCheckCircle size={16} className="text-gray-600" />
-                    <span className="text-sm text-gray-600">Approve Job</span>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-      </td>
-    </tr>
-  );
 };
