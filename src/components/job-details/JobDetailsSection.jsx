@@ -11,17 +11,16 @@ import { FaStar } from "react-icons/fa";
 import FeedbackForm from "./feedbackForm";
 import { useGetCurrentLoginUserQuery } from "@/redux/reducers/user/userThunk";
 import { useGetReviewOfJobQuery } from "@/redux/reducers/reviews/reviewThunk";
+import FeedbackFormFreelancer from "./feedbackFormFreelancer";
 
 const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
+  console.log("jobdetails",jobDetails)
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [mediaModal, setMediaModal] = useState(false);
   const [acceptOrRejectWatchdog] = useAcceptOrRejectWatchdogMutation();
   //Get query for getReviewOfJob
   const { data: reviewData, isLoading: reviewLoading, error: reviewError } = useGetReviewOfJobQuery(jobDetails?.data?._id);
-  console.log(reviewData, "reviewData");
   const { data: currentLoginUser, isLoading, error } = useGetCurrentLoginUserQuery();
-  console.log(jobDetails, "jobDetails");
-  console.log(currentLoginUser, "currentLoginUser");
   const {
     jobTitle,
     description,
@@ -277,20 +276,26 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
                 </div>
               )
             }
+
+          {/* client review and form  */}
+
             {
-              currentLoginUser?.role?.isClient == true && report.status === "accepted" && reviewData?.reviews[0]?.client?.reviewText?.trim().length === 0
+                !(report.status === "pending") &&
+             (
+              currentLoginUser?.role?.isClient == true && report.status === "accepted" && (reviewData?.reviews[0]?.client?.reviewText || "").trim().length === 0
               ?
                 <FeedbackForm jobDetails={jobDetails} />
                 :
                 <>
                   <div className="flex flex-col justify-start gap-4 mt-4   p-4 rounded-lg bg-white">
                     {
-                      currentLoginUser?.role?.isClient == true ?
-                        <>
+                      currentLoginUser?.role?.isClient == true && (reviewData?.reviews[0]?.client?.reviewText || "").trim().length > 0 &&
+                     (
+                     <>
                           <h3 className="font-bold">My Review</h3>
                           <div className="flex  flex-col gap-2 drop-shadow-md p-4 rounded-lg bg-gray-50">
 
-                          <h3 className="font-semibold">{`${currentLoginUser?.fullName?.firstName || ''} ${currentLoginUser?.fullName?.lastName || ''}`.trim()}</h3>
+                          <h3 className="font-semibold">{`${jobDetails?.data?.personalInfo?.fullName || ''}`.trim()}</h3>
 
                             <p>{reviewData?.reviews[0]?.client?.reviewText}</p>
                             <div className="flex items-center gap-2">
@@ -304,12 +309,16 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
                             </div>
                           </div>
                         </>
-                        :
+                     )
+                    }
+                    {
+                   currentLoginUser?.role?.isWatchDog == true && (reviewData?.reviews[0]?.client?.reviewText || "").trim().length > 10 &&
+                 (
                         <>
                           <h3 className="font-bold">Client Review</h3>
                           <div className="flex  flex-col gap-2 drop-shadow-md p-4 rounded-lg bg-gray-50">
 
-                          <h3 className="font-semibold">{`${currentLoginUser?.fullName?.firstName || ''} ${currentLoginUser?.fullName?.lastName || ''}`.trim()}</h3>
+                          <h3 className="font-semibold">{`${jobDetails?.data?.personalInfo?.fullName || ''}`.trim()}</h3>
 
                             <p>{reviewData?.reviews[0]?.client?.reviewText}</p>
                             <div className="flex items-center gap-2">
@@ -323,31 +332,40 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
                             </div>
                           </div>
                         </>
-
+                 )
                     }
                   </div>
                 </>
+             )
             }
 
+
+          {/* watchdog review and form  */}
             {
-              currentLoginUser?.role?.isWatchDog == true && report.status === "accepted" && reviewData?.reviews[0]?.watchdog?.reviewText?.trim().length === 0
+              !(report.status === "pending") &&  
+                (
+                  !((reviewData?.reviews[0]?.client?.reviewText || "").trim().length === 0) &&
+              (
+              currentLoginUser?.role?.isWatchDog == true && report.status === "accepted" && (reviewData?.reviews[0]?.watchdog?.reviewText || "").trim().length === 0
               ?
-                <FeedbackForm jobDetails={jobDetails} />
+                <FeedbackFormFreelancer jobDetails={jobDetails} reviewData={reviewData} />
                 :
                 <>
-                <div className="flex flex-col justify-start gap-4 mt-4   p-4 rounded-lg bg-white">
+                <div className="flex flex-col justify-start gap-4 mt-4 p-4 rounded-lg bg-white">
                   {
-                    currentLoginUser?.role?.isWatchDog == true ?
+                    (
+                       currentLoginUser?.role?.isWatchDog == true &&
+                       (reviewData?.reviews[0]?.watchdog?.reviewText || "").trim().length > 10 )
+                       &&
+                        (
                       <>
                         <h3 className="font-bold">My Review</h3>
-                        <div className="flex  flex-col gap-2 drop-shadow-md p-4 rounded-lg bg-gray-50">
-
-                        <h3 className="font-semibold">{`${currentLoginUser?.fullName?.firstName || ''} ${currentLoginUser?.fullName?.lastName || ''}`.trim()}</h3>
-
-                          <p>{reviewData?.reviews[0]?.watchdog?.reviewText}</p>
+                        <div className="flex flex-col gap-2 drop-shadow-md p-4 rounded-lg bg-gray-50">
+                        <h3 className="font-semibold">{`${jobDetails?.data?.acceptedBy?.watchdog?.fullName?.firstName || ''} ${jobDetails?.data?.acceptedBy?.watchdog?.fullName?.lastName || ''}`.trim()}</h3>
+                          <p>{reviewData?.reviews[0]?.client?.reviewText}</p>
                           <div className="flex items-center gap-2">
                             {
-                              Array.from({ length: reviewData?.reviews[0]?.watchdog?.numberOfStars }, (_, index) => (
+                              Array.from({ length: reviewData?.reviews[0]?.client?.numberOfStars }, (_, index) => (
                                 <FaStar key={index} size={20} color="#FFD700" />
                               ))
                             }
@@ -355,12 +373,16 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
                           </div>
                         </div>
                       </>
-                      :
+                      )
+                  }
+
+                  {
+                    currentLoginUser?.role?.isClient == true && (reviewData?.reviews[0]?.watchdog?.reviewText || "").trim().length > 10 &&
                       <>
                         <h3 className="font-bold">Freelancer Review</h3>
                         <div className="flex  flex-col gap-2 drop-shadow-md p-4 rounded-lg bg-gray-50">
 
-                        <h3 className="font-semibold">{`${currentLoginUser?.fullName?.firstName || ''} ${currentLoginUser?.fullName?.lastName || ''}`.trim()}</h3>
+                        <h3 className="font-semibold">{`${jobDetails?.data?.acceptedBy?.watchdog?.fullName?.firstName || ''} ${jobDetails?.data?.acceptedBy?.watchdog?.fullName?.lastName || ''}`.trim()}</h3>
 
                           <p>{reviewData?.reviews[0]?.watchdog?.reviewText}</p>
                           <div className="flex items-center gap-2">
@@ -377,6 +399,8 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
                   }
                 </div>
               </>
+        )
+                )
             }
 
            
