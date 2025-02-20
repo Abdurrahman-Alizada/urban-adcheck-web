@@ -4,7 +4,6 @@
     const url = request.url;
     const pathname = request.nextUrl.pathname;
 
-    // Get cookies
     const userInfo = request.cookies.get('userInfo');
     const accessToken = request.cookies.get('accessToken');
     const userRole = request.cookies.get('userRole');
