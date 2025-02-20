@@ -121,7 +121,7 @@ const JobsInfoSection = ({
                 className={`text-[15.04px] border-[1px] px-3 py-3 rounded-[5px] border-gray-300`}
               >
                 <option value="">Select Currency</option>
-                <option value="CAD">$CAD</option>
+                <option value="CAD">CAD</option>
               </Field>
               <ErrorMessage name="paymentDetails.currency" component="div" className="text-red-500 text-sm" />
             </div>

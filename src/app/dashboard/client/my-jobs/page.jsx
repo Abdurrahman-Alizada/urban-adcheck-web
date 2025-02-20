@@ -1,23 +1,15 @@
 "use client";
 import { useJobListQuery } from "@/redux/reducers/jobs/jobThunk";
-import React, { useState, useMemo } from "react";
-import { BsThreeDots, BsEye, BsCheckCircle, BsSearch } from "react-icons/bs";
-import { CiEdit } from "react-icons/ci";
-import { MdOutlineCancel, MdFilterList } from "react-icons/md";
+import React, { useState } from "react";
+import { BsThreeDots, BsEye, BsSearch } from "react-icons/bs";
+import {  MdFilterList } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import Select from "react-select";
-import MarkAsExpired from "@/components/dashboard/adminJobs/markAsExpired";
-import DeleteJob from "@/components/dashboard/adminJobs/deleteJob";
-import MarkAsApproved from "@/components/dashboard/adminJobs/markAsApproved";
 import moment from "moment";
 import Image from "next/image";
 
 const JobFilterComponent = () => {
   const [activeRow, setActiveRow] = useState(null);
-  const [showExpirePopup, setShowExpirePopup] = useState(false);
-  const [showMarkAsApprovePopup, setShowMarkAsApprovedPopup] = useState(false);
-  const [selectedJob, setSelectedJob] = useState(null);
-  const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const router = useRouter();
 
@@ -61,11 +53,10 @@ const JobFilterComponent = () => {
       "Not Approved": "bg-yellow-100 text-yellow-800",
       Completed: "bg-blue-100 text-blue-800",
       Cancelled: "bg-red-100 text-red-800",
-      Expired: "bg-gray-100 text-gray-800"
+      Expired: "bg-gray-100 text-gray-800",
     };
     return statusColors[status] || "bg-gray-100 text-gray-800";
   };
-
 
   const handleJobTypeChange = (e) => {
     const values = e.map((option) => option.value);
@@ -77,7 +68,7 @@ const JobFilterComponent = () => {
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    console.log(name,value)
+    console.log(name, value);
     setFilters((prev) => ({
       ...prev,
       [name]: value,
@@ -110,16 +101,14 @@ const JobFilterComponent = () => {
     setActiveRow((prevRow) => (prevRow === rowId ? null : rowId));
   };
 
-  const handleApprovePopup = (job) => {
-    setSelectedJob(job);
-    setShowMarkAsApprovedPopup(true);
-  };
-
   if (isLoading) {
     return (
       <div className="p-6">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="mb-4 p-6 bg-gray-100 rounded-lg animate-pulse">
+          <div
+            key={i}
+            className="mb-4 p-6 bg-gray-100 rounded-lg animate-pulse"
+          >
             <div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
             <div className="h-4 bg-gray-200 rounded w-1/3"></div>
           </div>
@@ -152,7 +141,8 @@ const JobFilterComponent = () => {
             className="w-48"
             options={sortOptions}
             value={sortOptions.find(
-              option => option.value === `${filters.sortBy}-${filters.sortOrder}`
+              (option) =>
+                option.value === `${filters.sortBy}-${filters.sortOrder}`
             )}
             onChange={handleSortChange}
             placeholder="Sort by"
@@ -164,7 +154,9 @@ const JobFilterComponent = () => {
         <div className="bg-gray-50 p-4 rounded-lg mb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Job Types</label>
+              <label className="text-sm font-medium text-gray-700">
+                Job Types
+              </label>
               <Select
                 isMulti
                 name="jobTypes"
@@ -180,7 +172,9 @@ const JobFilterComponent = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Date Range</label>
+              <label className="text-sm font-medium text-gray-700">
+                Date Range
+              </label>
               <div className="grid grid-cols-2 gap-2">
                 <input
                   type="date"
@@ -200,7 +194,9 @@ const JobFilterComponent = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Amount Range</label>
+              <label className="text-sm font-medium text-gray-700">
+                Amount Range
+              </label>
               <div className="grid grid-cols-2 gap-2">
                 <input
                   type="number"
@@ -232,7 +228,10 @@ const JobFilterComponent = () => {
                 onChange={handleFilterChange}
                 className="w-full pl-10 py-2 border rounded bg-white"
               />
-              <BsSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+              <BsSearch
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                size={16}
+              />
             </div>
             <button
               onClick={clearFilters}
@@ -245,7 +244,9 @@ const JobFilterComponent = () => {
       )}
 
       <div className="mt-4">
-        <h2 className="text-gray-600 mb-4">Total ({totalJobs || "0"}) jobs found</h2>
+        <h2 className="text-gray-600 mb-4">
+          Total ({totalJobs || "0"}) jobs found
+        </h2>
 
         {jobs.length > 0 ? (
           <div className="overflow-x-auto">
@@ -258,7 +259,6 @@ const JobFilterComponent = () => {
                     job={job}
                     activeRow={activeRow}
                     togglePopup={togglePopup}
-                    handleApprovePopup={handleApprovePopup}
                     router={router}
                     getStatusColor={getStatusColor}
                   />
@@ -268,37 +268,12 @@ const JobFilterComponent = () => {
           </div>
         ) : (
           <div className="text-center py-8">
-            <p className="text-gray-500">No jobs found. Try adjusting your filters.</p>
+            <p className="text-gray-500">
+              No jobs found. Try adjusting your filters.
+            </p>
           </div>
         )}
       </div>
-
-      {/* Mark as Approved Modal */}
-      {showMarkAsApprovePopup && (
-        <MarkAsApproved
-          selectedJob={selectedJob}
-          setShowMarkAsApprovedPopup={setShowMarkAsApprovedPopup}
-        />
-
-      )}
-
-      {/* Mark as Expired Modal */}
-      {showExpirePopup && (
-        <MarkAsExpired
-          selectedJob={selectedJob}
-          setShowExpirePopup={setShowExpirePopup}
-        />
-
-      )}
-
-      {/* Delete Job Modal */}
-      {showDeletePopup && (
-        <DeleteJob
-          selectedJob={selectedJob}
-          setShowDeletePopup={setShowDeletePopup}
-        />
-
-      )}
 
     </div>
   );
@@ -306,22 +281,33 @@ const JobFilterComponent = () => {
 
 export default JobFilterComponent;
 
-
 const JobTableHeader = () => {
   return (
     <thead>
       <tr className="border-b">
-        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Image</th>
-        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Job Title</th>
-        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Location</th>
-        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Status</th>
-        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Amount</th>
+        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">
+          Image
+        </th>
+        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">
+          Job Title
+        </th>
+        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">
+          Location
+        </th>
+        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">
+          Status
+        </th>
+        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">
+          Amount
+        </th>
+        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">
+          Pay Status
+        </th>
         <th className="px-6 py-3 text-left text-sm font-medium text-gray-500"></th>
       </tr>
     </thead>
   );
 };
-
 
 const getStatusColor = (status) => {
   const statusColors = {
@@ -330,18 +316,22 @@ const getStatusColor = (status) => {
     "Not Approved": "bg-yellow-100 text-yellow-800",
     Completed: "bg-blue-100 text-blue-800",
     Cancelled: "bg-red-100 text-red-800",
-    Expired: "bg-gray-100 text-gray-800"
+    Expired: "bg-gray-100 text-gray-800",
   };
   return statusColors[status] || "bg-gray-100 text-gray-800";
 };
 
-
-const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }) => {
+const JobTableRow = ({
+  job,
+  activeRow,
+  togglePopup,
+  router,
+}) => {
   return (
     <tr className="border-b hover:bg-gray-50 transition-colors">
       <td className="p-2">
         <Image
-          src={job.jobCoverImage ? job.jobCoverImage :"/billboard-square.png"}
+          src={job.jobCoverImage ? job.jobCoverImage : "/billboard-square.png"}
           alt={`${job.jobTitle} image`}
           width={80}
           height={80}
@@ -368,7 +358,9 @@ const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }
             .map(([key], idx) => (
               <span
                 key={idx}
-                className={`px-2 py-1 text-xs rounded-full ${getStatusColor(key.replace("is", ""))}`}
+                className={`px-2 py-1 text-xs rounded-full ${getStatusColor(
+                  key.replace("is", "")
+                )}`}
               >
                 {key.replace("is", "")}
               </span>
@@ -379,6 +371,11 @@ const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }
         <div className="font-medium text-gray-900">{`${job.paymentDetails.amount} ${job.paymentDetails.currency}`}</div>
       </td>
       <td className="px-6 py-4">
+        <div className="font-medium text-gray-900">
+          {job.paymentDetails?.status || "Pending"}
+        </div>
+      </td>
+      <td className="px-6 py-4">
         <div className="flex justify-end relative">
           <button
             onClick={() => togglePopup(job._id)}
@@ -386,39 +383,20 @@ const JobTableRow = ({ job, activeRow, togglePopup, handleApprovePopup, router }
           >
             <BsThreeDots size={20} />
           </button>
-        
         </div>
         {activeRow === job._id && (
-            <div className="absolute  right-10 mt-1 w-[200px] bg-white shadow-lg rounded-md z-50 border">
-              <div 
-                onClick={() => router.push(`/dashboard/client/my-jobs/${job._id}`)}
-                className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors"
-              >
-                <BsEye size={16} className="text-gray-600" />
-                <span className="text-sm text-gray-600">View Details</span>
-              </div>
-              <div className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors">
-                <CiEdit size={16} className="text-gray-600" />
-                <span className="text-sm text-gray-600">Edit Job</span>
-              </div>
-              <div 
-                onClick={() => handleApprovePopup(job)}
-                className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors"
-              >
-                {job.status?.isApproved ? (
-                  <>
-                    <MdOutlineCancel size={16} className="text-gray-600" />
-                    <span className="text-sm text-gray-600">Disapprove Job</span>
-                  </>
-                ) : (
-                  <>
-                    <BsCheckCircle size={16} className="text-gray-600" />
-                    <span className="text-sm text-gray-600">Approve Job</span>
-                  </>
-                )}
-              </div>
+          <div className="absolute  right-10 mt-1 w-[200px] bg-white shadow-lg rounded-md z-50 border">
+            <div
+              onClick={() =>
+                router.push(`/dashboard/client/my-jobs/${job._id}`)
+              }
+              className="flex items-center gap-2 hover:bg-[#E8F7FF] p-3 cursor-pointer transition-colors"
+            >
+              <BsEye size={16} className="text-gray-600" />
+              <span className="text-sm text-gray-600">View Details</span>
             </div>
-          )}
+          </div>
+        )}
       </td>
     </tr>
   );
