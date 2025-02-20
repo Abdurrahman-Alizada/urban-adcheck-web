@@ -2,23 +2,28 @@
 
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Image from "next/image";
 import { useLoginUserMutation } from "@/redux/reducers/user/userThunk";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/reducers/user/userSlice";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
 
 function Login() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const dispatch = useDispatch();
+  const [from, setFrom] = useState("")
   const [loginUser, { isLoading, error }] = useLoginUserMutation();
+
+   useEffect(() => {
+      const params = new URLSearchParams(window.location.search);
+      setFrom(params.get("from") || "");
+    }, [router]);
 
   const formik = useFormik({
     initialValues: {
@@ -55,8 +60,6 @@ function Login() {
           autoClose: 2000,
         });
 
-        // Handle redirect
-        const from = searchParams.get('from');
         if (from) {
           router.push(decodeURIComponent(from));
         } else {
