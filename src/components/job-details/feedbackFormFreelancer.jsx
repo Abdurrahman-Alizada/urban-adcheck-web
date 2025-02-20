@@ -2,13 +2,12 @@ import { useCreateJobMutation } from "@/redux/reducers/jobs/jobThunk";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
-import { useCreateReviewMutation } from "@/redux/reducers/reviews/reviewThunk";
+import { useUpdateReviewByWatchdogMutation } from "@/redux/reducers/reviews/reviewThunk";
 
-export default function FeedbackForm({jobDetails}) {
+export default function FeedbackFormFreelancer({jobDetails,reviewData}) {
   const [submitted, setSubmitted] = useState(false);
-  const [createReview, { isLoading }] = useCreateReviewMutation();
-  console.log("jobDetails",jobDetails)
-  // Formik Setup
+  const [updateReviewByWatchdog, { isLoading }] = useUpdateReviewByWatchdogMutation();
+console.log("hello", reviewData)  // Formik Setup
   const formik = useFormik({
     initialValues: {
       feedback: "",
@@ -25,26 +24,18 @@ export default function FeedbackForm({jobDetails}) {
     onSubmit: async (values) => {
 
       const data={
+        reviewId:reviewData?.reviews[0]?._id,
+        info: {
         numberOfStars: values.rating,
-        reviewText: values.feedback,
-        categories:{
-          communication: 5,
-          quality: 5,
-          timeliness: 4
-        },
-        attachments: [],
-        metadata:{
-          platform: "web",
-          version: "1.2",
-          language: "en", 
-          region: "US"
-        },
-        jobId:jobDetails?.data?._id,
+        reviewText: values.feedback
+        }
       }
       try {
-        const res=await createReview(data).unwrap();
-        console.log("res",res)
+       await updateReviewByWatchdog(data).then((res) => {
+        console.log("Notification status updated:", res);
         setSubmitted(true);
+       })
+      console.log("id",reviewData)
       } catch (error) {
         console.error("Submission failed:", error);
       }
@@ -53,7 +44,7 @@ export default function FeedbackForm({jobDetails}) {
 
   return (
     <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded-lg shadow-md border border-gray-200">
-      {!submitted ? (
+      {!submitted &&  (
         <>
           <h1 className="text-2xl font-bold text-gray-800 mb-4">Leave your review</h1>
           <form onSubmit={formik.handleSubmit}>
@@ -109,12 +100,9 @@ export default function FeedbackForm({jobDetails}) {
             </button>
           </form>
         </>
-      ) : (
-        <div className="text-center">
-          <h2 className="text-primary text-lg font-medium">Feedback Submitted!</h2>
-          <p className="text-gray-700 mt-2">Thank you for your feedback.</p>
-        </div>
-      )}
+    ) }
     </div>
   );
 }
+
+

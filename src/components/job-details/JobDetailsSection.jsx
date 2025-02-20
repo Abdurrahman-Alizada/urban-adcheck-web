@@ -10,17 +10,17 @@ import { FaS } from "react-icons/fa6";
 import { FaStar } from "react-icons/fa";
 import FeedbackForm from "./feedbackForm";
 import { useGetCurrentLoginUserQuery } from "@/redux/reducers/user/userThunk";
+import { useGetReviewOfJobQuery } from "@/redux/reducers/reviews/reviewThunk";
+import FeedbackFormFreelancer from "./feedbackFormFreelancer";
 
 const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
+  console.log("jobdetails",jobDetails)
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [mediaModal, setMediaModal] = useState(false);
   const [acceptOrRejectWatchdog] = useAcceptOrRejectWatchdogMutation();
 
-  const {
-    data: currentLoginUser,
-    isLoading,
-    error,
-  } = useGetCurrentLoginUserQuery();
+  const { data: reviewData, isLoading: reviewLoading, error: reviewError } = useGetReviewOfJobQuery(jobDetails?.data?._id);
+  const { data: currentLoginUser, isLoading, error } = useGetCurrentLoginUserQuery();
 
   const {
     jobTitle,
@@ -259,8 +259,9 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
               )}
             </div>
 
-            {report.status === "pending" &&
-              currentLoginUser?.role?.isClient == true && (
+
+            {
+              report.status === "pending" && currentLoginUser?.role?.isClient == true && (
                 <div className="flex justify-start gap-4 mt-4">
                   <button
                     onClick={rejectDelivery}
@@ -275,10 +276,136 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
                     Accept Delivery
                   </button>
                 </div>
-              )}
-            {report.status === "accepted" && (
-              <FeedbackForm jobDetails={jobDetails} />
-            )}
+
+              )
+            }
+
+          {/* client review and form  */}
+
+            {
+                !(report.status === "pending") &&
+             (
+              currentLoginUser?.role?.isClient == true && report.status === "accepted" && (reviewData?.reviews[0]?.client?.reviewText || "").trim().length === 0
+              ?
+                <FeedbackForm jobDetails={jobDetails} />
+                :
+                <>
+                  <div className="flex flex-col justify-start gap-4 mt-4   p-4 rounded-lg bg-white">
+                    {
+                      currentLoginUser?.role?.isClient == true && (reviewData?.reviews[0]?.client?.reviewText || "").trim().length > 0 &&
+                     (
+                     <>
+                          <h3 className="font-bold">My Review</h3>
+                          <div className="flex  flex-col gap-2 drop-shadow-md p-4 rounded-lg bg-gray-50">
+
+                          <h3 className="font-semibold">{`${jobDetails?.data?.personalInfo?.fullName || ''}`.trim()}</h3>
+
+                            <p>{reviewData?.reviews[0]?.client?.reviewText}</p>
+                            <div className="flex items-center gap-2">
+                              {
+                                Array.from({ length: reviewData?.reviews[0]?.client?.numberOfStars }, (_, index) => (
+                                  <FaStar key={index} size={20} color="#FFD700" />
+                                ))
+                              }
+                              <span>{reviewData?.reviews[0]?.client?.numberOfStars}</span>
+
+                            </div>
+                          </div>
+                        </>
+                     )
+                    }
+                    {
+                   currentLoginUser?.role?.isWatchDog == true && (reviewData?.reviews[0]?.client?.reviewText || "").trim().length > 10 &&
+                 (
+                        <>
+                          <h3 className="font-bold">Client Review</h3>
+                          <div className="flex  flex-col gap-2 drop-shadow-md p-4 rounded-lg bg-gray-50">
+
+                          <h3 className="font-semibold">{`${jobDetails?.data?.personalInfo?.fullName || ''}`.trim()}</h3>
+
+                            <p>{reviewData?.reviews[0]?.client?.reviewText}</p>
+                            <div className="flex items-center gap-2">
+                              {
+                                Array.from({ length: reviewData?.reviews[0]?.client?.numberOfStars }, (_, index) => (
+                                  <FaStar key={index} size={20} color="#FFD700" />
+                                ))
+                              }
+                              <span>{reviewData?.reviews[0]?.client?.numberOfStars}</span>
+
+                            </div>
+                          </div>
+                        </>
+                 )
+                    }
+                  </div>
+                </>
+             )
+            }
+
+
+          {/* watchdog review and form  */}
+            {
+              !(report.status === "pending") &&  
+                (
+                  !((reviewData?.reviews[0]?.client?.reviewText || "").trim().length === 0) &&
+              (
+              currentLoginUser?.role?.isWatchDog == true && report.status === "accepted" && (reviewData?.reviews[0]?.watchdog?.reviewText || "").trim().length === 0
+              ?
+                <FeedbackFormFreelancer jobDetails={jobDetails} reviewData={reviewData} />
+                :
+                <>
+                <div className="flex flex-col justify-start gap-4 mt-4 p-4 rounded-lg bg-white">
+                  {
+                    (
+                       currentLoginUser?.role?.isWatchDog == true &&
+                       (reviewData?.reviews[0]?.watchdog?.reviewText || "").trim().length > 10 )
+                       &&
+                        (
+                      <>
+                        <h3 className="font-bold">My Review</h3>
+                        <div className="flex flex-col gap-2 drop-shadow-md p-4 rounded-lg bg-gray-50">
+                        <h3 className="font-semibold">{`${jobDetails?.data?.acceptedBy?.watchdog?.fullName?.firstName || ''} ${jobDetails?.data?.acceptedBy?.watchdog?.fullName?.lastName || ''}`.trim()}</h3>
+                          <p>{reviewData?.reviews[0]?.client?.reviewText}</p>
+                          <div className="flex items-center gap-2">
+                            {
+                              Array.from({ length: reviewData?.reviews[0]?.client?.numberOfStars }, (_, index) => (
+                                <FaStar key={index} size={20} color="#FFD700" />
+                              ))
+                            }
+                            <span>{reviewData?.reviews[0]?.watchdog?.numberOfStars}</span>
+                          </div>
+                        </div>
+                      </>
+                      )
+                  }
+
+                  {
+                    currentLoginUser?.role?.isClient == true && (reviewData?.reviews[0]?.watchdog?.reviewText || "").trim().length > 10 &&
+                      <>
+                        <h3 className="font-bold">Freelancer Review</h3>
+                        <div className="flex  flex-col gap-2 drop-shadow-md p-4 rounded-lg bg-gray-50">
+
+                        <h3 className="font-semibold">{`${jobDetails?.data?.acceptedBy?.watchdog?.fullName?.firstName || ''} ${jobDetails?.data?.acceptedBy?.watchdog?.fullName?.lastName || ''}`.trim()}</h3>
+
+                          <p>{reviewData?.reviews[0]?.watchdog?.reviewText}</p>
+                          <div className="flex items-center gap-2">
+                            {
+                              Array.from({ length: reviewData?.reviews[0]?.watchdog?.numberOfStars }, (_, index) => (
+                                <FaStar key={index} size={20} color="#FFD700" />
+                              ))
+                            }
+                            <span>{reviewData?.reviews[0]?.watchdog?.numberOfStars}</span>
+
+                          </div>
+                        </div>
+                      </>
+                  }
+                </div>
+              </>
+        )
+                )
+            }
+
           </div>
         );
       })}
@@ -417,64 +544,62 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
                 <span className="text-gray-600">Total:</span>
                 <span className="font-semibold">
                   ${paymentDetails?.totalAmount}
+
                 </span>
               </p>
             </div>
           </section>
 
-          {currentLoginUser?.role?.isWatchDog == true &&
-          acceptedBy?.watchdog ? (
-            // Client Information
-            <section className="bg-white p-6 rounded-lg shadow-sm">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-gray-800">
-                  Client Information
-                </h2>
-              </div>
-              <div className="space-y-2">
-                <p className="flex justify-between">
-                  <span className="text-gray-600">Name:</span>
-                  <span>{personalInfo?.fullName || "N/A"}</span>
-                </p>
-                <p className="flex justify-between">
-                  <span className="text-gray-600">Email:</span>
-                  <span>{personalInfo?.email || "N/A"}</span>
-                </p>
-                <p className="flex justify-between">
-                  <span className="text-gray-600">Phone:</span>
-                  <span>{phoneNumber?.primary || "N/A"}</span>
-                </p>
-              </div>
-            </section>
-          ) : currentLoginUser?.role?.isClient == true ? (
-            // Watchdog Information
-            <section className="bg-white p-6 rounded-lg shadow-sm">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">
-                Watchdog Information
-              </h2>
-              <div className="space-y-2">
-                <p className="flex justify-between">
-                  <span className="text-gray-600">Name:</span>
-                  <span>
-                    {acceptedBy?.watchdog?.fullName?.firstName || "N/A"}{" "}
-                    {acceptedBy?.watchdog?.fullName?.lastName || "N/A"}
-                  </span>
-                </p>
-                <p className="flex justify-between">
-                  <span className="text-gray-600">Email:</span>
-                  <span>{acceptedBy?.watchdog?.email || "N/A"}</span>
-                </p>
-                <p className="flex justify-between">
-                  <span className="text-gray-600">Phone:</span>
-                  <span>{acceptedBy?.watchdog?.phoneNumber || "N/A"}</span>
-                </p>
-                <button
-                  onClick={handleChatModal}
-                  className="h-8 md:h-12 px-3 md:px-6 py-2 text-xl rounded-[10px] bg-secondary text-white hover:bg-primary"
-                >
-                  Chat Now
-                </button>
-                {/* <button
+          {
+            currentLoginUser?.role?.isWatchDog == true && acceptedBy?.watchdog ? (
+              // Client Information
+              <section className="bg-white p-6 rounded-lg shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-bold text-gray-800">Client Information</h2>
+                </div>
+                <div className="space-y-2">
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">Name:</span>
+                    <span>{personalInfo?.fullName || "N/A"}</span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">Email:</span>
+                    <span>{personalInfo?.email || "N/A"}</span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">Phone:</span>
+                    <span>{phoneNumber?.primary || "N/A"}</span>
+                  </p>
+                </div>
+              </section>
+            ) : currentLoginUser?.role?.isClient == true ? (
+              // Watchdog Information
+              <section className="bg-white p-6 rounded-lg shadow-sm">
+                <h2 className="text-xl font-bold text-gray-800 mb-4">Watchdog Information</h2>
+                <div className="space-y-2">
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">Name:</span>
+                    <span>
+                      {acceptedBy?.watchdog?.fullName?.firstName || "N/A"}{" "}
+                      {acceptedBy?.watchdog?.fullName?.lastName || "N/A"}
+                    </span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">Email:</span>
+                    <span>{acceptedBy?.watchdog?.email || "N/A"}</span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">Phone:</span>
+                    <span>{acceptedBy?.watchdog?.phoneNumber || "N/A"}</span>
+                  </p>
+                  <button
+                    onClick={handleChatModal}
+                    className="h-8 md:h-12 px-3 md:px-6 py-2 text-xl rounded-[10px] bg-secondary text-white hover:bg-primary"
+                  >
+                    Chat Now
+                  </button>
+                  {/* <button
+
                     onClick={handleViewDelievery}
                     className="h-8 md:h-12 px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-primary text-white hover:bg-primary"
                   >
@@ -513,6 +638,7 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
                   <h2 className="text-xl font-bold text-gray-800 mb-4">
                     Watchdog Information
                   </h2>
+
                   <div className="space-y-2">
                     <p className="flex justify-between">
                       <span className="text-gray-600">Name:</span>

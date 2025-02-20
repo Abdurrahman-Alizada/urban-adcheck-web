@@ -30,14 +30,24 @@ export const reviewApi = createApi({
       }),
       invalidatesTags: ['reviews'],
     }),
+
+
+    updateReviewByWatchdog: build.mutation({
+      query: (data) => ({
+        url: `/user/review/${data?.reviewId}`,
+        method: 'PUT',
+        body: data.info,
+      })
+    }),
     getReviewOfJob: build.query({
-        query: (data) => `/user/job/review/${data.jobId}`,
-        providesTags: ["reviews"]
-      }),
+      query: (jobId) => `/user/job/review/${jobId}`,
+      providesTags: ["reviews"]
+    }),
   }),
 });
 
 export const {
   useCreateReviewMutation,
   useGetReviewOfJobQuery,
+  useUpdateReviewByWatchdogMutation
 } = reviewApi;
