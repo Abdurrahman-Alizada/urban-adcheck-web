@@ -1,53 +1,59 @@
-"use client"
+"use client";
 
-import React, { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import React, { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import { FaBell } from "react-icons/fa6";
 import { GoGear } from "react-icons/go";
 import { PiSignOut } from "react-icons/pi";
-import { useRouter } from 'next/navigation';
-import { useGetCurrentLoginUserQuery, useSignOutUserMutation } from '@/redux/reducers/user/userThunk';
-import Notification from '../notification/page';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from "next/navigation";
+import {
+  useGetCurrentLoginUserQuery,
+  useSignOutUserMutation,
+} from "@/redux/reducers/user/userThunk";
+import Notification from "../notification/page";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import Cookies from "js-cookie";
+import { MdDashboard } from "react-icons/md";
 
 const navItems = [
-  { href: '/about', label: 'About us' },
-  { href: '/Pricing', label: 'Services' },
-  { href: '/faq', label: 'FAQ' },
-  { href: '/contact', label: 'Contact' },
+  { href: "/about", label: "About us" },
+  { href: "/Pricing", label: "Services" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/contact", label: "Contact" },
 ];
 
 const Header = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [MenuOpen, setMenuOpen] = useState(false);
-  
+
   const dropdownRef = useRef(null);
   const notificationRef = useRef(null);
   const router = useRouter();
   const [signOutUser] = useSignOutUserMutation();
   const { data: currentLoginUser } = useGetCurrentLoginUserQuery();
 
-  const userRole = currentLoginUser?.role;
-
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false);
       }
-      
-      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
         setShowNotifications(false);
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -70,9 +76,12 @@ const Header = () => {
   const SignoutUser = async () => {
     try {
       await signOutUser();
+      Cookies.remove("userInfo");
+      Cookies.remove("userRole");
+      Cookies.remove("accessToken");
       localStorage.removeItem("userInfo");
-      toast.success('Logout successful', {
-        position: 'bottom-right',
+      toast.success("Logout successful", {
+        position: "bottom-right",
         autoClose: 2000,
       });
       router.push("/account/login");
@@ -85,10 +94,27 @@ const Header = () => {
   const UserDropdown = () => (
     <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 z-50">
       <div className="py-2">
-        <Link 
-          href={currentLoginUser?.role.isClient ? "/dashboard/client/account-setting" : 
-                currentLoginUser?.role.isWatchDog ? "/dashboard/watchdog/account-settings" :
-                "/dashboard/admin/account-setting"}
+        <Link
+          href={
+            currentLoginUser?.role.isClient
+              ? "/dashboard/client/overview"
+              : currentLoginUser?.role.isWatchDog
+              ? "/dashboard/watchdog/overview"
+              : "/dashboard/admin/overview"
+          }
+          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+        >
+          <MdDashboard className="mr-2" size={18} />
+          Dashboard
+        </Link>
+        <Link
+          href={
+            currentLoginUser?.role.isClient
+              ? "/dashboard/client/account-setting"
+              : currentLoginUser?.role.isWatchDog
+              ? "/dashboard/watchdog/account-settings"
+              : "/dashboard/admin/account-setting"
+          }
           className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
         >
           <GoGear className="mr-2" size={18} />
@@ -143,7 +169,7 @@ const Header = () => {
                   onClick={handleNotification}
                 />
                 {showNotifications && (
-                  <Notification 
+                  <Notification
                     setShowNotifications={setShowNotifications}
                     notifications={currentLoginUser?.notifications || []}
                   />
@@ -186,9 +212,9 @@ const Header = () => {
           )}
 
           <div className="lg:hidden">
-            <FontAwesomeIcon 
-              icon={faBars} 
-              size={40} 
+            <FontAwesomeIcon
+              icon={faBars}
+              size={40}
               className="cursor-pointer"
               onClick={openSidebarMenu}
             />
@@ -200,20 +226,20 @@ const Header = () => {
       {MenuOpen && (
         <div className="w-3/5 z-10 md:w-2/5 max-h-svh lg:hidden fixed inset-0 bg-opacity-80 bg-black">
           <div className="relative">
-            <FontAwesomeIcon 
-              icon={faCircleXmark} 
-              size="xl" 
-              color="white" 
-              className="cursor-pointer absolute right-2 top-2" 
-              onClick={closeSidebarMenu} 
+            <FontAwesomeIcon
+              icon={faCircleXmark}
+              size="xl"
+              color="white"
+              className="cursor-pointer absolute right-2 top-2"
+              onClick={closeSidebarMenu}
             />
           </div>
           <nav className="z-10">
             <ul className="flex z-10 flex-col gap-3 p-6 text-white font-medium">
               {navItems.map((item) => (
                 <li key={item.href}>
-                  <Link 
-                    href={item.href} 
+                  <Link
+                    href={item.href}
                     className="hover:text-secondary font-NotoSans text-[18px] leading-6"
                   >
                     {item.label}
@@ -224,7 +250,7 @@ const Header = () => {
           </nav>
         </div>
       )}
-      
+
       <ToastContainer className="z-9999" />
     </div>
   );

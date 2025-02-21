@@ -29,7 +29,7 @@ const FinancialTransactions = () => {
   const stats = [
     { 
       label: 'Total Amount', 
-      value: `$${overview.totalAmount}`,
+      value: `$${overview.totalAmount?.toFixed(2)}`,
       icon: <BiDollar size={24} />,
       gradient: 'from-blue-500/20 to-blue-600/20',
       textColor: 'text-blue-600'
