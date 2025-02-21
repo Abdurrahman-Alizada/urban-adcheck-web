@@ -19,12 +19,6 @@ const JobFilterComponent = () => {
   const [showFilters, setShowFilters] = useState(false);
   const router = useRouter();
   const [selectedJobsByStatus, setSelectedJobsByStatus] = useState([]);
-  
-  //extracting title from url
-  // const searchParams = useSearchParams();
-  // const titleFromURL = searchParams.get("title") || "";
-
-
   const [titleFromURL, setTitleFromURL] = useState("");
 
   useEffect(() => {
