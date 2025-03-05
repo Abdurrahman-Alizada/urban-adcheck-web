@@ -34,14 +34,14 @@ function Hero() {
       {/* Heading and Floating Image */}
       <div className="relative mb-2">
         <h2 className="text-[30px] md:text-[35px] lg:text-[60px] font-bold font-NotoSans text-white leading-[70px]">
-          URBAN-AdCHECK
+URBAN-AdCHECK
         </h2>
       </div>
       {/* Description and Button */}
       <div>
         <p className="max-w-[480px] text-white font-NotoSans text-[16px] md:text-[18px] lg:text-[20px] mb-6 leading-6 md:leading-8">
-          Hidupkan suasana ruanganmu dengan berbagai produk dan koleksi pilihan furniture tebaik!
-          Temukan furniture idamanmu sekarang
+        Discover how Urban AdCheck revolutionizes ad monitoring with a simple, efficient way to keep billboards, digital displays, and signage in top condition.
+
         </p>
         <button 
         className="flex items-center text-[18px] px-12 py-4  rounded-[10px] bg-secondary text-white">
