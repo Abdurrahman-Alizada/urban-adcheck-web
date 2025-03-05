@@ -92,13 +92,13 @@ function Login() {
         <section className="relative z-[1] w-[100%] shadow-custom-shadow px-6 pt-10 pb-10 bg-white">
           <div className="flex gap-1 items-center justify-center">
             <Image src={"/favicon.png"} width={30} height={30} alt="Favicon" />
-            <h2 className="text-grayColor font-bold">Urban Adcheck</h2>
+            <h2 className="text-grayColor font-bold">Urban AdCheck
+            </h2>
           </div>
           <div className="mt-8">
-            <h2 className="font-nunitosans">Welcome to UAC! 👋</h2>
+            <h2 className="font-nunitosans">Welcome to UAC 👋</h2>
             <span className="font-nunitosans text-[14px] text-grayColor">
-              Please sign in to your account and start the adventure
-            </span>
+            Sign in to start your journey!            </span>
           </div>
           <div className="mt-6">
             <form
