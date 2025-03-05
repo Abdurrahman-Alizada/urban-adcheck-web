@@ -29,7 +29,7 @@ function Footer() {
         {/* Text Section */}
         <div className=" md:max-w-[50%] text-center">
           <h2 className="text-white font-extrabold mb-5 mt-3 text-[22.86px] lg:text-[30.86px] font-nunitosans leading-7 lg:leading-10">
-            Subscribe our Newsletter 
+          Subscribe to Our Newsletter
           </h2>
         </div>
 
@@ -57,8 +57,9 @@ function Footer() {
               </h2>
             </div>
             <p className="text-[#585858] font-nunitosans font-normal text-[16px]">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua.
+            Empowering businesses with real-time insights on advertising displays while creating earning opportunities
+             for watchdogs. Ensuring visibility, 
+            functionality, and cleanliness—one display at a time.
             </p>
             {/* Social Media */}
             <div className="flex gap-4 mt-4">
@@ -125,7 +126,7 @@ function Footer() {
                      <FontAwesomeIcon icon={faLocationDot} size="lg" href='#'/>
                </div>
                <p className="text-white font-nunitosans font-normal text-[17px]">
-               Address: 123 Street, City, Country
+               Headquarters: Toronto, Ontario, Canada
                </p> 
             </div>
             <div className='flex justify-start items-center gap-4'>
@@ -142,8 +143,7 @@ function Footer() {
                      <FontAwesomeIcon icon={faEnvelope} size="lg" href='#'/>
                </div>
                <div className='flex flex-col'>
-                  <p className="text-white font-nunitosans font-normal text-[17px]">Email: info@domain.com</p>
-                  <p className="text-white font-nunitosans font-normal text-[17px]">Email: info@domain.com</p>
+                  <p className="text-white font-nunitosans font-normal text-[17px]">Email: UrbanAdCheck@protonmail.com</p>
                 </div>  
             </div>
           </div>

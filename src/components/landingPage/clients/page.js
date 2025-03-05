@@ -8,9 +8,9 @@ function Clients() {
 
         {/* left side */}
         <div className='w-full md:w-1/2'>
-        <hr className="w-16 border-primary border-t-[4px]" />
+        <hr className="w-36 border-primary border-t-[4px]" />
         <p className="max-w-[480px] text-[#515151] font-nunitosans font-bold text-[16px] md:text-[18px] lg:text-[23.34px] mb-6 leading-6 md:leading-8">
-         See why over 100,000 teams choose Urban Adchecker
+        Find out why businesses trust Urban AdCheck to enhance their ad visibility and effectiveness!
         </p>
         </div>
 
