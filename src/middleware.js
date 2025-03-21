@@ -32,16 +32,16 @@
     }
 
     // If accessing login page while already logged in
-    if (pathname === '/account/login' && userInfo && accessToken) {
-      try {
-        const roleValue = userRole?.value ? JSON.parse(userRole.value) : null;
-        if (roleValue) {
-          return NextResponse.redirect(new URL(`/dashboard/${roleValue}/overview`, url));
-        }
-      } catch (error) {
-        console.error('Login redirect error:', error);
-      }
-    }
+    // if (pathname === '/account/login' && userInfo && accessToken) {
+    //   try {
+    //     const roleValue = userRole?.value ? JSON.parse(userRole.value) : null;
+    //     if (roleValue) {
+    //       return NextResponse.redirect(new URL(`/dashboard/${roleValue}/overview`, url));
+    //     }
+    //   } catch (error) {
+    //     console.error('Login redirect error:', error);
+    //   }
+    // }
 
     return NextResponse.next();
   }
