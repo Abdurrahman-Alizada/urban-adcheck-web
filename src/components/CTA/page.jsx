@@ -9,17 +9,17 @@ function CTA() {
   const people = [
     {
       id: 1,
-      alt:"Person-Smiling",
+      alt:"Person-Smilin",
       image: "/Avatar.png",
     },
     {
       id: 2,
-      alt:"Person-Smiling",
+      alt:"Person-Smilin",
       image: "/Avatar-2.png",
     },
     {
       id: 3,
-      alt:"Person-Smiling",
+      alt:"Person-Smilin",
       image: "/Avatar-3.png",
     },
   ];
