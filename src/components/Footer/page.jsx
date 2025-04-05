@@ -6,8 +6,8 @@ import { faEnvelope, faLocationDot,faPhone } from '@fortawesome/free-solid-svg-i
 
 function Footer() {
   const footerListOne = [
-    { title: 'Our Story', link: '/our-story' },
-    { title: 'About Us', link: '/about-us' },
+    { title: 'Our Story', link: '/about' },
+    { title: 'About Us', link: '/about' },
     { title: 'Contact Us', link: '#' },
     { title: 'Faq', link: '#' },
     { title: 'Pricings', link: '#' },
