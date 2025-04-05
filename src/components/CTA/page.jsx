@@ -10,17 +10,17 @@ function CTA() {
     {
       id: 1,
       alt:"Person-Smiling",
-      image: "/Avatar.svg",
+      image: "/Avatar.png",
     },
     {
       id: 2,
       alt:"Person-Smiling",
-      image: "/Avatar-2.svg",
+      image: "/Avatar-2.png",
     },
     {
       id: 3,
       alt:"Person-Smiling",
-      image: "/Avatar-3.svg",
+      image: "/Avatar-3.png",
     },
   ];
   return (
