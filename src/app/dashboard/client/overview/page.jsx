@@ -16,11 +16,7 @@ function Overview() {
         </div>
       ) : (
         <>
-        
           <DashboardCards info={cardsInfo?.data} />
-
-         
-
         </>
       )}
     </div>

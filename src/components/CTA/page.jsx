@@ -9,18 +9,18 @@ function CTA() {
   const people = [
     {
       id: 1,
-
-      image: "/avatar.png",
+      alt:"Person-Smiling",
+      image: "/Avatar.svg",
     },
     {
       id: 2,
-
-      image: "/avatar-2.png",
+      alt:"Person-Smiling",
+      image: "/Avatar-2.svg",
     },
     {
       id: 3,
-   
-      image: "/avatar-3.png",
+      alt:"Person-Smiling",
+      image: "/Avatar-3.svg",
     },
   ];
   return (
