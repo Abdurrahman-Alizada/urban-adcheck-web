@@ -7,10 +7,6 @@ import { headers } from 'next/headers';
 
 export function getMarkdownPage({ title = 'not-found' }) {
   
-  const requestHeaders = headers();
-  const host = requestHeaders.get('host') || '';
-
-
   const postsDirectory = path.join(process.cwd(), `src/markdown`);
   
   try {
