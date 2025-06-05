@@ -1,96 +1,94 @@
+"use client"
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faTwitter, faInstagram } from '@fortawesome/free-brands-svg-icons';
-import { faEnvelope, faLocationDot, faPhone } from '@fortawesome/free-solid-svg-icons';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
-// Shared ContactIcon Component
-const ContactIcon = ({ icon, text }) => (
-  <div className="flex items-center gap-4">
-    <FontAwesomeIcon icon={icon} color="#068179" size="lg" />
-    <p className="text-black font-nunitosans font-normal text-[17px]">{text}</p>
-  </div>
-);
+const Contact = () => {
+  const validationSchema = Yup.object({
+    name: Yup.string().min(3, 'Name must be at least 3 characters').required('Name is required'),
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    message: Yup.string().min(10, 'Message must be at least 10 characters').required('Message is required'),
+  });
 
-// Main Contact Component
-function Contact() {
-  const contactDetails = [
-    { icon: faLocationDot, text: 'Address: 123 Street, City, Country' },
-    { icon: faPhone, text: '+123 456 789' },
-    { icon: faEnvelope, text: 'Email: info@domain.com' },
-  ];
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    console.log('Form Submitted:', values);
+    setSubmitting(false);
+    resetForm();
+  };
 
   return (
-    <section className="w-full min-h-auto  flex flex-col md:flex-row gap-3 mt-24 mb-10 px-3 md:px-10 lg:px-16">
-      {/* Left Side */}
-      <div className="w-full md:w-1/2">
-        <div className="mb-5 md:mb-8">
-          <h2 className="text-[24px] md:text-[34px] lg:text-[48px] font-extrabold font-Archivoo">Get In Touch!</h2>
-          <p className="text-black max-w-[400px] font-nunitosans font-normal text-[17px]">
-            Fill up the form and our Team will get back to you within 24 hours.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4">
-          {contactDetails.map((item, index) => (
-            <ContactIcon key={index} icon={item.icon} text={item.text} />
-          ))}
-        </div>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className='w-full min-h-[60vh] flex items-center justify-center' style={{
+        backgroundImage: "url('/bg-about-hero.png')",
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+      }}>
+      </section>
 
-      {/* Right Side */}
-      <div className="w-full md:w-1/2">
-       {/* contact form */}
-        <form className="p-4 bg-[#068179] bg-opacity-40 shadow-md rounded-3xl">
-          <div className="mb-4">
-            <label htmlFor="name" className="block text-gray-700 font-bold mb-2">
-              Full Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-              placeholder="Enter your name"
-              required
-            />
+      <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+        <h2 className="text-[30px] text-center md:text-[35px] lg:text-[60px] font-bold font-NotoSans text-black leading-[50px] md:leading-[70px]">
+          Get In Touch!
+        </h2>
+        <p className="text-center text-gray-600 mt-4 text-lg">
+          Have questions or need assistance? We’re here to help! Fill out the form, and our team will get back to you within 24 hours.
+        </p>
+        <div className="grid lg:grid-cols-2 gap-16 mt-10">
+          {/* Contact Information */}
+          <div className="space-y-6">
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <h3 className="text-lg font-semibold text-gray-900">Headquarters</h3>
+              <p className="text-gray-600 text-sm">Toronto, Ontario, Canada</p>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <h3 className="text-lg font-semibold text-gray-900">Email</h3>
+              <p className="text-gray-600 text-sm">UrbanAdCheck@protonmail.com</p>
+            </div>
           </div>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700 font-bold mb-2">
-              Email Address
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-              placeholder="Enter your email"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="message" className="block text-gray-700 font-bold mb-2">
-              Message
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              rows="4"
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-              placeholder="Write your message here"
-              required
-            ></textarea>
-          </div>
-          <div className="flex justify-center">
-            <button
-              type="submit"
-              className="bg-secondary text-white py-2 px-4 rounded-md font-bold hover:bg-secondary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark"
+
+          {/* Contact Form */}
+          <div className="bg-white p-8 rounded-lg shadow-sm">
+            <Formik
+              initialValues={{ name: '', email: '', message: '' }}
+              validationSchema={validationSchema}
+              onSubmit={handleSubmit}
             >
-              Send Message
-            </button>
+              {({ isSubmitting }) => (
+                <Form className="space-y-6">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
+                    <Field type="text" id="name" name="name" className="w-full p-2 border rounded font-nunitosans" />
+                    <ErrorMessage name="name" component="div" className="text-red-500 text-sm mt-1" />
+                  </div>
+
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                    <Field type="email" id="email" name="email" className="w-full p-2 border rounded font-nunitosans" />
+                    <ErrorMessage name="email" component="div" className="text-red-500 text-sm mt-1" />
+                  </div>
+
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-gray-700">Message</label>
+                    <Field as="textarea" id="message" name="message" rows="4" className="w-full p-2 border rounded font-nunitosans" />
+                    <ErrorMessage name="message" component="div" className="text-red-500 text-sm mt-1" />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-primary text-white py-2 rounded font-nunitosans hover:bg-primary/90 transition"
+                  >
+                    {isSubmitting ? 'Sending...' : 'Send Message'}
+                  </button>
+                </Form>
+              )}
+            </Formik>
           </div>
-        </form>
+        </div>
       </div>
-    </section>
+    </div>
   );
-}
+};
 
 export default Contact;

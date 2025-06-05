@@ -206,7 +206,7 @@ const PostJob = () => {
   const renderStepButtons = (validateForm, setFieldTouched) => {
     const commonButtonClasses =
       "w-full sm:w-auto px-6 py-2 rounded-md transition-colors";
-    const primaryButtonClasses = `${commonButtonClasses} bg-primary text-white hover:bg-secondary`;
+    const primaryButtonClasses = `${commonButtonClasses} bg-primary text-white hover:bg-secondary flex items-center justify-center`;
     const secondaryButtonClasses = `${commonButtonClasses} border border-gray-300 text-gray-700 hover:bg-gray-50`;
 
     const buttons = {

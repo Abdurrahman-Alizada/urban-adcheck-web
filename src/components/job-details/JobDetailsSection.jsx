@@ -42,6 +42,9 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
     watchdogReports,
     status,
   } = jobDetails?.data || {};
+
+  const serviceFee=paymentDetails?.serviceFee;
+  const fee= serviceFee.toFixed(2);
   const router = useRouter();
 
   // chat modal
@@ -616,12 +619,12 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
             <div className="space-y-2">
               <p className="flex justify-between">
                 <span className="text-gray-600">Amount:</span>
-                <span className="font-semibold">${paymentDetails?.amount}</span>
+                <span className="font-semibold">CAD {paymentDetails?.amount}</span>
               </p>
               <p className="flex justify-between">
                 <span className="text-gray-600">Service Fee:</span>
                 <span className="font-semibold">
-                  ${paymentDetails?.serviceFee}
+                  CAD  {fee}
                 </span>
               </p>
               <p className="flex justify-between">

@@ -12,7 +12,7 @@ function Pricing() {
         
         
   return (
-    <div className='mt-16 flex justify-center gap-2 mb-12'>
+    <div className='mt-16 flex flex-col md:flex-row justify-center gap-2 mb-12 p-2'>
         {  
           (isLoading || isFetching) ? Array.from({ length: 2 }).map((_, index) => (              
                <div className='flex' key={index}>
