@@ -6,21 +6,30 @@ import { BsArrowLeft } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 import { useAcceptOrRejectWatchdogMutation } from "@/redux/reducers/jobs/jobThunk";
-import { FaS } from "react-icons/fa6";
 import { FaStar } from "react-icons/fa";
 import FeedbackForm from "./feedbackForm";
 import { useGetCurrentLoginUserQuery } from "@/redux/reducers/user/userThunk";
 import { useGetReviewOfJobQuery } from "@/redux/reducers/reviews/reviewThunk";
 import FeedbackFormFreelancer from "./feedbackFormFreelancer";
+import Modal from "../Modal/JobSuccessModal";
 
 const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
-  console.log("jobdetails",jobDetails)
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [mediaModal, setMediaModal] = useState(false);
   const [acceptOrRejectWatchdog] = useAcceptOrRejectWatchdogMutation();
+  const [jobPostModal, setJobPostModal] = useState(false);
+  const [selectedReport, setSelectedReport] = useState(null);
 
-  const { data: reviewData, isLoading: reviewLoading, error: reviewError } = useGetReviewOfJobQuery(jobDetails?.data?._id);
-  const { data: currentLoginUser, isLoading, error } = useGetCurrentLoginUserQuery();
+  const {
+    data: reviewData,
+    isLoading: reviewLoading,
+    error: reviewError,
+  } = useGetReviewOfJobQuery(jobDetails?.data?._id);
+  const {
+    data: currentLoginUser,
+    isLoading,
+    error,
+  } = useGetCurrentLoginUserQuery();
 
   const {
     jobTitle,
@@ -33,7 +42,7 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
     watchdogReports,
     status,
   } = jobDetails?.data || {};
-  
+
   const serviceFee=paymentDetails?.serviceFee;
   const fee= serviceFee.toFixed(2);
   const router = useRouter();
@@ -261,16 +270,26 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
               )}
             </div>
 
+            {report.status === "pending" &&
+              currentLoginUser?.role?.isClient == true && (
+                <div className="flex justify-start gap-4 m-4">
+                  {report.isResubmissionRequested ? (
+                    <div>
+                      <p>You have requested for resubmission</p>
+                      <p>Reason: {report.rejectedReason}</p>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setSelectedReport(report._id);
+                        setJobPostModal(true);
+                      }}
+                      className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-gray-300"
+                    >
+                      Request for revision
+                    </button>
+                  )}
 
-            {
-              report.status === "pending" && currentLoginUser?.role?.isClient == true && (
-                <div className="flex justify-start gap-4 mt-4">
-                  <button
-                    onClick={rejectDelivery}
-                    className="px-4 py-2 bg-secondary text-white rounded-md hover:bg-gray-300"
-                  >
-                    Submit a revision
-                  </button>
                   <button
                     onClick={() => acceptDelivery(report._id)}
                     className="px-4 py-2 bg-primary text-white rounded-md hover:bg-red-700"
@@ -278,136 +297,201 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
                     Accept Delivery
                   </button>
                 </div>
+              )}
 
-              )
-            }
+            {/* client review and form  */}
 
-          {/* client review and form  */}
-
-            {
-                !(report.status === "pending") &&
-             (
-              currentLoginUser?.role?.isClient == true && report.status === "accepted" && (reviewData?.reviews[0]?.client?.reviewText || "").trim().length === 0
-              ?
+            {!(report.status === "pending") &&
+              (currentLoginUser?.role?.isClient == true &&
+              report.status === "accepted" &&
+              (reviewData?.reviews[0]?.client?.reviewText || "").trim()
+                .length === 0 ? (
                 <FeedbackForm jobDetails={jobDetails} />
-                :
+              ) : (
                 <>
                   <div className="flex flex-col justify-start gap-4 mt-4   p-4 rounded-lg bg-white">
-                    {
-                      currentLoginUser?.role?.isClient == true && (reviewData?.reviews[0]?.client?.reviewText || "").trim().length > 0 &&
-                     (
-                     <>
+                    {currentLoginUser?.role?.isClient == true &&
+                      (reviewData?.reviews[0]?.client?.reviewText || "").trim()
+                        .length > 0 && (
+                        <>
                           <h3 className="font-bold">My Review</h3>
                           <div className="flex  flex-col gap-2 drop-shadow-md p-4 rounded-lg bg-gray-50">
-
-                          <h3 className="font-semibold">{`${jobDetails?.data?.personalInfo?.fullName || ''}`.trim()}</h3>
+                            <h3 className="font-semibold">
+                              {`${
+                                jobDetails?.data?.personalInfo?.fullName || ""
+                              }`.trim()}
+                            </h3>
 
                             <p>{reviewData?.reviews[0]?.client?.reviewText}</p>
                             <div className="flex items-center gap-2">
-                              {
-                                Array.from({ length: reviewData?.reviews[0]?.client?.numberOfStars }, (_, index) => (
-                                  <FaStar key={index} size={20} color="#FFD700" />
-                                ))
-                              }
-                              <span>{reviewData?.reviews[0]?.client?.numberOfStars}</span>
-
+                              {Array.from(
+                                {
+                                  length:
+                                    reviewData?.reviews[0]?.client
+                                      ?.numberOfStars,
+                                },
+                                (_, index) => (
+                                  <FaStar
+                                    key={index}
+                                    size={20}
+                                    color="#FFD700"
+                                  />
+                                )
+                              )}
+                              <span>
+                                {reviewData?.reviews[0]?.client?.numberOfStars}
+                              </span>
                             </div>
                           </div>
                         </>
-                     )
-                    }
-                    {
-                   currentLoginUser?.role?.isWatchDog == true && (reviewData?.reviews[0]?.client?.reviewText || "").trim().length > 10 &&
-                 (
+                      )}
+                    {currentLoginUser?.role?.isWatchDog == true &&
+                      (reviewData?.reviews[0]?.client?.reviewText || "").trim()
+                        .length > 10 && (
                         <>
                           <h3 className="font-bold">Client Review</h3>
                           <div className="flex  flex-col gap-2 drop-shadow-md p-4 rounded-lg bg-gray-50">
-
-                          <h3 className="font-semibold">{`${jobDetails?.data?.personalInfo?.fullName || ''}`.trim()}</h3>
+                            <h3 className="font-semibold">
+                              {`${
+                                jobDetails?.data?.personalInfo?.fullName || ""
+                              }`.trim()}
+                            </h3>
 
                             <p>{reviewData?.reviews[0]?.client?.reviewText}</p>
                             <div className="flex items-center gap-2">
-                              {
-                                Array.from({ length: reviewData?.reviews[0]?.client?.numberOfStars }, (_, index) => (
-                                  <FaStar key={index} size={20} color="#FFD700" />
-                                ))
-                              }
-                              <span>{reviewData?.reviews[0]?.client?.numberOfStars}</span>
-
+                              {Array.from(
+                                {
+                                  length:
+                                    reviewData?.reviews[0]?.client
+                                      ?.numberOfStars,
+                                },
+                                (_, index) => (
+                                  <FaStar
+                                    key={index}
+                                    size={20}
+                                    color="#FFD700"
+                                  />
+                                )
+                              )}
+                              <span>
+                                {reviewData?.reviews[0]?.client?.numberOfStars}
+                              </span>
                             </div>
                           </div>
                         </>
-                 )
-                    }
+                      )}
                   </div>
                 </>
-             )
-            }
+              ))}
 
-
-          {/* watchdog review and form  */}
-            {
-              !(report.status === "pending") &&  
-                (
-                  !((reviewData?.reviews[0]?.client?.reviewText || "").trim().length === 0) &&
-              (
-              currentLoginUser?.role?.isWatchDog == true && report.status === "accepted" && (reviewData?.reviews[0]?.watchdog?.reviewText || "").trim().length === 0
-              ?
-                <FeedbackFormFreelancer jobDetails={jobDetails} reviewData={reviewData} />
-                :
+            {/* watchdog review and form  */}
+            {!(report.status === "pending") &&
+              !(
+                (reviewData?.reviews[0]?.client?.reviewText || "").trim()
+                  .length === 0
+              ) &&
+              (currentLoginUser?.role?.isWatchDog == true &&
+              report.status === "accepted" &&
+              (reviewData?.reviews[0]?.watchdog?.reviewText || "").trim()
+                .length === 0 ? (
+                <FeedbackFormFreelancer
+                  jobDetails={jobDetails}
+                  reviewData={reviewData}
+                />
+              ) : (
                 <>
-                <div className="flex flex-col justify-start gap-4 mt-4 p-4 rounded-lg bg-white">
-                  {
-                    (
-                       currentLoginUser?.role?.isWatchDog == true &&
-                       (reviewData?.reviews[0]?.watchdog?.reviewText || "").trim().length > 10 )
-                       &&
-                        (
-                      <>
-                        <h3 className="font-bold">My Review</h3>
-                        <div className="flex flex-col gap-2 drop-shadow-md p-4 rounded-lg bg-gray-50">
-                        <h3 className="font-semibold">{`${jobDetails?.data?.acceptedBy?.watchdog?.fullName?.firstName || ''} ${jobDetails?.data?.acceptedBy?.watchdog?.fullName?.lastName || ''}`.trim()}</h3>
-                          <p>{reviewData?.reviews[0]?.client?.reviewText}</p>
-                          <div className="flex items-center gap-2">
-                            {
-                              Array.from({ length: reviewData?.reviews[0]?.client?.numberOfStars }, (_, index) => (
-                                <FaStar key={index} size={20} color="#FFD700" />
-                              ))
-                            }
-                            <span>{reviewData?.reviews[0]?.watchdog?.numberOfStars}</span>
+                  <div className="flex flex-col justify-start gap-4 mt-4 p-4 rounded-lg bg-white">
+                    {currentLoginUser?.role?.isWatchDog == true &&
+                      (
+                        reviewData?.reviews[0]?.watchdog?.reviewText || ""
+                      ).trim().length > 10 && (
+                        <>
+                          <h3 className="font-bold">My Review</h3>
+                          <div className="flex flex-col gap-2 drop-shadow-md p-4 rounded-lg bg-gray-50">
+                            <h3 className="font-semibold">
+                              {`${
+                                jobDetails?.data?.acceptedBy?.watchdog?.fullName
+                                  ?.firstName || ""
+                              } ${
+                                jobDetails?.data?.acceptedBy?.watchdog?.fullName
+                                  ?.lastName || ""
+                              }`.trim()}
+                            </h3>
+                            <p>{reviewData?.reviews[0]?.client?.reviewText}</p>
+                            <div className="flex items-center gap-2">
+                              {Array.from(
+                                {
+                                  length:
+                                    reviewData?.reviews[0]?.client
+                                      ?.numberOfStars,
+                                },
+                                (_, index) => (
+                                  <FaStar
+                                    key={index}
+                                    size={20}
+                                    color="#FFD700"
+                                  />
+                                )
+                              )}
+                              <span>
+                                {
+                                  reviewData?.reviews[0]?.watchdog
+                                    ?.numberOfStars
+                                }
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      </>
-                      )
-                  }
+                        </>
+                      )}
 
-                  {
-                    currentLoginUser?.role?.isClient == true && (reviewData?.reviews[0]?.watchdog?.reviewText || "").trim().length > 10 &&
-                      <>
-                        <h3 className="font-bold">Freelancer Review</h3>
-                        <div className="flex  flex-col gap-2 drop-shadow-md p-4 rounded-lg bg-gray-50">
+                    {currentLoginUser?.role?.isClient == true &&
+                      (
+                        reviewData?.reviews[0]?.watchdog?.reviewText || ""
+                      ).trim().length > 10 && (
+                        <>
+                          <h3 className="font-bold">Watchdog Review</h3>
+                          <div className="flex  flex-col gap-2 drop-shadow-md p-4 rounded-lg bg-gray-50">
+                            <h3 className="font-semibold">
+                              {`${
+                                jobDetails?.data?.acceptedBy?.watchdog?.fullName
+                                  ?.firstName || ""
+                              } ${
+                                jobDetails?.data?.acceptedBy?.watchdog?.fullName
+                                  ?.lastName || ""
+                              }`.trim()}
+                            </h3>
 
-                        <h3 className="font-semibold">{`${jobDetails?.data?.acceptedBy?.watchdog?.fullName?.firstName || ''} ${jobDetails?.data?.acceptedBy?.watchdog?.fullName?.lastName || ''}`.trim()}</h3>
-
-                          <p>{reviewData?.reviews[0]?.watchdog?.reviewText}</p>
-                          <div className="flex items-center gap-2">
-                            {
-                              Array.from({ length: reviewData?.reviews[0]?.watchdog?.numberOfStars }, (_, index) => (
-                                <FaStar key={index} size={20} color="#FFD700" />
-                              ))
-                            }
-                            <span>{reviewData?.reviews[0]?.watchdog?.numberOfStars}</span>
-
+                            <p>
+                              {reviewData?.reviews[0]?.watchdog?.reviewText}
+                            </p>
+                            <div className="flex items-center gap-2">
+                              {Array.from(
+                                {
+                                  length:
+                                    reviewData?.reviews[0]?.watchdog
+                                      ?.numberOfStars,
+                                },
+                                (_, index) => (
+                                  <FaStar
+                                    key={index}
+                                    size={20}
+                                    color="#FFD700"
+                                  />
+                                )
+                              )}
+                              <span>
+                                {
+                                  reviewData?.reviews[0]?.watchdog
+                                    ?.numberOfStars
+                                }
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      </>
-                  }
-                </div>
-              </>
-        )
-                )
-            }
-
+                        </>
+                      )}
+                  </div>
+                </>
+              ))}
           </div>
         );
       })}
@@ -454,18 +538,19 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
     });
   };
 
+  const [rejectComment, setRejectComment] = useState("");
   const rejectDelivery = () => {
     let data = {
       body: {
         action: "reject",
-        comments: "Please provide additional images.",
+        comments: rejectComment,
         requestResubmission: true,
       },
-      jobId: "",
-      reportId: "",
+      jobId: jobDetails?.data?._id,
+      reportId: selectedReport,
     };
     acceptOrRejectWatchdog(data).then((res) => {
-      console.log("first ", res);
+      setJobPostModal(!jobPostModal);
     });
   };
 
@@ -545,62 +630,65 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
               <p className="flex justify-between">
                 <span className="text-gray-600">Total:</span>
                 <span className="font-semibold">
-                  CAD {paymentDetails?.totalAmount}
-
+                  ${paymentDetails?.totalAmount}
                 </span>
               </p>
             </div>
           </section>
 
-          {
-            currentLoginUser?.role?.isWatchDog == true && acceptedBy?.watchdog ? (
-              // Client Information
-              <section className="bg-white p-6 rounded-lg shadow-sm">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-bold text-gray-800">Client Information</h2>
-                </div>
-                <div className="space-y-2">
-                  <p className="flex justify-between">
-                    <span className="text-gray-600">Name:</span>
-                    <span>{personalInfo?.fullName || "N/A"}</span>
-                  </p>
-                  <p className="flex justify-between">
-                    <span className="text-gray-600">Email:</span>
-                    <span>{personalInfo?.email || "N/A"}</span>
-                  </p>
-                  <p className="flex justify-between">
-                    <span className="text-gray-600">Phone:</span>
-                    <span>{phoneNumber?.primary || "N/A"}</span>
-                  </p>
-                </div>
-              </section>
-            ) : currentLoginUser?.role?.isClient == true ? (
-              // Watchdog Information
-              <section className="bg-white p-6 rounded-lg shadow-sm">
-                <h2 className="text-xl font-bold text-gray-800 mb-4">Watchdog Information</h2>
-                <div className="space-y-2">
-                  <p className="flex justify-between">
-                    <span className="text-gray-600">Name:</span>
-                    <span>
-                      {acceptedBy?.watchdog?.fullName?.firstName || "N/A"}{" "}
-                      {acceptedBy?.watchdog?.fullName?.lastName || "N/A"}
-                    </span>
-                  </p>
-                  <p className="flex justify-between">
-                    <span className="text-gray-600">Email:</span>
-                    <span>{acceptedBy?.watchdog?.email || "N/A"}</span>
-                  </p>
-                  <p className="flex justify-between">
-                    <span className="text-gray-600">Phone:</span>
-                    <span>{acceptedBy?.watchdog?.phoneNumber || "N/A"}</span>
-                  </p>
-                  <button
-                    onClick={handleChatModal}
-                    className="h-8 md:h-12 px-3 md:px-6 py-2 text-xl rounded-[10px] bg-secondary text-white hover:bg-primary"
-                  >
-                    Chat Now
-                  </button>
-                  {/* <button
+          {currentLoginUser?.role?.isWatchDog == true &&
+          acceptedBy?.watchdog ? (
+            // Client Information
+            <section className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold text-gray-800">
+                  Client Information
+                </h2>
+              </div>
+              <div className="space-y-2">
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Name:</span>
+                  <span>{personalInfo?.fullName || "N/A"}</span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Email:</span>
+                  <span>{personalInfo?.email || "N/A"}</span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Phone:</span>
+                  <span>{phoneNumber?.primary || "N/A"}</span>
+                </p>
+              </div>
+            </section>
+          ) : currentLoginUser?.role?.isClient == true ? (
+            // Watchdog Information
+            <section className="bg-white p-6 rounded-lg shadow-sm">
+              <h2 className="text-xl font-bold text-gray-800 mb-4">
+                Watchdog Information
+              </h2>
+              <div className="space-y-2">
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Name:</span>
+                  <span>
+                    {acceptedBy?.watchdog?.fullName?.firstName || "N/A"}{" "}
+                    {acceptedBy?.watchdog?.fullName?.lastName || "N/A"}
+                  </span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Email:</span>
+                  <span>{acceptedBy?.watchdog?.email || "N/A"}</span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Phone:</span>
+                  <span>{acceptedBy?.watchdog?.phoneNumber || "N/A"}</span>
+                </p>
+                <button
+                  onClick={handleChatModal}
+                  className="h-8 md:h-12 px-3 md:px-6 py-2 text-xl rounded-[10px] bg-secondary text-white hover:bg-primary"
+                >
+                  Chat Now
+                </button>
+                {/* <button
 
                     onClick={handleViewDelievery}
                     className="h-8 md:h-12 px-3 md:px-6 py-2 text-[10px] md:text-[16px] rounded-[10px] bg-primary text-white hover:bg-primary"
@@ -700,6 +788,29 @@ const JobDetailsSection = ({ jobDetails, setDeliveryModal, setChatModal }) => {
           }}
         />
       )}
+
+      <Modal isOpen={jobPostModal} onClose={setJobPostModal}>
+        <h2 class="text-xl font-semibold mb-4">What is missing?</h2>
+        <div class="mb-4">
+          <label for="comments" class="block text-sm font-medium text-gray-700">
+            Please explain here for watchdog what is missing.
+          </label>
+          <textarea
+            id="comments"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary"
+            placeholder="Enter your comments"
+            rows="4"
+            onChange={(e) => setRejectComment(e.target.value)}
+          ></textarea>
+        </div>
+
+        <button
+          onClick={rejectDelivery}
+          className="px-4 py-2 bg-primary text-white rounded-md hover:bg-secondary"
+        >
+          Submit
+        </button>
+      </Modal>
     </div>
   );
 };
